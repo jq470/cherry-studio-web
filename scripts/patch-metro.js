@@ -1,27 +1,26 @@
 #!/usr/bin/env node
 /**
- * Anchor patch for upstream metro.config.js.
+ * Patch upstream/metro.config.js so a web export resolves browser shims.
  *
- * Anchored on `config.resolver.resolveRequest = (context, moduleName, platform) => {`
- * so upstream's own resolver logic (libp2p browser maps, MCP shims, Expo runtime
- * pinning) stays byte-for-byte intact. Idempotent: a second run is a no-op.
+ * Three layers are injected:
+ *   L1  react-native/Libraries/** and react-native/src/** -> native-stub.js
+ *       (the native RN core drags TurboModuleRegistry onto the web bundle)
+ *   L2  behavioural shims for the modules the app actually calls
+ *   L2b subpaths of those packages (pkg/sub/path) -> the same shim, so a stubbed
+ *       native package cannot leak its real implementation through an internal
+ *       import (e.g. @shopify/react-native-skia/lib/...)
  *
- * Rules, all scoped to platform === 'web':
- *   1. react-native/Libraries/** and react-native/src/**  -> generic stub
- *      (these pull the native RN core and throw __fbBatchedBridgeConfig on web)
- *   2. react-native-web's "./exports/InputAccessoryView" -> local component stub
- *      (pnpm layout makes Metro fail to resolve that directory entry)
- *   3. explicit module -> shim file table (L1 generic stub, L2 behavioural shim)
+ * Idempotent: a second run detects the marker and exits 0.
  */
+'use strict';
+
 const fs = require('fs');
-const path = require('path');
 
-const target = path.resolve(process.argv[2] || 'upstream/metro.config.js');
-const MARKER = 'src/web-shims';
-let src = fs.readFileSync(target, 'utf8');
+const target = process.argv[2] || 'upstream/metro.config.js';
+const src = fs.readFileSync(target, 'utf8');
 
-if (src.includes(MARKER)) {
-  console.log('metro.config.js already patched, skipping');
+if (src.includes('web-shims')) {
+  console.log(`[metro] ${target} already patched, skipping`);
   process.exit(0);
 }
 
@@ -110,11 +109,21 @@ ${ANCHOR}
         filePath: path.join(__dirname, 'src/web-shims', 'rnw-input-accessory-view.web.js'),
       };
     }
-    const shimFile = webShimMap[moduleName];
-    if (shimFile) {
+    // Exact matches first, then the longest matching package prefix: a stubbed
+    // package's internal subpaths (e.g. @shopify/react-native-skia/lib/...) must
+    // resolve to the shim too, or they drag the real native implementation in.
+    let shimKey = webShimMap[moduleName] ? moduleName : null;
+    if (!shimKey) {
+      for (const key of Object.keys(webShimMap)) {
+        if (moduleName.startsWith(key + '/') && (!shimKey || key.length > shimKey.length)) {
+          shimKey = key;
+        }
+      }
+    }
+    if (shimKey) {
       return {
         type: 'sourceFile',
-        filePath: path.join(__dirname, 'src/web-shims', shimFile),
+        filePath: path.join(__dirname, 'src/web-shims', webShimMap[shimKey]),
       };
     }
   }
