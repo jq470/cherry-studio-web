@@ -33,6 +33,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # A failed build used to leave the previous run's smoke report in place,
+      # which then got embedded above "size: 0 MB" and looked like a live result.
+      - name: Reset stale reports
+        run: rm -f RUNTIME-SMOKE.md CI-REPORT.md
+
       - name: Clone upstream at pinned commit
         run: bash scripts/prepare-upstream.sh
 
@@ -63,10 +68,11 @@ jobs:
       - name: Export web bundle
         working-directory: upstream
         run: |
+          set -o pipefail
           if [ "${{ inputs.diagnostic }}" = "true" ]; then
-            npx expo export --platform web --output-dir dist-web --dev --no-minify --source-maps external
+            npx expo export --platform web --output-dir dist-web --dev --no-minify --source-maps external 2>&1 | tee /tmp/export.log
           else
-            npx expo export --platform web --output-dir dist-web
+            npx expo export --platform web --output-dir dist-web 2>&1 | tee /tmp/export.log
           fi
 
       - name: Inject boot gate
@@ -145,6 +151,13 @@ jobs:
             echo "- size: $(du -sm upstream/dist-web 2>/dev/null | cut -f1 || echo 0) MB"
             echo "- files: $(find upstream/dist-web -type f 2>/dev/null | wc -l)"
             echo
+            if [ -f /tmp/export.log ]; then
+              echo "## export log (tail)"
+              echo '```'
+              tail -n 80 /tmp/export.log
+              echo '```'
+              echo
+            fi
             echo "## sqlite3 runtime"
             ls -la upstream/dist-web/sqlite3 2>/dev/null || echo "missing"
             echo
