@@ -257,6 +257,14 @@ function normalizeParams(params) {
   return [normalizeValue(params)];
 }
 
+// expo-sqlite accepts both styles: `runSync(sql, [a, b])` and `runSync(sql, a, b)`.
+// Collecting here keeps the array form intact and turns the variadic form into one.
+function collectParams(args) {
+  if (args.length === 0) return undefined;
+  if (args.length === 1) return args[0];
+  return args;
+}
+
 function resolveUri(name, directory) {
   let dir = 'file:///web/document/';
   if (typeof directory === 'string' && directory) dir = directory;
@@ -303,16 +311,16 @@ class SQLiteStatement {
     return this;
   }
 
-  executeSync(params) {
-    return this._run(params, false);
+  executeSync(...params) {
+    return this._run(collectParams(params), false);
   }
 
-  executeForRawResultSync(params) {
-    return this._run(params, true);
+  executeForRawResultSync(...params) {
+    return this._run(collectParams(params), true);
   }
 
-  bindSync(params) {
-    const bound = normalizeParams(params);
+  bindSync(...params) {
+    const bound = normalizeParams(collectParams(params));
     if (shouldBind(bound)) this._prepare().bind(bound);
     return this;
   }
@@ -358,12 +366,12 @@ class SQLiteStatement {
     this._positioned = false;
   }
 
-  async executeAsync(params) {
-    return this.executeSync(params);
+  async executeAsync(...params) {
+    return this.executeSync(...params);
   }
 
-  async executeForRawResultAsync(params) {
-    return this.executeForRawResultSync(params);
+  async executeForRawResultAsync(...params) {
+    return this.executeForRawResultSync(...params);
   }
 
   async getAllAsync() {
@@ -451,29 +459,29 @@ class SQLiteDatabase {
     return new SQLiteStatement(this, sql);
   }
 
-  getAllSync(sql, params) {
+  getAllSync(sql, ...params) {
     const stmt = this.prepareSync(sql);
     try {
-      stmt.executeSync(params);
+      stmt.executeSync(collectParams(params));
       return stmt.getAllSync();
     } finally {
       stmt.finalizeSync();
     }
   }
 
-  getFirstSync(sql, params) {
+  getFirstSync(sql, ...params) {
     const stmt = this.prepareSync(sql);
     try {
-      return stmt.executeSync(params).getFirstSync();
+      return stmt.executeSync(collectParams(params)).getFirstSync();
     } finally {
       stmt.finalizeSync();
     }
   }
 
-  runSync(sql, params) {
+  runSync(sql, ...params) {
     const stmt = this.prepareSync(sql);
     try {
-      stmt.executeSync(params);
+      stmt.executeSync(collectParams(params));
       return { changes: stmt.changes, lastInsertRowId: stmt.lastInsertRowId };
     } finally {
       stmt.finalizeSync();
@@ -505,17 +513,17 @@ class SQLiteDatabase {
     return this.prepareSync(sql);
   }
 
-  async getAllAsync(sql, params) {
-    return this.getAllSync(sql, params);
+  async getAllAsync(sql, ...params) {
+    return this.getAllSync(sql, ...params);
   }
 
-  async getFirstAsync(sql, params) {
-    const row = this.getFirstSync(sql, params);
+  async getFirstAsync(sql, ...params) {
+    const row = this.getFirstSync(sql, ...params);
     return row === undefined ? null : row;
   }
 
-  async runAsync(sql, params) {
-    return this.runSync(sql, params);
+  async runAsync(sql, ...params) {
+    return this.runSync(sql, ...params);
   }
 
   async withTransactionAsync(fn) {
