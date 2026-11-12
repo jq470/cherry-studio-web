@@ -1,0 +1,176 @@
+name: web-build
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+  workflow_dispatch:
+    inputs:
+      diagnostic:
+        description: 'Diagnostic export (dev, no minify, external source maps)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: web-build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  UPSTREAM_SHA: 714d071096589a4144e2c4dbbbf2b6e3827b998c
+  EXPO_NO_TELEMETRY: '1'
+  CI: '1'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clone upstream at pinned commit
+        run: bash scripts/prepare-upstream.sh
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: upstream/pnpm-lock.yaml
+
+      - name: Restore Metro transform cache
+        uses: actions/cache@v4
+        with:
+          path: upstream/node_modules/.cache/metro
+          key: metro-${{ runner.os }}-${{ hashFiles('upstream/pnpm-lock.yaml') }}
+          restore-keys: metro-${{ runner.os }}-
+
+      - name: Install dependencies
+        working-directory: upstream
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Apply web overlay
+        run: bash scripts/apply-overlay.sh
+
+      - name: Export web bundle
+        working-directory: upstream
+        run: |
+          if [ "${{ inputs.diagnostic }}" = "true" ]; then
+            npx expo export --platform web --output-dir dist-web --dev --no-minify --source-maps external
+          else
+            npx expo export --platform web --output-dir dist-web
+          fi
+
+      - name: Vendor sql.js runtime
+        working-directory: upstream
+        run: |
+          set -e
+          mkdir -p dist-web/sqljs
+          for f in sql-wasm.js sql-wasm.wasm; do
+            curl -fsSL -o "dist-web/sqljs/$f" "https://cdn.jsdelivr.net/npm/sql.js@1.13.0/dist/$f" \
+              || curl -fsSL -o "dist-web/sqljs/$f" "https://unpkg.com/sql.js@1.13.0/dist/$f"
+          done
+          ls -la dist-web/sqljs
+
+      - name: Verify bundle output
+        working-directory: upstream
+        run: |
+          set -e
+          ls -la dist-web | head -30
+          size=$(du -sm dist-web | cut -f1)
+          files=$(find dist-web -type f | wc -l)
+          html=$(find dist-web -maxdepth 1 -name '*.html' | wc -l)
+          echo "bundle: ${size} MB / ${files} files / ${html} html entry"
+          test "$html" -ge 1 || { echo "::error::no html entry in dist-web"; exit 1; }
+          test "$size" -ge 1 || { echo "::error::bundle suspiciously small"; exit 1; }
+
+      - name: Start static server
+        run: |
+          node upstream/web-adaptation/static-server.js upstream/dist-web 8099 > /tmp/static.log 2>&1 &
+          for i in $(seq 1 20); do
+            curl -sf -o /dev/null http://127.0.0.1:8099/ && break
+            sleep 0.5
+          done
+          curl -sf -o /dev/null http://127.0.0.1:8099/ || { cat /tmp/static.log; exit 1; }
+
+      - name: Static assertions
+        run: |
+          set -e
+          code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8099/)
+          echo "index.html -> $code"
+          test "$code" = "200" || { echo "::error::index.html not served"; exit 1; }
+          curl -s http://127.0.0.1:8099/ | grep -q "<script" || { echo "::error::no script tag in index.html"; exit 1; }
+          js=$(curl -s http://127.0.0.1:8099/ | grep -oE 'src="[^"]+\.js"' | head -1 | sed 's/src="//;s/"//')
+          echo "main bundle: $js"
+          test -n "$js" || { echo "::error::cannot locate main bundle"; exit 1; }
+          mcode=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:8099${js}")
+          echo "bundle -> $mcode"; test "$mcode" = "200" || exit 1
+          for f in sqljs/sql-wasm.js sqljs/sql-wasm.wasm; do
+            scode=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:8099/$f")
+            echo "$f -> $scode"; test "$scode" = "200" || { echo "::error::$f missing"; exit 1; }
+          done
+
+      - name: Install smoke driver
+        run: npm i --no-save --no-audit --no-fund puppeteer-core@24
+
+      - name: Runtime smoke (headless Chrome)
+        continue-on-error: true
+        env:
+          SMOKE_URL: http://127.0.0.1:8099/
+          SMOKE_REPORT: ${{ github.workspace }}/RUNTIME-SMOKE.md
+        run: node scripts/runtime-smoke.mjs
+
+      - name: Collect report
+        if: always()
+        run: |
+          {
+            echo "# Web build report"
+            echo
+            echo "- run: ${GITHUB_RUN_ID} (${GITHUB_SHA})"
+            echo "- upstream: $(cd upstream && git rev-parse HEAD 2>/dev/null || echo unknown)"
+            echo "- diagnostic export: ${{ inputs.diagnostic }}"
+            echo "- size: $(du -sm upstream/dist-web 2>/dev/null | cut -f1 || echo 0) MB"
+            echo "- files: $(find upstream/dist-web -type f 2>/dev/null | wc -l)"
+            echo
+            echo "## sql.js runtime"
+            ls -la upstream/dist-web/sqljs 2>/dev/null || echo "missing"
+            echo
+            echo "## js chunks"
+            find upstream/dist-web -name '*.js' -type f 2>/dev/null | sed "s|upstream/dist-web|.|" | head -20
+            echo
+            echo "## wasm assets"
+            find upstream/dist-web -name '*.wasm' -type f 2>/dev/null | sed "s|upstream/dist-web|.|" | head -10
+            echo
+            if [ -f RUNTIME-SMOKE.md ]; then
+              echo "## runtime smoke"
+              cat RUNTIME-SMOKE.md
+            fi
+          } > CI-REPORT.md
+          cat CI-REPORT.md
+
+      - name: Commit report
+        if: always() && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CI-REPORT.md RUNTIME-SMOKE.md 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "report unchanged"
+          else
+            git commit -m "ci: web build report [skip ci]"
+            git push
+          fi
+
+      - name: Upload bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: cherry-studio-web
+          path: upstream/dist-web
+          retention-days: 14
