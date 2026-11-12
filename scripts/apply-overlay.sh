@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copy the overlay into the freshly cloned upstream tree and apply both patches.
+# Copy the overlay into the freshly cloned upstream tree and apply the patches.
 # Idempotent end to end: shim copy is a plain overwrite, patches detect their own marker.
 set -euo pipefail
 
@@ -15,6 +15,7 @@ cp "$ROOT/overlay/docs/WEB-ADAPTATION.md" "$UPSTREAM/WEB-ADAPTATION.md"
 
 node "$ROOT/scripts/patch-app-config.js" "$UPSTREAM/app.json"
 node "$ROOT/scripts/patch-metro.js" "$UPSTREAM/metro.config.js"
+node "$ROOT/scripts/patch-rnw.js"
 
 echo "shims: $(ls -1 "$UPSTREAM/src/web-shims" | wc -l) files"
 node -e "
