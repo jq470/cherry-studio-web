@@ -1,7 +1,7 @@
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 2761 ms (first non-empty paint: 2761)
+- boot wait: 2218 ms (first non-empty paint: 2218)
 - dom nodes: 42
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
@@ -44,7 +44,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1421 ms
+- elapsed: 1397 ms
 - welcome screen returned: false
 - text: Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry Cherry Studio
 ```
@@ -57,19 +57,19 @@ onboarding dismissed: true
 - [error] Failed to load resource: net::ERR_FAILED
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
-- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
-- [error] TypeError: o.get is not a function
-- [log] [stack-frame] TypeError: o.get is not a function
-- [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:5412:287)
-- [log] [stack-frame] at e.initialUpdaterRun (http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:1396:327)
-- [log] [stack-frame] at e.useAnimatedStyle (http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:1452:453)
-- [log] [stack-frame] at _e.ChatComposerClearance (http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:3823:459)
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [error] TypeError: (0 , r(...).codegenNativeComponent) is not a function
+- [log] [stack-frame] TypeError: (0 , r(...).codegenNativeComponent) is not a function
+- [log] [stack-frame] at http://127.0.0.1:8099/_expo/static/js/web/__common-40de448f86259cf1879127c1ffcae940.js:2261:207
+- [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js:4:2010)
+- [log] [stack-frame] at a (http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js:4:1512)
+- [log] [stack-frame] at i (http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js:4:586)
+- [log] [stack-frame] at http://127.0.0.1:8099/_expo/static/js/web/__common-40de448f86259cf1879127c1ffcae940.js:2259:370
+- [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js:4:2010)
+- [log] [stack-frame] at a (http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js:4:1512)
+- [log] [stack-frame] at i (http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js:4:586)
+- [log] [stack-frame] at o (http://127.0.0.1:8099/_expo/static/js/web/__common-40de448f86259cf1879127c1ffcae940.js:2264:252)
 - [log] [stack-frame] at _o (http://127.0.0.1:8099/_expo/static/js/web/index-a3ce0e6b0556238491560dedc2e7cfb4.js:315:57061)
-- [log] [stack-frame] at hu (http://127.0.0.1:8099/_expo/static/js/web/index-a3ce0e6b0556238491560dedc2e7cfb4.js:315:80466)
-- [log] [stack-frame] at Iu (http://127.0.0.1:8099/_expo/static/js/web/index-a3ce0e6b0556238491560dedc2e7cfb4.js:315:91388)
-- [log] [stack-frame] at Pf (http://127.0.0.1:8099/_expo/static/js/web/index-a3ce0e6b0556238491560dedc2e7cfb4.js:315:136688)
-- [log] [stack-frame] at Tf (http://127.0.0.1:8099/_expo/static/js/web/index-a3ce0e6b0556238491560dedc2e7cfb4.js:315:135696)
-- [log] [stack-frame] at Nf (http://127.0.0.1:8099/_expo/static/js/web/index-a3ce0e6b0556238491560dedc2e7cfb4.js:315:135538)
 - [error] Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
 - [error] Failed to load resource: net::ERR_FAILED
 - [log] [web-gate] sqlite ready
@@ -83,15 +83,15 @@ onboarding dismissed: true
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [error] TypeError: (0 , r(...).codegenNativeComponent) is not a function
 - [log] [stack-frame] TypeError: (0 , r(...).codegenNativeComponent) is not a function
-- [log] [stack-frame] at http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:2261:207
+- [log] [stack-frame] at http://127.0.0.1:8099/_expo/static/js/web/__common-40de448f86259cf1879127c1ffcae940.js:2261:207
 - [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js:4:2010)
 - [log] [stack-frame] at a (http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js:4:1512)
 - [log] [stack-frame] at i (http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js:4:586)
-- [log] [stack-frame] at http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:2259:370
+- [log] [stack-frame] at http://127.0.0.1:8099/_expo/static/js/web/__common-40de448f86259cf1879127c1ffcae940.js:2259:370
 - [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js:4:2010)
 - [log] [stack-frame] at a (http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js:4:1512)
 - [log] [stack-frame] at i (http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js:4:586)
-- [log] [stack-frame] at o (http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:2264:252)
+- [log] [stack-frame] at o (http://127.0.0.1:8099/_expo/static/js/web/__common-40de448f86259cf1879127c1ffcae940.js:2264:252)
 - [log] [stack-frame] at _o (http://127.0.0.1:8099/_expo/static/js/web/index-a3ce0e6b0556238491560dedc2e7cfb4.js:315:57061)
 
 ## page errors (0)
@@ -99,7 +99,7 @@ onboarding dismissed: true
 ## console errors (8)
 - Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
 - Failed to load resource: net::ERR_FAILED
-- TypeError: o.get is not a function
+- TypeError: (0 , r(...).codegenNativeComponent) is not a function
 - Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
 - Failed to load resource: net::ERR_FAILED
 - Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
@@ -121,7 +121,7 @@ onboarding dismissed: true
 
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
-- http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js
+- http://127.0.0.1:8099/_expo/static/js/web/__common-40de448f86259cf1879127c1ffcae940.js
 - http://127.0.0.1:8099/_expo/static/js/web/index-a3ce0e6b0556238491560dedc2e7cfb4.js
 - http://127.0.0.1:8099/sqlite3/sqlite3.wasm
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
