@@ -42,8 +42,8 @@ function findChrome() {
 const report = [];
 const push = (line = '') => report.push(line);
 
-const consoleAll = [];
 const consoleErrors = [];
+const consoleAll = [];
 const pageErrors = [];
 const failedRequests = [];
 const badResponses = [];
@@ -86,7 +86,6 @@ try {
 
   const started = Date.now();
   await page.goto(URL_TO_OPEN, { waitUntil: 'networkidle2', timeout: 60000 });
-
   // First boot runs migrations and seeding in WASM; poll instead of assuming a
   // fixed delay, and keep whatever the app managed to render.
   const deadline = Date.now() + Number(process.env.SMOKE_TIMEOUT_MS || 45000);
@@ -104,6 +103,42 @@ try {
     await new Promise((resolve) => setTimeout(resolve, 1500));
   }
   const bootMs = Date.now() - started;
+
+  // Drive the first-run flow so the report covers more than "onboarding rendered".
+  const clickByText = async (label) => {
+    try {
+      return await page.evaluate((wanted) => {
+        const nodes = Array.from(document.querySelectorAll('[role="button"], button'));
+        const target = nodes.find((node) => (node.innerText || node.textContent || '').trim() === wanted);
+        if (!target) return false;
+        target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+        return true;
+      }, label);
+    } catch {
+      return false;
+    }
+  };
+
+  const interaction = [];
+  const privacyClicked = await clickByText('Accept and continue');
+  interaction.push(`privacy accept clicked: ${privacyClicked}`);
+  if (!privacyClicked) interaction.push('privacy button not found; continuing anyway');
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+  const skipClicked = await clickByText('Set up later');
+  interaction.push(`skip setup clicked: ${skipClicked}`);
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+
+  let homeReached = false;
+  const homeDeadline = Date.now() + 20000;
+  while (Date.now() < homeDeadline) {
+    const text = await page.evaluate(() => (document.body && document.body.innerText) || '');
+    if (text.trim().length > 20 && !text.includes('Welcome to Cherry')) {
+      homeReached = true;
+      break;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+  }
+  interaction.push(`onboarding dismissed: ${homeReached}`);
 
   const state = await page.evaluate(() => {
     const root = document.getElementById('root');
@@ -159,6 +194,29 @@ try {
       .filter((name) => name.endsWith('.js') || name.endsWith('.wasm')),
   );
 
+  // Reload: proves preferences + sqlite bytes survive in IndexedDB. If the
+  // welcome screen comes back, nothing was persisted.
+  let reloadState = { skipped: true };
+  try {
+    const reloadStarted = Date.now();
+    await page.reload({ waitUntil: 'networkidle2', timeout: 60000 });
+    const reloadDeadline = Date.now() + 20000;
+    reloadState = await page.evaluate(() => ({
+      text: (document.body && document.body.innerText) || '',
+      sqlite: window.__CHERRY_SQLITE__ || 'unset',
+    }));
+    while (Date.now() < reloadDeadline && reloadState.text.trim().length < 20) {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      reloadState = await page.evaluate(() => ({
+        text: (document.body && document.body.innerText) || '',
+        sqlite: window.__CHERRY_SQLITE__ || 'unset',
+      }));
+    }
+    reloadState.elapsedMs = Date.now() - reloadStarted;
+  } catch (error) {
+    reloadState = { skipped: false, error: summarise(error && error.message ? error.message : error) };
+  }
+
   const workers = page.workers();
   const workerProbes = [];
   for (const worker of workers) {
@@ -191,7 +249,7 @@ try {
       if (source.startsWith('blob:') || source.startsWith('data:')) continue;
       try {
         const text = await page.evaluate(async (url) => {
-          const response = await fetch(url, { cache: 'force-cache' });
+          const response = await fetch(url);
           if (!response.ok) return '';
           return response.text();
         }, source);
@@ -250,6 +308,20 @@ try {
   push(state.rootHtml || '(empty)');
   push('```');
   push();
+  push('## interaction');
+  push('```');
+  for (const line of interaction) push(line);
+  push('```');
+  push();
+  push('## reload (persistence)');
+  push('```');
+  push(`- sqlite: ${reloadState.sqlite || 'unset'}`);
+  push(`- elapsed: ${reloadState.elapsedMs || 'n/a'} ms`);
+  push(`- welcome screen returned: ${String((reloadState.text || '').includes('Welcome to Cherry'))}`);
+  push(`- text: ${(reloadState.text || '').replace(/\s+/g, ' ').slice(0, 240) || '(empty)'}`);
+  if (reloadState.error) push(`- error: ${reloadState.error}`);
+  push('```');
+  push();
   push('## startup stages');
   const stages = consoleAll.filter((line) => line.includes('Startup stage'));
   if (!stages.length) push('- none logged');
@@ -264,45 +336,28 @@ try {
   push(`## console errors (${consoleErrors.length})`);
   for (const line of consoleErrors.slice(0, 20)) push(`- ${summarise(line)}`);
   push();
-  push(`## warnings (${warnings.length})`);
-  for (const line of warnings.slice(0, 10)) push(`- ${summarise(line)}`);
-  push();
-  push(`## workers (${workers.length})`);
-  if (!workerProbes.length) push('- none');
-  for (const line of workerProbes) push(line);
-  push();
-  push(`## failed requests (${failedRequests.length})`);
-  for (const line of failedRequests.slice(0, 12)) push(`- ${summarise(line)}`);
+  push(`## unknown module analysis (${unknownIds.length})`);
+  for (const line of mappings.slice(0, 10)) push(line);
+  if (!mappings.length) push('- no mapping recovered');
   push();
   push(`## bad responses (${badResponses.length})`);
-  for (const line of badResponses.slice(0, 12)) push(`- ${summarise(line)}`);
+  for (const line of badResponses.slice(0, 20)) push(`- ${line}`);
+  push();
+  push(`## failed requests (${failedRequests.length})`);
+  for (const line of failedRequests.slice(0, 20)) push(`- ${line}`);
+  push();
+  push(`## workers (${workers.length})`);
+  for (const line of workerProbes) push(line);
+  if (!workers.length) push('- none');
   push();
   push('## scripts');
-  for (const line of state.scripts.slice(0, 20)) push(`- ${line}`);
+  for (const line of chunkSources.slice(0, 12)) push(`- ${line}`);
+} catch (error) {
+  push('# Runtime smoke report');
   push();
-  push(`## unknown module analysis (${unknownIds.length})`);
-  if (!mappings.length) push('- no mapping recovered');
-  for (const line of mappings) push(line);
-
+  push(`- fatal: ${summarise(error && error.message ? error.message : error, 800)}`);
+} finally {
+  await browser.close().catch(() => {});
   fs.writeFileSync(REPORT_PATH, `${report.join('\n')}\n`);
   console.log(report.join('\n'));
-} catch (error) {
-  const fallback = [
-    '# Runtime smoke report',
-    '',
-    '- verdict: FAIL: smoke harness crashed',
-    `- error: ${summarise(error && error.message ? error.message : error)}`,
-    '',
-    '## console tail',
-    ...consoleAll.slice(-30).map((line) => `- ${summarise(line, 240)}`),
-    '',
-    '## page errors',
-    ...pageErrors.slice(0, 12).map((line) => `- ${summarise(line)}`),
-  ];
-  fs.writeFileSync(REPORT_PATH, `${fallback.join('\n')}\n`);
-  console.log(fallback.join('\n'));
-} finally {
-  await browser.close();
 }
-
-process.exit(0);
