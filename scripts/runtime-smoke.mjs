@@ -113,7 +113,33 @@ try {
       title: document.title,
       rootChildren: root ? root.children.length : -1,
       rootText: root ? root.innerText.slice(0, 600) : '',
-      rootHtml: root ? root.innerHTML.replace(/\s+/g, ' ').slice(0, 500) : '',
+      rootHtml: root ? root.innerHTML.slice(0, 2000) : '',
+      fiberTree: (() => {
+        const rootEl = document.getElementById('root');
+        if (!rootEl) return ['no #root'];
+        const key = Object.keys(rootEl).find((k) => k.startsWith('__reactContainer$'));
+        if (!key) return ['no container fiber key: ' + Object.keys(rootEl).slice(0, 8).join(',')];
+        const nameOf = (fiber) => {
+          const type = fiber && fiber.type;
+          if (!type) return fiber && fiber.tag === 3 ? 'HostRoot' : String(fiber && fiber.tag);
+          if (typeof type === 'string') return type;
+          return type.displayName || type.name || (type.__context && type.__context.displayName) || 'Anonymous';
+        };
+        const lines = [];
+        const walk = (fiber, depth) => {
+          if (!fiber || depth > 9 || lines.length > 160) return;
+          lines.push('  '.repeat(depth) + nameOf(fiber));
+          let child = fiber.child;
+          let guard = 0;
+          while (child && guard < 8) {
+            walk(child, depth + 1);
+            child = child.sibling;
+            guard += 1;
+          }
+        };
+        walk(rootEl[key], 0);
+        return lines;
+      })(),
       domNodes: document.querySelectorAll('*').length,
       bodyTextLength: bodyText.length,
       bodyExcerpt: bodyText.replace(/\s+/g, ' ').slice(0, 400),
@@ -212,6 +238,11 @@ try {
   push('## body excerpt');
   push('```');
   push(state.bodyExcerpt || '(empty)');
+  push('```');
+  push();
+  push('## react fiber tree');
+  push('```');
+  for (const line of state.fiberTree || []) push(line);
   push('```');
   push();
   push('## #root html');
