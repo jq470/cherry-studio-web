@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43236434998 (205e555c2c1a99a696ef99a14c553d5beac7d082)
+- run: 43237637038 (c6419b72ac00a1e76d344ad5780303cd0625ebb9)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - size: 45 MB
@@ -8,10 +8,10 @@
 
 ## sql.js runtime
 total 704
-drwxr-xr-x 2 runner runner   4096 Nov 12 14:24 .
-drwxr-xr-x 5 runner runner   4096 Nov 12 14:24 ..
--rw-r--r-- 1 runner runner  48788 Nov 12 14:24 sql-wasm.js
--rw-r--r-- 1 runner runner 659806 Nov 12 14:24 sql-wasm.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 12 14:32 .
+drwxr-xr-x 5 runner runner   4096 Nov 12 14:32 ..
+-rw-r--r-- 1 runner runner  48788 Nov 12 14:32 sql-wasm.js
+-rw-r--r-- 1 runner runner 659806 Nov 12 14:32 sql-wasm.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -42,10 +42,10 @@ drwxr-xr-x 5 runner runner   4096 Nov 12 14:24 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 22528 ms
+- boot wait: 20781 ms
 - title: Cherry Studio
-- verdict: FAIL: #root has no children | FAIL: body text too short | FAIL: sqlite backend state = unset | FAIL: 1 uncaught page error(s)
-- #root children: 0 | body text length: 0
+- verdict: FAIL: body text too short | FAIL: sqlite backend state = unset
+- #root children: 1 | body text length: 0
 - sqlite backend: unset
 - crossOriginIsolated: true | SAB: true | Worker: true
 - hardwareConcurrency: 4
@@ -55,8 +55,7 @@ drwxr-xr-x 5 runner runner   4096 Nov 12 14:24 ..
 (empty)
 ```
 
-## page errors (1)
-- Cannot redefine property: createStub
+## page errors (0)
 
 ## console errors (0)
 
@@ -73,4 +72,4 @@ drwxr-xr-x 5 runner runner   4096 Nov 12 14:24 ..
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
 - http://127.0.0.1:8099/_expo/static/js/web/__common-0bc6136ab1aeea68ea1a4b26cf9e6d5d.js
-- http://127.0.0.1:8099/_expo/static/js/web/index-7805aa4a5ba9902baac8fd5c9a080b19.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-d14c6cd759488fb13294f99ceee54c58.js

@@ -1,10 +1,10 @@
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 22528 ms
+- boot wait: 20781 ms
 - title: Cherry Studio
-- verdict: FAIL: #root has no children | FAIL: body text too short | FAIL: sqlite backend state = unset | FAIL: 1 uncaught page error(s)
-- #root children: 0 | body text length: 0
+- verdict: FAIL: body text too short | FAIL: sqlite backend state = unset
+- #root children: 1 | body text length: 0
 - sqlite backend: unset
 - crossOriginIsolated: true | SAB: true | Worker: true
 - hardwareConcurrency: 4
@@ -14,8 +14,7 @@
 (empty)
 ```
 
-## page errors (1)
-- Cannot redefine property: createStub
+## page errors (0)
 
 ## console errors (0)
 
@@ -32,4 +31,4 @@
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
 - http://127.0.0.1:8099/_expo/static/js/web/__common-0bc6136ab1aeea68ea1a4b26cf9e6d5d.js
-- http://127.0.0.1:8099/_expo/static/js/web/index-7805aa4a5ba9902baac8fd5c9a080b19.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-d14c6cd759488fb13294f99ceee54c58.js
