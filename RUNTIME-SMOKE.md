@@ -1,7 +1,7 @@
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 47141 ms (first non-empty paint: never)
+- boot wait: 49608 ms (first non-empty paint: never)
 - dom nodes: 19
 - title: Cherry Studio
 - verdict: FAIL: body text too short
@@ -13,6 +13,20 @@
 ## body excerpt
 ```
 (empty)
+```
+
+## react fiber tree
+```
+HostRoot
+  o
+    t
+      Anonymous
+        f
+          f
+            Anonymous
+              Anonymous
+                Anonymous
+                  h
 ```
 
 ## #root html

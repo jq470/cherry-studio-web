@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43242713576 (df24c8a0dec9b73b8c9376371d6d54b32c08b399)
+- run: 43246564405 (450eff637e3472fcc7f252c2db0523c32ef769e3)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - size: 46 MB
@@ -8,10 +8,10 @@
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 12 15:01 .
-drwxr-xr-x 5 runner runner   4096 Nov 12 15:01 ..
--rw-r--r-- 1 runner runner 656872 Nov 12 15:01 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 12 15:01 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 12 15:23 .
+drwxr-xr-x 5 runner runner   4096 Nov 12 15:23 ..
+-rw-r--r-- 1 runner runner 656872 Nov 12 15:23 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 12 15:23 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -42,7 +42,7 @@ drwxr-xr-x 5 runner runner   4096 Nov 12 15:01 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 47141 ms (first non-empty paint: never)
+- boot wait: 49608 ms (first non-empty paint: never)
 - dom nodes: 19
 - title: Cherry Studio
 - verdict: FAIL: body text too short
@@ -54,6 +54,20 @@ drwxr-xr-x 5 runner runner   4096 Nov 12 15:01 ..
 ## body excerpt
 ```
 (empty)
+```
+
+## react fiber tree
+```
+HostRoot
+  o
+    t
+      Anonymous
+        f
+          f
+            Anonymous
+              Anonymous
+                Anonymous
+                  h
 ```
 
 ## #root html
