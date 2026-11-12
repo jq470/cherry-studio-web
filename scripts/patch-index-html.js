@@ -179,14 +179,15 @@ function buildGate(scripts) {
   // file + line survive minification) to the same console call.
   function installErrorStacks() {
     if (typeof console === 'undefined') return;
+    var NL = String.fromCharCode(10);
     var nativeError = console.error.bind(console);
     console.error = function () {
       try {
         var args = [].slice.call(arguments);
         for (var i = 0; i < args.length; i += 1) {
           var value = args[i];
-          if (value && typeof value === 'object' && typeof value.stack === 'string' && value.stack.indexOf('\n') !== -1) {
-            nativeError.apply(console, args.concat(['[stack] ' + value.stack.split('\n').slice(0, 7).join(' | ')]));
+          if (value && typeof value === 'object' && typeof value.stack === 'string' && value.stack.indexOf(NL) !== -1) {
+            nativeError.apply(console, args.concat(['[stack] ' + value.stack.split(NL).slice(0, 7).join(' | ')]));
             return;
           }
         }
