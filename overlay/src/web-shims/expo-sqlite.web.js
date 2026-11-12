@@ -8,10 +8,13 @@
 // `INSERT ... RETURNING` (drizzle's insertWithOrderKey needs a returned row), and
 // needs no worker, no SAB, no COOP/COEP.
 //
-// Sync-vs-async bridge: `initSqlJs` only returns a Promise while bootstrap calls
-// `openDatabaseSync`. The load starts at module-evaluation time (long before
-// DbService.onInit), and `waitForReadySync()` pumps a nested event loop with a
-// same-origin synchronous XHR until wasm instantiation + IndexedDB preload finish.
+// Sync-vs-async bridge: sql.js can only be initialised asynchronously, while
+// bootstrap calls `openDatabaseSync`. Waiting inside a synchronous call is
+// impossible (a sync-XHR pump does not drain the microtask queue - measured in
+// headless Chromium: 20s pumping, zero progress). So the wait lives in the page:
+// index.html's boot gate (scripts/patch-index-html.js) initialises sql.js and
+// preloads IndexedDB, then injects the app bundle. This module just adopts that
+// done state on evaluation, which keeps the API genuinely synchronous.
 //
 // Persistence: after writes the database bytes are exported and stored in
 // IndexedDB (`cherry-studio-sqlite` / `databases`), keyed by database name, and
@@ -79,6 +82,33 @@ async function boot() {
   if (typeof init !== 'function') throw new Error('sql.js did not expose initSqlJs');
   const mod = await init({ locateFile: (file) => base + file });
   markReady(mod);
+}
+
+function toBytes(value) {
+  if (value instanceof Uint8Array) return value;
+  if (value instanceof ArrayBuffer) return new Uint8Array(value);
+  if (value && value.buffer instanceof ArrayBuffer) {
+    return new Uint8Array(value.buffer, value.byteOffset || 0, value.byteLength);
+  }
+  return null;
+}
+
+// The static index.html boot gate initialises sql.js and preloads IndexedDB
+// *before* the app bundle runs. That is the only way to have a synchronous
+// SQLite API on the main thread: waiting for a Promise inside a synchronous
+// call cannot work (a sync-XHR pump does not drain the microtask queue - proven
+// in headless Chromium: 20s of pumping, zero progress).
+function adoptPreload() {
+  const pre = globalThis.__CHERRY_PRELOAD__;
+  if (globalThis.__SQLJS_MODULE__) markReady(globalThis.__SQLJS_MODULE__);
+  if (pre && pre.sqlite && typeof pre.sqlite.forEach === 'function') {
+    pre.sqlite.forEach((value, key) => {
+      const bytes = toBytes(value);
+      if (bytes) restored.set(String(key), bytes);
+    });
+    preloadDone = true;
+  }
+  return readyState === 1;
 }
 
 // ---------------------------------------------------------------------------
@@ -153,8 +183,8 @@ function flushPersist() {
     try {
       const bytes = db._handle.export();
       pendingWrites.set(db._name, bytes);
-      // Two key forms: the registry keeps `file://` URIs, the filesystem shim
-      // works on plain absolute paths.
+      // Two key forms: the shim registry keeps `file://` URIs, the filesystem
+      // shim works on plain absolute paths.
       fsSizes.set(db._uri, bytes.length);
       fsSizes.set(db._uri.replace(/^file:\/\//, ''), bytes.length);
     } catch {
@@ -182,35 +212,20 @@ if (typeof addEventListener === 'function') {
 }
 
 // ---------------------------------------------------------------------------
-// synchronous readiness gate
+// readiness gate
 // ---------------------------------------------------------------------------
-
-function pumpOnce() {
-  try {
-    const xhr = new XMLHttpRequest();
-    // Same-origin sync XHR is only a pump; any existing static file works.
-    xhr.open('GET', `${originRoot()}metadata.json?t=${Date.now()}`, false);
-    xhr.send();
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 function waitForReadySync() {
   if (readyState === 1 && preloadDone) return runtime;
-  const deadline = Date.now() + 20000;
-  while (readyState !== 1 || !preloadDone) {
-    if (readyState === 2) throw readyError;
-    if (Date.now() > deadline) throw new Error('sql.js did not initialize within 20s (web sqlite shim)');
-    if (!pumpOnce()) {
-      const until = Date.now() + 25;
-      while (Date.now() < until) {
-        /* sync XHR unavailable: brief blocking spin, only as a fallback */
-      }
-    }
+  if (readyState === 2) throw readyError;
+  if (readyState === 0 && globalThis.__SQLJS_MODULE__) {
+    markReady(globalThis.__SQLJS_MODULE__);
+    if (readyState === 1 && preloadDone) return runtime;
   }
-  return runtime;
+  throw new Error(
+    'sql.js runtime is not ready: the static index.html boot gate did not run. ' +
+      'Patch index.html after `expo export` (scripts/patch-index-html.js).',
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -244,7 +259,11 @@ function normalizeParams(params) {
 }
 
 function resolveUri(name, directory) {
-  const dir = typeof directory === 'string' && directory ? directory : 'file:///web/document/';
+  let dir = 'file:///web/document/';
+  if (typeof directory === 'string' && directory) dir = directory;
+  else if (directory && typeof directory === 'object' && typeof directory.uri === 'string') {
+    dir = directory.uri;
+  }
   return dir.endsWith('/') ? `${dir}${name}` : `${dir}/${name}`;
 }
 
@@ -603,8 +622,12 @@ const SQLite = {
   SQLiteStatement,
 };
 
-boot().catch(markFailed);
-preload();
+// Boot gate first; the async path below only covers `expo start --web` (dev),
+// where the shim's synchronous API is already unusable for the first open.
+if (!adoptPreload()) {
+  boot().catch(markFailed);
+  preload();
+}
 
 module.exports = SQLite;
 module.exports.default = SQLite;

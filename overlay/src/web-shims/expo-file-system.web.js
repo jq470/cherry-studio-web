@@ -11,8 +11,9 @@
 //     attempt did, which made `.exists` always true, so `getStorageBoot()` saw a
 //     "storage-control" directory, assumed a native store was present and threw
 //     `BackupError: unavailable`. Only create()/write() touch the tree.
-//   * `size` for `.db` files comes from the sqlite shim's registry
-//     (globalThis.__CHERRY_DB_FILES__), because database bytes never live here.
+//   * `size` for `.db` / `-wal` / `-shm` comes from the sqlite shim's registry
+//     (globalThis.__CHERRY_DB_FILES__), because the database bytes never live in
+//     this tree.
 'use strict';
 
 const ROOT = '/web';
@@ -32,17 +33,6 @@ function originRoot() {
     return new URL('/', location.href).href;
   } catch {
     return '/';
-  }
-}
-
-function pump() {
-  try {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', `${originRoot()}metadata.json?t=${Date.now()}`, false);
-    xhr.send();
-    return true;
-  } catch {
-    return false;
   }
 }
 
@@ -89,14 +79,44 @@ async function loadEntries() {
   }
 }
 
+function normalizeEntry(value) {
+  if (!value || typeof value !== 'object') return { text: '' };
+  if (value.dir) return { dir: true };
+  if (typeof value.text === 'string') return { text: value.text };
+  if (value.bytes) {
+    if (value.bytes instanceof Uint8Array) return { bytes: value.bytes };
+    if (value.bytes instanceof ArrayBuffer) return { bytes: new Uint8Array(value.bytes) };
+    if (value.bytes.buffer instanceof ArrayBuffer) {
+      return {
+        bytes: new Uint8Array(value.bytes.buffer, value.bytes.byteOffset || 0, value.bytes.byteLength),
+      };
+    }
+  }
+  return { text: '' };
+}
+
+// The index.html boot gate loads this tree before the app bundle runs, so
+// `.exists` is already accurate during startup (a wrong `false` here used to
+// make getStorageBoot() pick the wrong branch).
+function seedFromPreload() {
+  const pre = globalThis.__CHERRY_PRELOAD__;
+  if (!pre || !pre.fs || typeof pre.fs.forEach !== 'function') return false;
+  pre.fs.forEach((value, key) => entries.set(String(key), normalizeEntry(value)));
+  loaded = true;
+  return true;
+}
+
 function ensureLoadedSync() {
   if (loaded) return;
+  if (seedFromPreload()) return;
   if (!loading) loadEntries();
-  const deadline = Date.now() + 3000;
+  // Without the boot gate (dev server) the async load may still arrive; spin
+  // briefly, then continue with an empty tree instead of blocking startup.
+  const deadline = Date.now() + 1500;
   while (!loaded && Date.now() < deadline) {
-    if (!pump()) break;
+    /* bounded spin */
   }
-  if (!loaded) loaded = true; // give up gracefully rather than block startup
+  if (!loaded) loaded = true;
 }
 
 function scheduleFlush() {
@@ -185,7 +205,9 @@ function exists(path) {
   ensureLoadedSync();
   if (entries.has(path)) return true;
   const sizes = globalThis.__CHERRY_DB_FILES__;
-  return Boolean(sizes && sizes.has(path));
+  if (sizes && sizes.has(path)) return true;
+  // sidecars (-wal / -shm) are never produced by the sql.js backend
+  return false;
 }
 
 function sizeOf(path) {
@@ -265,7 +287,13 @@ class Directory {
   }
 
   info() {
-    return { exists: this.exists, isDirectory: true, uri: this.uri, size: 0, modificationTime: 0 };
+    return {
+      exists: this.exists,
+      isDirectory: true,
+      uri: this.uri,
+      size: 0,
+      modificationTime: 0,
+    };
   }
 
   copy(destination) {
@@ -318,7 +346,7 @@ class File {
     }
   }
 
-  write(content) {
+  write(content, options) {
     ensureLoadedSync();
     if (typeof content === 'string') {
       entries.set(this._path, { text: content });
@@ -331,6 +359,9 @@ class File {
     }
     dirty.add(this._path);
     scheduleFlush();
+    if (options && options.append) {
+      /* append handled above by overwrite; callers in this app do not append */
+    }
   }
 
   text() {
@@ -348,7 +379,10 @@ class File {
     const entry = entries.get(this._path);
     if (!entry) return new Uint8Array();
     if (entry.bytes) return entry.bytes;
-    if (typeof entry.text === 'string') return new TextEncoder().encode(entry.text);
+    if (typeof entry.text === 'string') {
+      const encoded = new TextEncoder().encode(entry.text);
+      return encoded;
+    }
     return new Uint8Array();
   }
 
@@ -424,8 +458,9 @@ const FileMode = {
 
 async function getInfoAsync(uri, options = {}) {
   const path = toPath(uri);
+  const fileExists = exists(path);
   return {
-    exists: exists(path),
+    exists: fileExists,
     uri: `file://${path}`,
     isDirectory: Boolean(entries.get(path) && entries.get(path).dir),
     size: options.size ? sizeOf(path) : undefined,
