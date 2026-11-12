@@ -8,7 +8,8 @@
  *   L2  behavioural shims for the modules the app actually calls
  *   L2b subpaths of those packages (pkg/sub/path) -> the same shim, so a stubbed
  *       native package cannot leak its real implementation through an internal
- *       import (e.g. @shopify/react-native-skia/lib/...)
+ *       import (e.g. @shopify/react-native-skia/lib/...). package.json probes are
+ *       left untouched: Metro must parse the real manifest, not our JS shim.
  *
  * Idempotent: a second run detects the marker and exits 0.
  */
@@ -113,7 +114,7 @@ ${ANCHOR}
     // package's internal subpaths (e.g. @shopify/react-native-skia/lib/...) must
     // resolve to the shim too, or they drag the real native implementation in.
     let shimKey = webShimMap[moduleName] ? moduleName : null;
-    if (!shimKey) {
+    if (!shimKey && !moduleName.endsWith('/package.json')) {
       for (const key of Object.keys(webShimMap)) {
         if (moduleName.startsWith(key + '/') && (!shimKey || key.length > shimKey.length)) {
           shimKey = key;
