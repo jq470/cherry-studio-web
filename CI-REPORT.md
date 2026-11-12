@@ -1,11 +1,11 @@
 # Web build report
 
-- run: 43261066283 (299691da6cfaeb391e1721d5e962af0e55b830f9)
+- run: 43325249062 (909df2ae7ebe868eb20837d765ef366a306de84d)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: smoke
-- size: 2 MB
-- files: 2
+- size: 46 MB
+- files: 654
 
 ## clone log (tail)
 ```
@@ -54,113 +54,104 @@ devDependencies:
 + tsx 4.22.0
 + typescript 6.0.3
 
-Done in 52.6s using pnpm v12.2.1
+Done in 48.1s using pnpm v12.2.1
 ```
 
 ## overlay log (tail)
 ```
 patched /home/runner/work/cherry-studio-web/cherry-studio-web/upstream/app.json: expo.web = {"output":"single","favicon":"./assets/icon.png","bundler":"metro"}
-/home/runner/work/cherry-studio-web/cherry-studio-web/scripts/patch-metro.js:123
-src = src.replace(ANCHOR, injection);
-    ^
-
-TypeError: Assignment to constant variable.
-    at Object.<anonymous> (/home/runner/work/cherry-studio-web/cherry-studio-web/scripts/patch-metro.js:123:5)
-    at Module._compile (node:internal/modules/cjs/loader:1929:14)
-    at Object..js (node:internal/modules/cjs/loader:2060:10)
-    at Module.load (node:internal/modules/cjs/loader:1651:32)
-    at Module._load (node:internal/modules/cjs/loader:1443:12)
-    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
-    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
-    at node:internal/main/run_main_module:33:47
-
-Node.js v24.22.2
+patched /home/runner/work/cherry-studio-web/cherry-studio-web/upstream/metro.config.js with 34 web shims
+shims: 9 files
+app.json web: {"output":"single","favicon":"./assets/icon.png","bundler":"metro"}
 ```
 
 ## export log (tail)
 ```
+_expo/static/js/web/model-6f0c1b76c7c9b95f33767291197697dd.js (6.4KB)
+_expo/static/js/web/model-add-a510c7f39a65595ad9d9f96504910466.js (32KB)
+_expo/static/js/web/new-0a05a205695e08b35ba25919ec3f7d5f.js (568B)
+_expo/static/js/web/new-1194a0637f044816cc8a2313ffb65937.js (560B)
+_expo/static/js/web/new-96e6ba2bffcd3bf28901f0c9003f0285.js (561B)
+_expo/static/js/web/node-535a1dbf61d4e5f60a998028cbdb1122.js (2.8KB)
+_expo/static/js/web/node-9e34eef653f7993ae9b0bb9713e86377.js (1.3KB)
+_expo/static/js/web/notifications-a735af5eec661f818f20e4a32d143f06.js (4.2KB)
+_expo/static/js/web/oauth-callback-4cbb6e2275ac8f61be44dcaf0c5d1eda.js (568B)
+_expo/static/js/web/officeText-2053456a5d632f917e164d9d8896db38.js (594KB)
+_expo/static/js/web/openai-codex-d688570404d9f8af55e28f458b3a8fcc.js (6.4KB)
+_expo/static/js/web/openai-codex-responses-daa03022cbb58babc1d2f6f01f68482c.js (25KB)
+_expo/static/js/web/openai-completions-6788357d562e6c9f44e6aeb63d4a08e9.js (25KB)
+_expo/static/js/web/openai-responses-61ee35597605ab1ac9451c95c1507efe.js (8.2KB)
+_expo/static/js/web/pair-572cbb462346ec431aa51c0feedf9155.js (751B)
+_expo/static/js/web/pair-5b347a5c3c17c31dc4f84d0e744b348a.js (575B)
+_expo/static/js/web/piVertexAnthropic-e68e60d31d86d56bc8cc4b2dcea036b0.js (12KB)
+_expo/static/js/web/privacy-f174e89ff118fc51905afe72f1fcb4c3.js (2.4KB)
+_expo/static/js/web/profile-306745a37b2d697e93f0af2bb59dfc5f.js (3.9KB)
+_expo/static/js/web/provider-0671c4571916cde9dcc1d4f85675a0f5.js (743B)
+_expo/static/js/web/provider-sync-85c961b359e018527b4228fc31dbb733.js (747B)
+_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js (40KB)
+_expo/static/js/web/remoteCrypto-34ae64d3af174d6ee209b03e53df6f44.js (1.2KB)
+_expo/static/js/web/scan-6f8b0cccdd9655bb38360f4940db5def.js (751B)
+_expo/static/js/web/scan-f4b9c4e14a6429d72e3c53a502389349.js (575B)
+_expo/static/js/web/search-3ce78642f8a7f10fb67e0ea537cb5bfe.js (558B)
+_expo/static/js/web/share-2f0680b1aee53bff98ad163b9d662bb7.js (67KB)
+_expo/static/js/web/share-destination-28c75f65f923f7bb56d4304e2e5b3a89.js (3KB)
+_expo/static/js/web/templates-c329eddff042fbbb2fe773d23051c9fe.js (573B)
+_expo/static/js/web/trash-7a2d54b1df167f084938b0b608e53964.js (13KB)
+_expo/static/js/web/voice-a2a8aeaeb07539b442a586c0e39e2aab.js (18KB)
+_expo/static/js/web/web-search-4f2211264c029c9f086f8c3d1ed06749.js (565B)
+_expo/static/js/web/xai-a1345ba89bae466fd1f6725a2ed751ef.js (3.2KB)
 
- index.ts
- | import "expo-router/entry"
+› Files (3):
+favicon.ico (15KB)
+index.html (1.6KB)
+metadata.json (49B)
 
- 
- | import "./index.ts"
-
-
-Error: Unable to resolve module ./exports/InputAccessoryView from /home/runner/work/cherry-studio-web/cherry-studio-web/upstream/node_modules/.pnpm/react-native-web@0.21.4_encoding@0.1.13_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/react-native-web/dist/index.js: ./exports/InputAccessoryView could not be found within the project or in these directories:
-  node_modules/.pnpm/react-native-web@0.21.4_encoding@0.1.13_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules
-  node_modules/.pnpm/node_modules
-  node_modules
-[0m [90m 39 |[39m [36mexport[39m { [36mdefault[39m [36mas[39m [33mImage[39m } [36mfrom[39m [32m'./exports/Image'[39m[33m;[39m
- [90m 40 |[39m [36mexport[39m { [36mdefault[39m [36mas[39m [33mImageBackground[39m } [36mfrom[39m [32m'./exports/ImageBackground'[39m[33m;[39m
-[31m[1m>[22m[39m[90m 41 |[39m [36mexport[39m { [36mdefault[39m [36mas[39m [33mInputAccessoryView[39m } [36mfrom[39m [32m'./exports/InputAccessoryView'[39m[33m;[39m
- [90m    |[39m                                                [31m[1m^[22m[39m
- [90m 42 |[39m [36mexport[39m { [36mdefault[39m [36mas[39m [33mKeyboardAvoidingView[39m } [36mfrom[39m [32m'./exports/KeyboardAvoidingView'[39m[33m;[39m
- [90m 43 |[39m [36mexport[39m { [36mdefault[39m [36mas[39m [33mModal[39m } [36mfrom[39m [32m'./exports/Modal'[39m[33m;[39m
- [90m 44 |[39m [36mexport[39m { [36mdefault[39m [36mas[39m [33mPicker[39m } [36mfrom[39m [32m'./exports/Picker'[39m[33m;[39m[0m
-
-Import stack:
-
- node_modules/.pnpm/react-native-web@0.21.4_encoding@0.1.13_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/react-native-web/dist/index.js
- | import "./exports/InputAccessoryView"
-
- node_modules/.pnpm/expo-router@58.0.29_patch_hash=231e96fb0587925929e716eb079a37f4cd6f0bc8a9dad0bbb62cfece_ec17e538f314aca3a86b20b563c087eb/node_modules/expo-router/build/renderRootComponent.js
- | import "react-native-web/dist/index"
-
- node_modules/.pnpm/expo-router@58.0.29_patch_hash=231e96fb0587925929e716eb079a37f4cd6f0bc8a9dad0bbb62cfece_ec17e538f314aca3a86b20b563c087eb/node_modules/expo-router/entry-classic.js
- | import "expo-router/build/renderRootComponent"
-
- node_modules/.pnpm/expo-router@58.0.29_patch_hash=231e96fb0587925929e716eb079a37f4cd6f0bc8a9dad0bbb62cfece_ec17e538f314aca3a86b20b563c087eb/node_modules/expo-router/entry.js
- | import "expo-router/entry-classic"
-
- index.ts
- | import "expo-router/entry"
-
- 
- | import "./index.ts"
-
+Exported: dist-web
 ```
 
 ## gate log (tail)
 ```
-[gate] upstream/dist-web/index.html not found
+[gate] gated 3 script(s):
+  - /_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
+  - /_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js
+  - /_expo/static/js/web/index-a3ce0e6b0556238491560dedc2e7cfb4.js
 ```
 
 ## smoke log (tail)
 ```
+```
+
+## interaction
+```
+privacy accept clicked: false
+privacy button not found; continuing anyway
+skip setup clicked: false
 onboarding dismissed: false
 ```
 
 ## reload (persistence)
 ```
 - sqlite: unset
-- elapsed: 22059 ms
+- elapsed: 22063 ms
 - welcome screen returned: false
-- text: not found
+- text: (empty)
 ```
 
 ## startup stages
 - none logged
 
-## console tail (3 messages)
-- [error] Failed to load resource: the server responded with a status of 404 (Not Found)
-- [error] Failed to load resource: the server responded with a status of 404 (Not Found)
-- [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+## console tail (0 messages)
 
-## page errors (0)
+## page errors (2)
+- Invalid or unexpected token
+- Invalid or unexpected token
 
-## console errors (3)
-- Failed to load resource: the server responded with a status of 404 (Not Found)
-- Failed to load resource: the server responded with a status of 404 (Not Found)
-- Failed to load resource: the server responded with a status of 404 (Not Found)
+## console errors (0)
 
 ## unknown module analysis (0)
 - no mapping recovered
 
-## bad responses (3)
-- 404 http://127.0.0.1:8099/
-- 404 http://127.0.0.1:8099/favicon.ico
-- 404 http://127.0.0.1:8099/
+## bad responses (0)
 
 ## failed requests (0)
 
@@ -172,12 +163,32 @@ onboarding dismissed: false
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 12 16:43 .
-drwxr-xr-x 3 runner runner   4096 Nov 12 16:43 ..
--rw-r--r-- 1 runner runner 656872 Nov 12 16:43 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 12 16:43 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 12 23:04 .
+drwxr-xr-x 5 runner runner   4096 Nov 12 23:04 ..
+-rw-r--r-- 1 runner runner 656872 Nov 12 23:04 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 12 23:04 sqlite3.wasm
 
 ## js chunks
+./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
+./_expo/static/js/web/pair-572cbb462346ec431aa51c0feedf9155.js
+./_expo/static/js/web/web-search-4f2211264c029c9f086f8c3d1ed06749.js
+./_expo/static/js/web/edit-46fb22ca5ce19efeb4d4a873ff6a7d1d.js
+./_expo/static/js/web/files-b5c23b002187edf3bb1c0e5006870358.js
+./_expo/static/js/web/desktop-sync-a492c756b4f6b96a0cbd05b0fec649e2.js
+./_expo/static/js/web/_layout-7c1581799993158806dec9da7b066143.js
+./_expo/static/js/web/index-214c563e120a3d87bd42c1477284c679.js
+./_expo/static/js/web/index-7138a22aa47bae477da6d48bfc17bc6b.js
+./_expo/static/js/web/provider-sync-85c961b359e018527b4228fc31dbb733.js
+./_expo/static/js/web/about-3e7b1c4aa927d4fef7467f6fe592ac16.js
+./_expo/static/js/web/azure-openai-responses-6e60b218fc2dc965d2ff308c59ff46bb.js
+./_expo/static/js/web/notifications-a735af5eec661f818f20e4a32d143f06.js
+./_expo/static/js/web/trash-7a2d54b1df167f084938b0b608e53964.js
+./_expo/static/js/web/_layout-21ae8887fe29682e0dc834c60b3dee2a.js
+./_expo/static/js/web/index-111d425fada28c54842dffc7bcece297.js
+./_expo/static/js/web/new-96e6ba2bffcd3bf28901f0c9003f0285.js
+./_expo/static/js/web/templates-c329eddff042fbbb2fe773d23051c9fe.js
+./_expo/static/js/web/privacy-f174e89ff118fc51905afe72f1fcb4c3.js
+./_expo/static/js/web/[marketplaceId]-b49bb394baa9942d3608c70fdb22cb1f.js
 
 ## wasm assets
 ./sqlite3/sqlite3.wasm
@@ -186,23 +197,23 @@ drwxr-xr-x 3 runner runner   4096 Nov 12 16:43 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 46233 ms (first non-empty paint: 1159)
-- dom nodes: 5
-- title: 
-- verdict: FAIL: #root has no children | FAIL: body text too short | FAIL: sqlite backend state = unset
-- #root children: -1 | body text length: 9
+- boot wait: 47399 ms (first non-empty paint: never)
+- dom nodes: 14
+- title: Cherry Studio
+- verdict: FAIL: #root has no children | FAIL: body text too short | FAIL: sqlite backend state = unset | FAIL: 2 uncaught page error(s)
+- #root children: 0 | body text length: 0
 - sqlite backend: unset
-- crossOriginIsolated: false | SAB: false | Worker: true
+- crossOriginIsolated: true | SAB: true | Worker: true
 - hardwareConcurrency: 4
 
 ## body excerpt
 ```
-not found
+(empty)
 ```
 
 ## react fiber tree
 ```
-no #root
+no container fiber key: 
 ```
 
 ## #root html
@@ -221,33 +232,26 @@ onboarding dismissed: false
 ## reload (persistence)
 ```
 - sqlite: unset
-- elapsed: 22059 ms
+- elapsed: 22063 ms
 - welcome screen returned: false
-- text: not found
+- text: (empty)
 ```
 
 ## startup stages
 - none logged
 
-## console tail (3 messages)
-- [error] Failed to load resource: the server responded with a status of 404 (Not Found)
-- [error] Failed to load resource: the server responded with a status of 404 (Not Found)
-- [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+## console tail (0 messages)
 
-## page errors (0)
+## page errors (2)
+- Invalid or unexpected token
+- Invalid or unexpected token
 
-## console errors (3)
-- Failed to load resource: the server responded with a status of 404 (Not Found)
-- Failed to load resource: the server responded with a status of 404 (Not Found)
-- Failed to load resource: the server responded with a status of 404 (Not Found)
+## console errors (0)
 
 ## unknown module analysis (0)
 - no mapping recovered
 
-## bad responses (3)
-- 404 http://127.0.0.1:8099/
-- 404 http://127.0.0.1:8099/favicon.ico
-- 404 http://127.0.0.1:8099/
+## bad responses (0)
 
 ## failed requests (0)
 
