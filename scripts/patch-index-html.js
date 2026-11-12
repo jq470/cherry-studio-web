@@ -3,14 +3,14 @@
  * Inject the boot gate into an exported index.html.
  *
  * Why this exists: `expo-sqlite`'s synchronous API (`openDatabaseSync`) needs a
- * ready sql.js runtime *at call time*, but sql.js can only be initialised
- * asynchronously (WASM instantiation). Blocking inside a synchronous call does
- * not work - a synchronous XHR pump does not drain the microtask queue (measured
- * in headless Chromium: 20s of pumping, zero progress). Therefore the wait is
- * moved to page load: this gate initialises sql.js and preloads the IndexedDB
+ * ready SQLite WASM runtime *at call time*, but it can only be initialised
+ * asynchronously (WASM instantiation). Blocking inside a synchronous call does not
+ * work - a synchronous XHR pump does not drain the microtask queue (measured in
+ * headless Chromium: 20s of pumping, zero progress). Therefore the wait is moved
+ * to page load: this gate initialises the runtime and preloads the IndexedDB
  * payloads, and only then injects the app bundle. By the time app code runs,
- * `globalThis.__SQLJS_MODULE__` and `globalThis.__CHERRY_PRELOAD__` are present,
- * so `openDatabaseSync` is genuinely synchronous.
+ * `globalThis.__SQLITE3__` and `globalThis.__CHERRY_PRELOAD__` are present, so
+ * `openDatabaseSync` is genuinely synchronous.
  *
  * Usage: node scripts/patch-index-html.js <dist-dir>
  */
@@ -35,6 +35,10 @@ const SCRIPT_RE = /<script\b[^>]*\bsrc="([^"]+_expo\/static\/js\/web\/[^"]+\.js)
 const found = [...html.matchAll(SCRIPT_RE)];
 
 if (!found.length) {
+  if (html.includes('cherry-web-gate')) {
+    console.log('[gate] already gated, nothing to do');
+    process.exit(0);
+  }
   console.error('[gate] no expo web entry scripts found in index.html');
   process.exit(1);
 }
@@ -59,7 +63,8 @@ for (const entry of entries) console.log(`  - ${entry}`);
 function buildGate(scripts) {
   return `(function () {
   var scripts = ${JSON.stringify(scripts)};
-  var SQLJS_DIR = 'sqljs/';
+  // Absolute URL: dynamic import() treats a bare specifier as a package name.
+  var SQLITE_DIR = new URL('sqlite3/', document.baseURI).href;
 
   function log() {
     try { console.log.apply(console, ['[web-gate]'].concat([].slice.call(arguments))); } catch (error) {}
@@ -132,21 +137,25 @@ function buildGate(scripts) {
     });
   }
 
-  function boot() {
-    var sqliteReady = loadScript(SQLJS_DIR + 'sql-wasm.js')
-      .then(function () {
-        var init = window.initSqlJs;
-        if (typeof init !== 'function') throw new Error('initSqlJs missing');
-        return withTimeout(init({ locateFile: function (file) { return SQLJS_DIR + file; } }), 30000, 'sql.js init');
-      })
+  function loadSqlite() {
+    return Promise.resolve()
+      .then(function () { return import(SQLITE_DIR + 'index.mjs'); })
       .then(function (mod) {
-        window.__SQLJS_MODULE__ = mod;
+        // The package's default export is the init function: sqlite3InitModule.
+        return mod.default({ print: function () {}, printErr: function () {} });
+      });
+  }
+
+  function boot() {
+    var sqliteReady = withTimeout(loadSqlite(), 30000, 'sqlite wasm init')
+      .then(function (sqlite3) {
+        window.__SQLITE3__ = sqlite3;
         window.__CHERRY_SQLITE__ = 'ready';
-        log('sql.js ready');
+        log('sqlite ready');
       })
       .catch(function (error) {
         window.__CHERRY_SQLITE__ = 'failed:' + (error && error.message ? error.message : error);
-        log('sql.js init failed', error);
+        log('sqlite init failed', error);
       });
 
     return sqliteReady

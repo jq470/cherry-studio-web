@@ -8,13 +8,38 @@ This repository contains **no application code**. It is an overlay: CI clones up
 
 ```
 upstream (pinned commit, cloned in CI)
-   + overlay/src/web-shims/*        # browser implementations for native modules
-   + scripts/patch-app-config.js    # expo.web.output = single
-   + scripts/patch-metro.js         # shim resolver + RN internals + RNW packaging fix
-   = expo export --platform web -> dist-web
+  + overlay/src/web-shims/*      # browser implementations for native modules
+  + scripts/patch-app-config.js  # expo.web.output = single
+  + scripts/patch-metro.js       # shim resolver + RN internals + RNW packaging fix
+  = expo export --platform web -> dist-web
+  + scripts/patch-index-html.js  # boot gate: SQLite WASM before the app bundle
+  + sqlite3/{index.mjs,sqlite3.wasm}   # vendored in CI
 ```
 
 Nothing under upstream's `src/` is ever modified. Business code stays untouched.
+
+## Why a boot gate instead of a polyfill
+
+The app calls `openDatabaseSync`. SQLite WASM can only be initialised asynchronously,
+and **a synchronous call cannot wait for a Promise** - a sync-XHR pump does not drain
+the microtask queue (measured in headless Chromium: 20s of pumping, zero progress).
+So the wait lives in the page: `scripts/patch-index-html.js` rewrites `index.html` to
+hold the app bundle until the runtime and IndexedDB payloads are ready, then injects
+the originally emitted scripts. App code then sees an already-ready runtime.
+
+## Database on web
+
+`expo-sqlite`'s official web backend runs wa-sqlite inside a Worker and blocks on
+`SharedArrayBuffer` + `Atomics`. Under a Metro static export the worker is wrapped as
+a `blob:` script and never answers, so every `openDatabaseSync()` throws
+`Sync operation timeout`. This overlay swaps in the official
+[`@sqlite.org/sqlite-wasm`](https://www.npmjs.com/package/@sqlite.org/sqlite-wasm)
+build (FTS5 + RTREE + JSON1) on the main thread, persisting the database bytes to
+IndexedDB. `INSERT ... RETURNING` works, which drizzle's `insertWithOrderKey` needs.
+
+> sql.js was tried first and rejected: its stock build has no FTS5/RTREE, and
+> `DbService.runCustomMigrations()` creates FTS5 tables on the startup path, so the
+> app could not boot.
 
 ## Run a build
 
@@ -31,43 +56,29 @@ Artifact: `cherry-studio-web` (the whole `dist-web` directory).
 
 ```bash
 node web-adaptation/static-server.js dist-web 8099
-# or, after applying the overlay into a checkout:
-node upstream/web-adaptation/static-server.js upstream/dist-web 8099
 ```
 
-`static-server.js` serves `.wasm` with the correct MIME type, sends COOP/COEP so
-`SharedArrayBuffer` remains available, and falls back to `index.html` for SPA
-routes.
+Serves `.wasm` with the correct MIME type, sends COOP/COEP, falls back to
+`index.html` for SPA routes.
 
 ## Deploy
 
-Any static host works (Cloudflare Pages, Netlify, Vercel, Nginx). Requirements:
+Static host + CORS proxy. Model providers do not send CORS headers for browser
+origins, so production needs the tiny proxy in `server/` (base URL becomes
+`https://<host>/api.openai.com/v1`). `server/cors-proxy.js` serves the SPA and proxies
+in one process; there is also a Cloudflare Worker variant. See [DEPLOY.md](DEPLOY.md).
 
-* serve at the **site root** - the bundle references `/assets/...` and `/sqljs/...`
-  with absolute paths, so a sub-path deployment 404s;
-* SPA fallback: unknown routes must return `index.html`;
-* `sqljs/sql-wasm.js` + `sqljs/sql-wasm.wasm` must be present (CI vendors them).
-
-GitHub Pages additionally needs Settings -> Pages -> Source = GitHub Actions (a one-time
-manual click; the connector has no permission to toggle it).
-
-## Database on web
-
-`expo-sqlite`'s official web backend runs wa-sqlite inside a Worker and blocks on
-`SharedArrayBuffer` + `Atomics`. Under a Metro static export the worker is wrapped
-as a `blob:` script and never answers, so the app dies with
-`Sync operation timeout`. This overlay replaces the module with **sql.js**
-(real SQLite compiled to WASM) executed on the main thread, persisting database
-bytes to IndexedDB. `INSERT ... RETURNING` works, which drizzle's
-`insertWithOrderKey` requires.
+Requirements: site-root deployment (absolute `/assets`, `/sqlite3` paths), SPA fallback,
+and `sqlite3/sqlite3.wasm` served as `application/wasm`.
 
 ## Known limitations
 
 * Camera, photo library, notifications, widgets, background tasks, native share,
   system TTS, on-device ASR, Skia canvas: stubbed out (unavailable on web).
-* Files imported through the app live in a virtual filesystem; it persists to
-  IndexedDB but does not touch the real disk.
-* No code splitting: the whole app is one bundle, so first load is heavy.
+* Files imported through the app live in a virtual filesystem backed by IndexedDB;
+  they do not touch the real disk.
+* No code splitting beyond the router's per-route chunks, so the first load is heavy.
+* Provider API calls need the CORS proxy; a direct browser call fails preflight.
 
 See [overlay/docs/WEB-ADAPTATION.md](overlay/docs/WEB-ADAPTATION.md) for the per-module
-rationale and [PLAN.md](PLAN.md) for the full design.
+rationale.

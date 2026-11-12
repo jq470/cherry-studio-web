@@ -21,6 +21,7 @@ permissions:
 
 env:
   UPSTREAM_SHA: 714d071096589a4144e2c4dbbbf2b6e3827b998c
+  SQLITE_WASM_VERSION: 3.54.1-build1
   EXPO_NO_TELEMETRY: '1'
   CI: '1'
 
@@ -71,16 +72,18 @@ jobs:
       - name: Inject boot gate
         run: node scripts/patch-index-html.js upstream/dist-web
 
-      - name: Vendor sql.js runtime
+      - name: Vendor SQLite WASM runtime
         working-directory: upstream
         run: |
           set -e
-          mkdir -p dist-web/sqljs
-          for f in sql-wasm.js sql-wasm.wasm; do
-            curl -fsSL -o "dist-web/sqljs/$f" "https://cdn.jsdelivr.net/npm/sql.js@1.13.0/dist/$f" \
-              || curl -fsSL -o "dist-web/sqljs/$f" "https://unpkg.com/sql.js@1.13.0/dist/$f"
+          mkdir -p dist-web/sqlite3
+          base="https://cdn.jsdelivr.net/npm/@sqlite.org/sqlite-wasm@${SQLITE_WASM_VERSION}/dist"
+          for f in index.mjs sqlite3.wasm; do
+            curl -fsSL -o "dist-web/sqlite3/$f" "$base/$f" \
+              || curl -fsSL -o "dist-web/sqlite3/$f" "https://unpkg.com/@sqlite.org/sqlite-wasm@${SQLITE_WASM_VERSION}/dist/$f"
+            test -s "dist-web/sqlite3/$f"
           done
-          ls -la dist-web/sqljs
+          ls -la dist-web/sqlite3
 
       - name: Verify bundle output
         working-directory: upstream
@@ -94,6 +97,7 @@ jobs:
           test "$html" -ge 1 || { echo "::error::no html entry in dist-web"; exit 1; }
           test "$size" -ge 1 || { echo "::error::bundle suspiciously small"; exit 1; }
           grep -q 'cherry-web-gate' dist-web/index.html || { echo "::error::boot gate not injected"; exit 1; }
+          test -s dist-web/sqlite3/index.mjs || { echo "::error::sqlite3 runtime missing"; exit 1; }
 
       - name: Start static server
         run: |
@@ -111,11 +115,13 @@ jobs:
           echo "index.html -> $code"
           test "$code" = "200" || { echo "::error::index.html not served"; exit 1; }
           curl -s http://127.0.0.1:8099/ | grep -q 'cherry-web-gate' || { echo "::error::boot gate missing"; exit 1; }
-          curl -s http://127.0.0.1:8099/ | grep -q '<script' || { echo "::error::no scripts at all"; exit 1; }
-          for f in sqljs/sql-wasm.js sqljs/sql-wasm.wasm; do
+          for f in sqlite3/index.mjs sqlite3/sqlite3.wasm; do
             scode=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:8099/$f")
             echo "$f -> $scode"; test "$scode" = "200" || { echo "::error::$f missing"; exit 1; }
           done
+          ctype=$(curl -s -o /dev/null -w '%{content_type}' http://127.0.0.1:8099/sqlite3/sqlite3.wasm)
+          echo "wasm content-type -> $ctype"
+          case "$ctype" in application/wasm*) ;; *) echo "::error::bad wasm mime"; exit 1 ;; esac
 
       - name: Install smoke driver
         run: npm i --no-save --no-audit --no-fund puppeteer-core@24
@@ -139,8 +145,8 @@ jobs:
             echo "- size: $(du -sm upstream/dist-web 2>/dev/null | cut -f1 || echo 0) MB"
             echo "- files: $(find upstream/dist-web -type f 2>/dev/null | wc -l)"
             echo
-            echo "## sql.js runtime"
-            ls -la upstream/dist-web/sqljs 2>/dev/null || echo "missing"
+            echo "## sqlite3 runtime"
+            ls -la upstream/dist-web/sqlite3 2>/dev/null || echo "missing"
             echo
             echo "## js chunks"
             find upstream/dist-web -name '*.js' -type f 2>/dev/null | sed "s|upstream/dist-web|.|" | head -20
