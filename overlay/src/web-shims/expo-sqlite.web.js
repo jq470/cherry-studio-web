@@ -1,31 +1,33 @@
-// expo-sqlite on web, backed by sql.js (real SQLite compiled to WASM) on the main thread.
+// expo-sqlite on web, backed by the official SQLite WASM build
+// (@sqlite.org/sqlite-wasm 3.54.x, FTS5 + RTREE + JSON1 enabled) on the main thread.
 //
 // Why not the official web build: expo-sqlite/web runs wa-sqlite inside a Worker
 // and blocks the main thread on SharedArrayBuffer + Atomics (`invokeWorkerSync`).
 // Under a Metro static export the worker is wrapped in a `blob:` script and never
 // answers, so every openDatabaseSync() throws `Sync operation timeout` and the app
-// dies on StartupFailureScreen. sql.js is synchronous SQLite, supports
-// `INSERT ... RETURNING` (drizzle's insertWithOrderKey needs a returned row), and
-// needs no worker, no SAB, no COOP/COEP.
+// dies on StartupFailureScreen.
 //
-// Sync-vs-async bridge: sql.js can only be initialised asynchronously, while
+// Why not sql.js: its stock build ships without FTS5 and RTREE ("no such module:
+// fts5"), and DbService.runCustomMigrations() unconditionally executes FTS5 DDL on
+// the startup critical path - the app cannot boot. The official build has both.
+//
+// Sync-vs-async bridge: SQLite WASM can only be initialised asynchronously, while
 // bootstrap calls `openDatabaseSync`. Waiting inside a synchronous call is
 // impossible (a sync-XHR pump does not drain the microtask queue - measured in
 // headless Chromium: 20s pumping, zero progress). So the wait lives in the page:
-// index.html's boot gate (scripts/patch-index-html.js) initialises sql.js and
+// index.html's boot gate (scripts/patch-index-html.js) initialises the runtime and
 // preloads IndexedDB, then injects the app bundle. This module just adopts that
 // done state on evaluation, which keeps the API genuinely synchronous.
 //
-// Persistence: after writes the database bytes are exported and stored in
-// IndexedDB (`cherry-studio-sqlite` / `databases`), keyed by database name, and
-// restored before the next open. `pagehide` / hidden visibility flushes.
+// Persistence: after writes the database is exported and stored in IndexedDB
+// (`cherry-studio-sqlite` / `databases`), keyed by database name, and restored
+// before the next open. `pagehide` / hidden visibility flushes.
 'use strict';
 
-const SQLJS_VERSION = '1.13.0';
 const IDB_NAME = 'cherry-studio-sqlite';
 const IDB_STORE = 'databases';
 
-let runtime = null; // sql.js module, exposes Database
+let runtime = null; // sqlite3 module (oo1 + capi + wasm)
 let readyState = 0; // 0 loading, 1 ready, 2 failed
 let readyError = null;
 let preloadDone = false;
@@ -37,14 +39,6 @@ const fsSizes = new Map(); // file uri -> byte length, for expo-file-system size
 
 if (typeof globalThis !== 'undefined') {
   globalThis.__CHERRY_DB_FILES__ = fsSizes;
-}
-
-function originRoot() {
-  try {
-    return new URL('/', location.href).href;
-  } catch {
-    return '/';
-  }
 }
 
 function markReady(mod) {
@@ -59,29 +53,12 @@ function markFailed(err) {
   globalThis.__CHERRY_SQLITE__ = `failed:${readyError.message}`;
 }
 
-async function fetchText(url) {
-  const response = await fetch(url, { credentials: 'same-origin' });
-  if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
-  return response.text();
-}
-
+// The runtime is injected by the page boot gate; a bundled `import()` would be
+// rewritten by Metro, and no other load path is needed for the static build.
 async function boot() {
-  const local = `${originRoot()}sqljs/`;
-  const cdn = `https://cdn.jsdelivr.net/npm/sql.js@${SQLJS_VERSION}/dist/`;
-  let base = local;
-  let code;
-  try {
-    code = await fetchText(`${local}sql-wasm.js`);
-  } catch {
-    base = cdn;
-    code = await fetchText(`${cdn}sql-wasm.js`);
-  }
-  // sql-wasm.js declares `var initSqlJs`; evaluate it as a function body and hand
-  // the symbol back (a <script> tag would be blocked by COEP cross-origin).
-  const init = new Function(`${code}\n;return typeof initSqlJs !== 'undefined' ? initSqlJs : undefined;`)();
-  if (typeof init !== 'function') throw new Error('sql.js did not expose initSqlJs');
-  const mod = await init({ locateFile: (file) => base + file });
-  markReady(mod);
+  throw new Error(
+    'sqlite runtime is provided by the index.html boot gate (scripts/patch-index-html.js)',
+  );
 }
 
 function toBytes(value) {
@@ -93,14 +70,14 @@ function toBytes(value) {
   return null;
 }
 
-// The static index.html boot gate initialises sql.js and preloads IndexedDB
+// The index.html boot gate initialises SQLite WASM and preloads IndexedDB
 // *before* the app bundle runs. That is the only way to have a synchronous
 // SQLite API on the main thread: waiting for a Promise inside a synchronous
 // call cannot work (a sync-XHR pump does not drain the microtask queue - proven
 // in headless Chromium: 20s of pumping, zero progress).
 function adoptPreload() {
   const pre = globalThis.__CHERRY_PRELOAD__;
-  if (globalThis.__SQLJS_MODULE__) markReady(globalThis.__SQLJS_MODULE__);
+  if (globalThis.__SQLITE3__) markReady(globalThis.__SQLITE3__);
   if (pre && pre.sqlite && typeof pre.sqlite.forEach === 'function') {
     pre.sqlite.forEach((value, key) => {
       const bytes = toBytes(value);
@@ -109,6 +86,26 @@ function adoptPreload() {
     preloadDone = true;
   }
   return readyState === 1;
+}
+
+// ---------------------------------------------------------------------------
+// engine helpers (OO1 API)
+// ---------------------------------------------------------------------------
+
+function createHandle(bytes) {
+  const db = new runtime.oo1.DB(':memory:', 'c');
+  if (bytes && bytes.length) {
+    const ptr = runtime.wasm.allocFromTypedArray(bytes);
+    const flags =
+      runtime.capi.SQLITE_DESERIALIZE_FREEONCLOSE | runtime.capi.SQLITE_DESERIALIZE_RESIZEABLE;
+    const rc = runtime.capi.sqlite3_deserialize(db.pointer, 'main', ptr, bytes.length, bytes.length, flags);
+    if (rc !== 0) throw new Error(`sqlite3_deserialize failed with rc=${rc}`);
+  }
+  return db;
+}
+
+function exportHandle(handle) {
+  return runtime.capi.sqlite3_js_db_export(handle);
 }
 
 // ---------------------------------------------------------------------------
@@ -181,7 +178,7 @@ function flushPersist() {
     if (!db._dirty || db._closed) continue;
     db._dirty = false;
     try {
-      const bytes = db._handle.export();
+      const bytes = exportHandle(db._handle);
       pendingWrites.set(db._name, bytes);
       // Two key forms: the shim registry keeps `file://` URIs, the filesystem
       // shim works on plain absolute paths.
@@ -218,12 +215,12 @@ if (typeof addEventListener === 'function') {
 function waitForReadySync() {
   if (readyState === 1 && preloadDone) return runtime;
   if (readyState === 2) throw readyError;
-  if (readyState === 0 && globalThis.__SQLJS_MODULE__) {
-    markReady(globalThis.__SQLJS_MODULE__);
+  if (readyState === 0 && globalThis.__SQLITE3__) {
+    markReady(globalThis.__SQLITE3__);
     if (readyState === 1 && preloadDone) return runtime;
   }
   throw new Error(
-    'sql.js runtime is not ready: the static index.html boot gate did not run. ' +
+    'sqlite runtime is not ready: the static index.html boot gate did not run. ' +
       'Patch index.html after `expo export` (scripts/patch-index-html.js).',
   );
 }
@@ -244,6 +241,15 @@ function normalizeValue(value) {
   if (typeof value === 'boolean') return value ? 1 : 0;
   if (value instanceof ArrayBuffer) return new Uint8Array(value);
   return value;
+}
+
+// OO1 throws "This statement has no bindable parameters" for bind([]) on SQL
+// without placeholders, which is the common case for DDL and plain SELECTs.
+function shouldBind(bound) {
+  if (bound === undefined || bound === null) return false;
+  if (Array.isArray(bound)) return bound.length > 0;
+  if (typeof bound === 'object') return Object.keys(bound).length > 0;
+  return true;
 }
 
 function normalizeParams(params) {
@@ -291,7 +297,7 @@ class SQLiteStatement {
     try {
       stmt.reset();
       const bound = normalizeParams(params);
-      if (bound !== undefined) stmt.bind(bound);
+      if (shouldBind(bound)) stmt.bind(bound);
       this._positioned = stmt.step();
       this.changes = this.database._rowsModified();
       this.lastInsertRowId = this.database._lastInsertRowId();
@@ -314,7 +320,7 @@ class SQLiteStatement {
 
   bindSync(params) {
     const bound = normalizeParams(params);
-    if (bound !== undefined) this._prepare().bind(bound);
+    if (shouldBind(bound)) this._prepare().bind(bound);
     return this;
   }
 
@@ -333,7 +339,7 @@ class SQLiteStatement {
     if (!this._stmt) return rows;
     let hasRow = this._positioned;
     while (hasRow) {
-      rows.push(this._raw ? Array.from(this._stmt.get()) : this._stmt.getAsObject());
+      rows.push(this._raw ? this._stmt.get([]) : this._stmt.get({}));
       hasRow = this._stmt.step();
     }
     this._positioned = false;
@@ -342,7 +348,7 @@ class SQLiteStatement {
 
   getFirstSync() {
     if (!this._stmt || !this._positioned) return undefined;
-    const row = this._raw ? Array.from(this._stmt.get()) : this._stmt.getAsObject();
+    const row = this._raw ? this._stmt.get([]) : this._stmt.get({});
     this._positioned = false;
     return row;
   }
@@ -350,7 +356,7 @@ class SQLiteStatement {
   finalizeSync() {
     if (this._stmt) {
       try {
-        this._stmt.free();
+        this._stmt.finalize();
       } catch {
         /* ignore */
       }
@@ -390,7 +396,7 @@ class SQLiteDatabase {
     this._dirty = false;
     waitForReadySync();
     const bytes = restored.get(this._name);
-    this._handle = bytes ? new runtime.Database(bytes) : new runtime.Database();
+    this._handle = createHandle(bytes);
     this._rowId = this._handle.prepare('SELECT last_insert_rowid()');
     databases.set(this._name, this);
   }
@@ -405,7 +411,7 @@ class SQLiteDatabase {
 
   _rowsModified() {
     try {
-      return this._handle.getRowsModified();
+      return this._handle.changes();
     } catch {
       return 0;
     }
@@ -414,7 +420,9 @@ class SQLiteDatabase {
   _lastInsertRowId() {
     try {
       this._rowId.reset();
-      return this._rowId.step() ? Number(this._rowId.get()[0] || 0) : 0;
+      if (!this._rowId.step()) return 0;
+      const row = this._rowId.get([]);
+      return Number(row[0] || 0);
     } catch {
       return 0;
     }
@@ -429,7 +437,7 @@ class SQLiteDatabase {
   execSync(sql) {
     this._assertOpen();
     try {
-      this._handle.exec(sql);
+      this._handle.exec({ sql, multi: true });
     } catch (error) {
       if (!tolerant(sql)) throw error;
     }
@@ -477,7 +485,7 @@ class SQLiteDatabase {
     if (this._closed) return;
     flushPersist();
     try {
-      this._rowId.free();
+      this._rowId.finalize();
     } catch {
       /* ignore */
     }
@@ -532,11 +540,11 @@ class SQLiteDatabase {
   }
 
   async serialize() {
-    return this._handle.export();
+    return exportHandle(this._handle);
   }
 
   serializeSync() {
-    return this._handle.export();
+    return exportHandle(this._handle);
   }
 
   async closeAsync() {
@@ -560,13 +568,13 @@ async function backupDatabaseAsync(options = {}) {
   const source = options.sourceDatabase;
   const target = options.destDatabase;
   if (source && target && source._handle && target._handle) {
-    const bytes = source._handle.export();
+    const bytes = exportHandle(source._handle);
     try {
       target._handle.close();
     } catch {
       /* ignore */
     }
-    target._handle = new runtime.Database(bytes);
+    target._handle = createHandle(bytes);
     target._dirty = true;
     flushPersist();
     return;
@@ -607,8 +615,7 @@ async function getDatabasesAsync() {
 }
 
 function configureWeb() {
-  // Assets always come from dist-web/sqljs (or the CDN fallback); a custom
-  // wasmURL from the app is ignored.
+  // Assets always come from dist-web/sqlite3; a custom wasmURL is ignored.
 }
 
 const SQLite = {
@@ -622,8 +629,7 @@ const SQLite = {
   SQLiteStatement,
 };
 
-// Boot gate first; the async path below only covers `expo start --web` (dev),
-// where the shim's synchronous API is already unusable for the first open.
+// Boot gate first; without it the synchronous API cannot be served (dev server).
 if (!adoptPreload()) {
   boot().catch(markFailed);
   preload();
