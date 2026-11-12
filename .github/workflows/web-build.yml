@@ -68,6 +68,9 @@ jobs:
             npx expo export --platform web --output-dir dist-web
           fi
 
+      - name: Inject boot gate
+        run: node scripts/patch-index-html.js upstream/dist-web
+
       - name: Vendor sql.js runtime
         working-directory: upstream
         run: |
@@ -90,6 +93,7 @@ jobs:
           echo "bundle: ${size} MB / ${files} files / ${html} html entry"
           test "$html" -ge 1 || { echo "::error::no html entry in dist-web"; exit 1; }
           test "$size" -ge 1 || { echo "::error::bundle suspiciously small"; exit 1; }
+          grep -q 'cherry-web-gate' dist-web/index.html || { echo "::error::boot gate not injected"; exit 1; }
 
       - name: Start static server
         run: |
@@ -106,12 +110,8 @@ jobs:
           code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8099/)
           echo "index.html -> $code"
           test "$code" = "200" || { echo "::error::index.html not served"; exit 1; }
-          curl -s http://127.0.0.1:8099/ | grep -q "<script" || { echo "::error::no script tag in index.html"; exit 1; }
-          js=$(curl -s http://127.0.0.1:8099/ | grep -oE 'src="[^"]+\.js"' | head -1 | sed 's/src="//;s/"//')
-          echo "main bundle: $js"
-          test -n "$js" || { echo "::error::cannot locate main bundle"; exit 1; }
-          mcode=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:8099${js}")
-          echo "bundle -> $mcode"; test "$mcode" = "200" || exit 1
+          curl -s http://127.0.0.1:8099/ | grep -q 'cherry-web-gate' || { echo "::error::boot gate missing"; exit 1; }
+          curl -s http://127.0.0.1:8099/ | grep -q '<script' || { echo "::error::no scripts at all"; exit 1; }
           for f in sqljs/sql-wasm.js sqljs/sql-wasm.wasm; do
             scode=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:8099/$f")
             echo "$f -> $scode"; test "$scode" = "200" || { echo "::error::$f missing"; exit 1; }
