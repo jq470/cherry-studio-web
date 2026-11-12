@@ -4,13 +4,13 @@
  *
  * Why this exists: `expo-sqlite`'s synchronous API (`openDatabaseSync`) needs a
  * ready SQLite WASM runtime *at call time*, but it can only be initialised
- * asynchronously (WASM instantiation). Blocking inside a synchronous call does not
- * work - a synchronous XHR pump does not drain the microtask queue (measured in
- * headless Chromium: 20s of pumping, zero progress). Therefore the wait is moved
- * to page load: this gate initialises the runtime and preloads the IndexedDB
+ * asynchronously (WASM instantiation). Blocking inside a synchronous call does
+ * not work - a synchronous XHR pump does not drain the microtask queue (measured
+ * in headless Chromium: 20s of pumping, zero progress). Therefore the wait is
+ * moved to page load: this gate initialises the runtime and preloads the IndexedDB
  * payloads, and only then injects the app bundle. By the time app code runs,
- * `globalThis.__SQLITE3__` and `globalThis.__CHERRY_PRELOAD__` are present, so
- * `openDatabaseSync` is genuinely synchronous.
+ * `globalThis.__SQLITE3__` and `globalThis.__CHERRY_PRELOAD__` are present,
+ * so `openDatabaseSync` is genuinely synchronous.
  *
  * Usage: node scripts/patch-index-html.js <dist-dir>
  */
@@ -146,7 +146,36 @@ function buildGate(scripts) {
       });
   }
 
+  // GitHub-hosted registry/skill files do not send CORS headers for browser
+  // origins. With server/cors-proxy.js in front of the site the same path is
+  // reachable as /<host>/<path>, so rewrite only those static-content hosts.
+  var PROXIED_HOSTS = {
+    'raw.githubusercontent.com': 1,
+    'objects.githubusercontent.com': 1,
+    'api.gitcode.com': 1,
+  };
+
+  function installProxyRewrite() {
+    if (typeof window === 'undefined' || typeof window.fetch !== 'function') return;
+    var nativeFetch = window.fetch.bind(window);
+    window.fetch = function (input, init) {
+      try {
+        var url = typeof input === 'string' ? input : input && input.url;
+        if (url) {
+          var parsed = new URL(url, location.href);
+          if (PROXIED_HOSTS[parsed.hostname] && parsed.origin !== location.origin) {
+            return nativeFetch(location.origin + '/' + parsed.hostname + parsed.pathname + parsed.search, init);
+          }
+        }
+      } catch (error) {
+        /* fall through to the original request */
+      }
+      return nativeFetch(input, init);
+    };
+  }
+
   function boot() {
+    installProxyRewrite();
     var sqliteReady = withTimeout(loadSqlite(), 30000, 'sqlite wasm init')
       .then(function (sqlite3) {
         window.__SQLITE3__ = sqlite3;
