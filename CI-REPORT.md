@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43237637038 (c6419b72ac00a1e76d344ad5780303cd0625ebb9)
+- run: 43239523817 (070dc6bf09d93cf6235645007245d004952e10c5)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - size: 45 MB
@@ -8,13 +8,14 @@
 
 ## sql.js runtime
 total 704
-drwxr-xr-x 2 runner runner   4096 Nov 12 14:32 .
-drwxr-xr-x 5 runner runner   4096 Nov 12 14:32 ..
--rw-r--r-- 1 runner runner  48788 Nov 12 14:32 sql-wasm.js
--rw-r--r-- 1 runner runner 659806 Nov 12 14:32 sql-wasm.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 12 14:43 .
+drwxr-xr-x 5 runner runner   4096 Nov 12 14:43 ..
+-rw-r--r-- 1 runner runner  48788 Nov 12 14:43 sql-wasm.js
+-rw-r--r-- 1 runner runner 659806 Nov 12 14:43 sql-wasm.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
+./_expo/static/js/web/_layout-7829f0b96fa322779c744d0a81a31055.js
 ./_expo/static/js/web/pair-572cbb462346ec431aa51c0feedf9155.js
 ./_expo/static/js/web/web-search-4f2211264c029c9f086f8c3d1ed06749.js
 ./_expo/static/js/web/edit-46fb22ca5ce19efeb4d4a873ff6a7d1d.js
@@ -33,7 +34,6 @@ drwxr-xr-x 5 runner runner   4096 Nov 12 14:32 ..
 ./_expo/static/js/web/new-96e6ba2bffcd3bf28901f0c9003f0285.js
 ./_expo/static/js/web/templates-c329eddff042fbbb2fe773d23051c9fe.js
 ./_expo/static/js/web/privacy-f174e89ff118fc51905afe72f1fcb4c3.js
-./_expo/static/js/web/[marketplaceId]-b49bb394baa9942d3608c70fdb22cb1f.js
 
 ## wasm assets
 ./sqljs/sql-wasm.wasm
@@ -42,11 +42,11 @@ drwxr-xr-x 5 runner runner   4096 Nov 12 14:32 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 20781 ms
+- boot wait: 20043 ms
 - title: Cherry Studio
-- verdict: FAIL: body text too short | FAIL: sqlite backend state = unset
+- verdict: FAIL: body text too short
 - #root children: 1 | body text length: 0
-- sqlite backend: unset
+- sqlite backend: ready
 - crossOriginIsolated: true | SAB: true | Worker: true
 - hardwareConcurrency: 4
 
@@ -70,6 +70,12 @@ drwxr-xr-x 5 runner runner   4096 Nov 12 14:32 ..
 - none
 
 ## scripts
+- http://127.0.0.1:8099/sqljs/sql-wasm.js
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
 - http://127.0.0.1:8099/_expo/static/js/web/__common-0bc6136ab1aeea68ea1a4b26cf9e6d5d.js
-- http://127.0.0.1:8099/_expo/static/js/web/index-d14c6cd759488fb13294f99ceee54c58.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-bb2c3a3026a4db5d4beac795e910a3d4.js
+- http://127.0.0.1:8099/sqljs/sql-wasm.wasm
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-7829f0b96fa322779c744d0a81a31055.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-53501e52582fd2edbc769c33d0d405e8.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-ce65163132c001c93990acf79cd18f44.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-7c1581799993158806dec9da7b066143.js
