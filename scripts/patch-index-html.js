@@ -174,7 +174,29 @@ function buildGate(scripts) {
     };
   }
 
+  // Production bundles only reach the console as minified messages, which makes
+  // a TypeError impossible to attribute. Attach the Error's own stack (chunk
+  // file + line survive minification) to the same console call.
+  function installErrorStacks() {
+    if (typeof console === 'undefined') return;
+    var nativeError = console.error.bind(console);
+    console.error = function () {
+      try {
+        var args = [].slice.call(arguments);
+        for (var i = 0; i < args.length; i += 1) {
+          var value = args[i];
+          if (value && typeof value === 'object' && typeof value.stack === 'string' && value.stack.indexOf('\n') !== -1) {
+            nativeError.apply(console, args.concat(['[stack] ' + value.stack.split('\n').slice(0, 7).join(' | ')]));
+            return;
+          }
+        }
+      } catch (error) {}
+      return nativeError.apply(console, args);
+    };
+  }
+
   function boot() {
+    installErrorStacks();
     installProxyRewrite();
     var sqliteReady = withTimeout(loadSqlite(), 30000, 'sqlite wasm init')
       .then(function (sqlite3) {

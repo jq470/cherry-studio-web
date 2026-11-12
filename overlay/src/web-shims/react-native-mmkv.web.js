@@ -62,6 +62,12 @@ class MMKV {
     return value instanceof ArrayBuffer ? value : undefined;
   }
 
+  // The v4 API has no generic getter, but keep one so a caller reaching for it
+  // gets the stored value instead of "undefined is not a function".
+  get(key) {
+    return this._read(key);
+  }
+
   contains(key) {
     const storage = this._storage();
     return Boolean(storage && storage.getItem(this._prefix + key) !== null);
@@ -81,6 +87,12 @@ class MMKV {
   delete(key) {
     const storage = this._storage();
     if (storage) storage.removeItem(this._prefix + key);
+  }
+
+  // react-native-mmkv's public API calls this `remove`; `delete` is kept because
+  // the shim shipped it first.
+  remove(key) {
+    this.delete(key);
   }
 
   clearAll() {

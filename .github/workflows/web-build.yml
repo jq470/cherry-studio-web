@@ -36,10 +36,12 @@ jobs:
       # A failed build used to leave the previous run's smoke report in place,
       # which then got embedded above "size: 0 MB" and looked like a live result.
       - name: Reset stale reports
-        run: rm -f RUNTIME-SMOKE.md CI-REPORT.md
+        run: |
+          rm -f RUNTIME-SMOKE.md CI-REPORT.md
+          echo checkout > /tmp/stage
 
       - name: Clone upstream at pinned commit
-        run: bash scripts/prepare-upstream.sh
+        run: bash scripts/prepare-upstream.sh 2>&1 | tee /tmp/clone.log; echo clone > /tmp/stage
 
       - uses: pnpm/action-setup@v4
         with:
@@ -60,10 +62,16 @@ jobs:
 
       - name: Install dependencies
         working-directory: upstream
-        run: pnpm install --frozen-lockfile --prefer-offline
+        run: |
+          set -o pipefail
+          pnpm install --frozen-lockfile --prefer-offline 2>&1 | tee /tmp/install.log
+          echo install > /tmp/stage
 
       - name: Apply web overlay
-        run: bash scripts/apply-overlay.sh
+        run: |
+          set -o pipefail
+          bash scripts/apply-overlay.sh 2>&1 | tee /tmp/overlay.log
+          echo overlay > /tmp/stage
 
       - name: Export web bundle
         working-directory: upstream
@@ -74,6 +82,7 @@ jobs:
           else
             npx expo export --platform web --output-dir dist-web 2>&1 | tee /tmp/export.log
           fi
+          echo export > /tmp/stage
 
       - name: Inject boot gate
         run: node scripts/patch-index-html.js upstream/dist-web
@@ -148,16 +157,19 @@ jobs:
             echo "- run: ${GITHUB_RUN_ID} (${GITHUB_SHA})"
             echo "- upstream: $(cd upstream && git rev-parse HEAD 2>/dev/null || echo unknown)"
             echo "- diagnostic export: ${{ inputs.diagnostic }}"
+            echo "- stage: $(cat /tmp/stage 2>/dev/null || echo checkout)"
             echo "- size: $(du -sm upstream/dist-web 2>/dev/null | cut -f1 || echo 0) MB"
             echo "- files: $(find upstream/dist-web -type f 2>/dev/null | wc -l)"
             echo
-            if [ -f /tmp/export.log ]; then
-              echo "## export log (tail)"
-              echo '```'
-              tail -n 80 /tmp/export.log
-              echo '```'
-              echo
-            fi
+            for log in export install overlay clone; do
+              if [ -f "/tmp/$log.log" ]; then
+                echo "## $log log (tail)"
+                echo '```'
+                tail -n 30 "/tmp/$log.log"
+                echo '```'
+                echo
+              fi
+            done
             echo "## sqlite3 runtime"
             ls -la upstream/dist-web/sqlite3 2>/dev/null || echo "missing"
             echo
