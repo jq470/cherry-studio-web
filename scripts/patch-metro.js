@@ -2,14 +2,14 @@
 /**
  * Patch upstream/metro.config.js so a web export resolves browser shims.
  *
- * Three layers are injected:
+ * Layers:
  *   L1  react-native/Libraries/** and react-native/src/** -> native-stub.js
  *       (the native RN core drags TurboModuleRegistry onto the web bundle)
  *   L2  behavioural shims for the modules the app actually calls
- *   L2b subpaths of those packages (pkg/sub/path) -> the same shim, so a stubbed
- *       native package cannot leak its real implementation through an internal
- *       import (e.g. @shopify/react-native-skia/lib/...). package.json probes are
- *       left untouched: Metro must parse the real manifest, not our JS shim.
+ *
+ * Exact module names only: prefix mapping was tried and broke the export, so
+ * subpaths of native packages are left to Metro until a concrete failure names
+ * one of them.
  *
  * Idempotent: a second run detects the marker and exits 0.
  */
@@ -110,21 +110,11 @@ ${ANCHOR}
         filePath: path.join(__dirname, 'src/web-shims', 'rnw-input-accessory-view.web.js'),
       };
     }
-    // Exact matches first, then the longest matching package prefix: a stubbed
-    // package's internal subpaths (e.g. @shopify/react-native-skia/lib/...) must
-    // resolve to the shim too, or they drag the real native implementation in.
-    let shimKey = webShimMap[moduleName] ? moduleName : null;
-    if (!shimKey && !moduleName.endsWith('/package.json')) {
-      for (const key of Object.keys(webShimMap)) {
-        if (moduleName.startsWith(key + '/') && (!shimKey || key.length > shimKey.length)) {
-          shimKey = key;
-        }
-      }
-    }
-    if (shimKey) {
+    const shimFile = webShimMap[moduleName];
+    if (shimFile) {
       return {
         type: 'sourceFile',
-        filePath: path.join(__dirname, 'src/web-shims', webShimMap[shimKey]),
+        filePath: path.join(__dirname, 'src/web-shims', shimFile),
       };
     }
   }
