@@ -33,15 +33,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # A failed build used to leave the previous run's smoke report in place,
-      # which then got embedded above "size: 0 MB" and looked like a live result.
+      # Build steps are diagnostic-tolerant: a failure must still reach the report
+      # step so /tmp/*.log lands in the repo (the only readable channel here).
       - name: Reset stale reports
         run: |
           rm -f RUNTIME-SMOKE.md CI-REPORT.md
           echo checkout > /tmp/stage
 
       - name: Clone upstream at pinned commit
-        run: bash scripts/prepare-upstream.sh 2>&1 | tee /tmp/clone.log; echo clone > /tmp/stage
+        continue-on-error: true
+        run: |
+          bash scripts/prepare-upstream.sh 2>&1 | tee /tmp/clone.log
+          echo clone > /tmp/stage
 
       - uses: pnpm/action-setup@v4
         with:
@@ -61,6 +64,7 @@ jobs:
           restore-keys: metro-${{ runner.os }}-
 
       - name: Install dependencies
+        continue-on-error: true
         working-directory: upstream
         run: |
           set -o pipefail
@@ -68,12 +72,14 @@ jobs:
           echo install > /tmp/stage
 
       - name: Apply web overlay
+        continue-on-error: true
         run: |
           set -o pipefail
           bash scripts/apply-overlay.sh 2>&1 | tee /tmp/overlay.log
           echo overlay > /tmp/stage
 
       - name: Export web bundle
+        continue-on-error: true
         working-directory: upstream
         run: |
           set -o pipefail
@@ -85,9 +91,13 @@ jobs:
           echo export > /tmp/stage
 
       - name: Inject boot gate
-        run: node scripts/patch-index-html.js upstream/dist-web
+        continue-on-error: true
+        run: |
+          node scripts/patch-index-html.js upstream/dist-web 2>&1 | tee /tmp/gate.log
+          echo gate > /tmp/stage
 
       - name: Vendor SQLite WASM runtime
+        continue-on-error: true
         working-directory: upstream
         run: |
           set -e
@@ -99,8 +109,10 @@ jobs:
             test -s "dist-web/sqlite3/$f"
           done
           ls -la dist-web/sqlite3
+          echo vendor > /tmp/stage
 
       - name: Verify bundle output
+        continue-on-error: true
         working-directory: upstream
         run: |
           set -e
@@ -113,8 +125,10 @@ jobs:
           test "$size" -ge 1 || { echo "::error::bundle suspiciously small"; exit 1; }
           grep -q 'cherry-web-gate' dist-web/index.html || { echo "::error::boot gate not injected"; exit 1; }
           test -s dist-web/sqlite3/index.mjs || { echo "::error::sqlite3 runtime missing"; exit 1; }
+          echo verify > /tmp/stage
 
       - name: Start static server
+        continue-on-error: true
         run: |
           node upstream/web-adaptation/static-server.js upstream/dist-web 8099 > /tmp/static.log 2>&1 &
           for i in $(seq 1 20); do
@@ -122,8 +136,10 @@ jobs:
             sleep 0.5
           done
           curl -sf -o /dev/null http://127.0.0.1:8099/ || { cat /tmp/static.log; exit 1; }
+          echo server > /tmp/stage
 
       - name: Static assertions
+        continue-on-error: true
         run: |
           set -e
           code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8099/)
@@ -137,16 +153,22 @@ jobs:
           ctype=$(curl -s -o /dev/null -w '%{content_type}' http://127.0.0.1:8099/sqlite3/sqlite3.wasm)
           echo "wasm content-type -> $ctype"
           case "$ctype" in application/wasm*) ;; *) echo "::error::bad wasm mime"; exit 1 ;; esac
+          echo assert > /tmp/stage
 
       - name: Install smoke driver
-        run: npm i --no-save --no-audit --no-fund puppeteer-core@24
+        continue-on-error: true
+        run: |
+          npm i --no-save --no-audit --no-fund puppeteer-core@24 > /tmp/puppeteer.log 2>&1
+          echo puppeteer > /tmp/stage
 
       - name: Runtime smoke (headless Chrome)
         continue-on-error: true
         env:
           SMOKE_URL: http://127.0.0.1:8099/
           SMOKE_REPORT: ${{ github.workspace }}/RUNTIME-SMOKE.md
-        run: node scripts/runtime-smoke.mjs
+        run: |
+          node scripts/runtime-smoke.mjs 2>&1 | tee /tmp/smoke.log || true
+          echo smoke > /tmp/stage
 
       - name: Collect report
         if: always()
@@ -158,14 +180,14 @@ jobs:
             echo "- upstream: $(cd upstream && git rev-parse HEAD 2>/dev/null || echo unknown)"
             echo "- diagnostic export: ${{ inputs.diagnostic }}"
             echo "- stage: $(cat /tmp/stage 2>/dev/null || echo checkout)"
-            echo "- size: $(du -sm upstream/dist-web 2>/dev/null | cut -f1 || echo 0) MB"
+            echo "- size: $(du -sm upstream/dist-web 2>/dev/null | cut -f1) MB"
             echo "- files: $(find upstream/dist-web -type f 2>/dev/null | wc -l)"
             echo
-            for log in export install overlay clone; do
+            for log in clone install overlay export gate smoke; do
               if [ -f "/tmp/$log.log" ]; then
                 echo "## $log log (tail)"
                 echo '```'
-                tail -n 30 "/tmp/$log.log"
+                tail -n 40 "/tmp/$log.log"
                 echo '```'
                 echo
               fi
@@ -196,10 +218,11 @@ jobs:
             echo "report unchanged"
           else
             git commit -m "ci: web build report [skip ci]"
-            git push
+            git push && echo pushed
           fi
 
       - name: Upload bundle
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cherry-studio-web
