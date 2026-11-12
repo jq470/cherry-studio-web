@@ -18,7 +18,7 @@
 const fs = require('fs');
 
 const target = process.argv[2] || 'upstream/metro.config.js';
-const src = fs.readFileSync(target, 'utf8');
+let src = fs.readFileSync(target, 'utf8');
 
 if (src.includes('web-shims')) {
   console.log(`[metro] ${target} already patched, skipping`);
