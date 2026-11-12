@@ -1,0 +1,7 @@
+{
+  "name": "cherry-studio-web-overlay",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Browser port overlay for CherryHQ/cherry-studio-app (config patches + platform shims)",
+  "packageManager": "pnpm@12.2.1"
+}
