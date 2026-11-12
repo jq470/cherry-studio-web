@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43325249062 (909df2ae7ebe868eb20837d765ef366a306de84d)
+- run: 43326145886 (0ac4ac32b229acef635708ad81d43bce0617eecb)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: smoke
@@ -54,7 +54,7 @@ devDependencies:
 + tsx 4.22.0
 + typescript 6.0.3
 
-Done in 48.1s using pnpm v12.2.1
+Done in 42.2s using pnpm v12.2.1
 ```
 
 ## overlay log (tail)
@@ -119,54 +119,54 @@ Exported: dist-web
 
 ## smoke log (tail)
 ```
-```
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [error] TypeError: (0 , r(...).codegenNativeComponent) is not a function [stack] TypeError: (0 , r(...).codegenNativeComponent) is not a function | at http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:22…
 
-## interaction
-```
-privacy accept clicked: false
-privacy button not found; continuing anyway
-skip setup clicked: false
-onboarding dismissed: false
-```
+## page errors (0)
 
-## reload (persistence)
-```
-- sqlite: unset
-- elapsed: 22063 ms
-- welcome screen returned: false
-- text: (empty)
-```
-
-## startup stages
-- none logged
-
-## console tail (0 messages)
-
-## page errors (2)
-- Invalid or unexpected token
-- Invalid or unexpected token
-
-## console errors (0)
+## console errors (8)
+- Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
+- Failed to load resource: net::ERR_FAILED
+- TypeError: o.get is not a function [stack] TypeError: o.get is not a function | at f (http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:5412:287) | at e.initialUpdaterRun (http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:1396…
+- Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
+- Failed to load resource: net::ERR_FAILED
+- Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
+- Failed to load resource: net::ERR_FAILED
+- TypeError: (0 , r(...).codegenNativeComponent) is not a function [stack] TypeError: (0 , r(...).codegenNativeComponent) is not a function | at http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:2261:207 | at f (http://127.0.0.1:8099/_expo/static/js/web/__expo-metr…
 
 ## unknown module analysis (0)
 - no mapping recovered
 
 ## bad responses (0)
 
-## failed requests (0)
+## failed requests (3)
+- POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
+- POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
+- POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
 
 ## workers (0)
 - none
 
 ## scripts
+- http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
+- http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-a3ce0e6b0556238491560dedc2e7cfb4.js
+- http://127.0.0.1:8099/sqlite3/sqlite3.wasm
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-53501e52582fd2edbc769c33d0d405e8.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-ce65163132c001c93990acf79cd18f44.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-7c1581799993158806dec9da7b066143.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-43a609c9e85702b33c3c35ac0a3a9a53.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-96f4b2821f567ae5339167974df76759.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-f9384db76673e101b7654ff4595eb18b.js
 ```
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 12 23:04 .
-drwxr-xr-x 5 runner runner   4096 Nov 12 23:04 ..
--rw-r--r-- 1 runner runner 656872 Nov 12 23:04 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 12 23:04 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 12 23:10 .
+drwxr-xr-x 5 runner runner   4096 Nov 12 23:10 ..
+-rw-r--r-- 1 runner runner 656872 Nov 12 23:10 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 12 23:10 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -197,65 +197,119 @@ drwxr-xr-x 5 runner runner   4096 Nov 12 23:04 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 47399 ms (first non-empty paint: never)
-- dom nodes: 14
+- boot wait: 2932 ms (first non-empty paint: 2932)
+- dom nodes: 42
 - title: Cherry Studio
-- verdict: FAIL: #root has no children | FAIL: body text too short | FAIL: sqlite backend state = unset | FAIL: 2 uncaught page error(s)
-- #root children: 0 | body text length: 0
-- sqlite backend: unset
+- verdict: PASS (no startup failure markers)
+- #root children: 1 | body text length: 140
+- sqlite backend: ready
 - crossOriginIsolated: true | SAB: true | Worker: true
 - hardwareConcurrency: 4
 
 ## body excerpt
 ```
-(empty)
+Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry
 ```
 
 ## react fiber tree
 ```
-no container fiber key: 
+HostRoot
+  o
+    t
+      Anonymous
+        f
+          f
+            Anonymous
+              Anonymous
+                Anonymous
+                  h
 ```
 
 ## #root html
 ```html
-(empty)
+<div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-105ug2t"><div class="css-g5y9jx r-13awgt0"><div aria-live="polite" class="css-g5y9jx flex-1 items-center justify-center bg-background px-8"><div class="css-g5y9jx items-center justify-center gap-4"><div class="css-g5y9jx max-w-full gap-1.5 items-center"><div dir="auto" class="css-146c3p1 text-center font-semibold text-lg text-error r-1xnzce8">Something went wrong</div><div dir="auto" class="css-146c3p1 text-center text-muted-foreground text-sm r-1xnzce8">This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it.</div></div><div class="css-g5y9jx flex-row flex-wrap items-center gap-3 justify-center"><button role="button" tabindex="0" class="css-g5y9jx r-1loqt21 r-1otgn73 flex-row items-center justify-center overflow-hidden border-0 active:opacity-80 disabled:opacity-40 bg-foreground shadow-xs rounded-full gap-2 px-4 py-2.5" type="button"><div dir="auto" class="css-146c3p1 min-w-0 shrink text-center font-medium text-base text-background">Retry</div></button></div></div></div></div></div></div></div></div></div></div></div>
 ```
 
 ## interaction
 ```
-privacy accept clicked: false
-privacy button not found; continuing anyway
-skip setup clicked: false
-onboarding dismissed: false
+privacy accept clicked: true
+skip setup clicked: true
+onboarding dismissed: true
 ```
 
 ## reload (persistence)
 ```
-- sqlite: unset
-- elapsed: 22063 ms
+- sqlite: ready
+- elapsed: 1369 ms
 - welcome screen returned: false
-- text: (empty)
+- text: Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry Cherry Studio
 ```
 
 ## startup stages
 - none logged
 
-## console tail (0 messages)
+## console tail (26 messages)
+- [log] [web-gate] sqlite ready
+- [log] [web-gate] preloaded 0 database(s), 0 file(s)
+- [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [error] Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
+- [error] Failed to load resource: net::ERR_FAILED
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [error] TypeError: o.get is not a function [stack] TypeError: o.get is not a function | at f (http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:5412:287) | at e.initialUpdaterRun (http://127.0.0.1:8099/_…
+- [error] Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
+- [error] Failed to load resource: net::ERR_FAILED
+- [log] [web-gate] sqlite ready
+- [log] [web-gate] preloaded 2 database(s), 9 file(s)
+- [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [error] Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
+- [error] Failed to load resource: net::ERR_FAILED
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [error] TypeError: (0 , r(...).codegenNativeComponent) is not a function [stack] TypeError: (0 , r(...).codegenNativeComponent) is not a function | at http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:22…
 
-## page errors (2)
-- Invalid or unexpected token
-- Invalid or unexpected token
+## page errors (0)
 
-## console errors (0)
+## console errors (8)
+- Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
+- Failed to load resource: net::ERR_FAILED
+- TypeError: o.get is not a function [stack] TypeError: o.get is not a function | at f (http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:5412:287) | at e.initialUpdaterRun (http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:1396…
+- Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
+- Failed to load resource: net::ERR_FAILED
+- Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
+- Failed to load resource: net::ERR_FAILED
+- TypeError: (0 , r(...).codegenNativeComponent) is not a function [stack] TypeError: (0 , r(...).codegenNativeComponent) is not a function | at http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js:2261:207 | at f (http://127.0.0.1:8099/_expo/static/js/web/__expo-metr…
 
 ## unknown module analysis (0)
 - no mapping recovered
 
 ## bad responses (0)
 
-## failed requests (0)
+## failed requests (3)
+- POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
+- POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
+- POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
 
 ## workers (0)
 - none
 
 ## scripts
+- http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
+- http://127.0.0.1:8099/_expo/static/js/web/__common-8bbb6b0f921baabe7442517fba32df3c.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-a3ce0e6b0556238491560dedc2e7cfb4.js
+- http://127.0.0.1:8099/sqlite3/sqlite3.wasm
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-53501e52582fd2edbc769c33d0d405e8.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-ce65163132c001c93990acf79cd18f44.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-7c1581799993158806dec9da7b066143.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-43a609c9e85702b33c3c35ac0a3a9a53.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-96f4b2821f567ae5339167974df76759.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-f9384db76673e101b7654ff4595eb18b.js
