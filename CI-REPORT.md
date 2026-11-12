@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43329118278 (aa9d36e5e1294be7e6ff9a3bd4d8c06cd030a4aa)
+- run: 43330012275 (30f30dc52a3318f03b7e4b2e7128044691484506)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: smoke
@@ -54,7 +54,7 @@ devDependencies:
 + tsx 4.22.0
 + typescript 6.0.3
 
-Done in 46.3s using pnpm v12.2.1
+Done in 50s using pnpm v12.2.1
 ```
 
 ## overlay log (tail)
@@ -121,6 +121,7 @@ Exported: dist-web
 ## smoke log (tail)
 ```
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [error] Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
 - [error] Failed to load resource: net::ERR_FAILED
 
@@ -139,10 +140,9 @@ Exported: dist-web
 
 ## bad responses (0)
 
-## failed requests (4)
+## failed requests (3)
 - POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
 - POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
-- GET http://127.0.0.1:8099/api.gitcode.com/api/v5/repos/CherryHQ/cherry-studio/raw/v4%2Fmanifest.json?ref=x-files%2Fprovider-registry :: net::ERR_ABORTED
 - POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
 
 ## workers (0)
@@ -164,10 +164,10 @@ Exported: dist-web
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 12 23:31 .
-drwxr-xr-x 5 runner runner   4096 Nov 12 23:31 ..
--rw-r--r-- 1 runner runner 656872 Nov 12 23:31 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 12 23:31 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 12 23:38 .
+drwxr-xr-x 5 runner runner   4096 Nov 12 23:38 ..
+-rw-r--r-- 1 runner runner 656872 Nov 12 23:38 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 12 23:38 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -198,7 +198,7 @@ drwxr-xr-x 5 runner runner   4096 Nov 12 23:31 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 2069 ms (first non-empty paint: 2069)
+- boot wait: 2771 ms (first non-empty paint: 2771)
 - dom nodes: 338
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
@@ -241,7 +241,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1483 ms
+- elapsed: 1560 ms
 - welcome screen returned: false
 - text: Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
 ```
@@ -289,10 +289,9 @@ onboarding dismissed: true
 
 ## bad responses (0)
 
-## failed requests (4)
+## failed requests (3)
 - POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
 - POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
-- GET http://127.0.0.1:8099/api.gitcode.com/api/v5/repos/CherryHQ/cherry-studio/raw/v4%2Fmanifest.json?ref=x-files%2Fprovider-registry :: net::ERR_ABORTED
 - POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
 
 ## workers (0)

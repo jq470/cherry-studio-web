@@ -1,7 +1,7 @@
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 2069 ms (first non-empty paint: 2069)
+- boot wait: 2771 ms (first non-empty paint: 2771)
 - dom nodes: 338
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
@@ -44,7 +44,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1483 ms
+- elapsed: 1560 ms
 - welcome screen returned: false
 - text: Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
 ```
@@ -92,10 +92,9 @@ onboarding dismissed: true
 
 ## bad responses (0)
 
-## failed requests (4)
+## failed requests (3)
 - POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
 - POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
-- GET http://127.0.0.1:8099/api.gitcode.com/api/v5/repos/CherryHQ/cherry-studio/raw/v4%2Fmanifest.json?ref=x-files%2Fprovider-registry :: net::ERR_ABORTED
 - POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
 
 ## workers (0)
