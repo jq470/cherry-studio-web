@@ -70,11 +70,6 @@ function toBytes(value) {
   return null;
 }
 
-// The index.html boot gate initialises SQLite WASM and preloads IndexedDB
-// *before* the app bundle runs. That is the only way to have a synchronous
-// SQLite API on the main thread: waiting for a Promise inside a synchronous
-// call cannot work (a sync-XHR pump does not drain the microtask queue - proven
-// in headless Chromium: 20s of pumping, zero progress).
 function adoptPreload() {
   const pre = globalThis.__CHERRY_PRELOAD__;
   if (globalThis.__SQLITE3__) markReady(globalThis.__SQLITE3__);
@@ -180,8 +175,6 @@ function flushPersist() {
     try {
       const bytes = exportHandle(db._handle);
       pendingWrites.set(db._name, bytes);
-      // Two key forms: the shim registry keeps `file://` URIs, the filesystem
-      // shim works on plain absolute paths.
       fsSizes.set(db._uri, bytes.length);
       fsSizes.set(db._uri.replace(/^file:\/\//, ''), bytes.length);
     } catch {
@@ -420,8 +413,14 @@ class SQLiteDatabase {
   _lastInsertRowId() {
     try {
       this._rowId.reset();
-      if (!this._rowId.step()) return 0;
+      if (!this._rowId.step()) {
+        this._rowId.reset();
+        return 0;
+      }
       const row = this._rowId.get([]);
+      // Leaving the statement mid-step keeps it "active" and makes the next
+      // COMMIT fail with SQLITE_BUSY ("SQL statements in progress").
+      this._rowId.reset();
       return Number(row[0] || 0);
     } catch {
       return 0;
