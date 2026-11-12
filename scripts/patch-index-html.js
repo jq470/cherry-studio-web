@@ -187,7 +187,13 @@ function buildGate(scripts) {
         for (var i = 0; i < args.length; i += 1) {
           var value = args[i];
           if (value && typeof value === 'object' && typeof value.stack === 'string' && value.stack.indexOf(NL) !== -1) {
-            nativeError.apply(console, args.concat(['[stack] ' + value.stack.split(NL).slice(0, 7).join(' | ')]));
+            nativeError.apply(console, args);
+            // One line per frame: the smoke report truncates long messages, and a
+            // joined stack hides exactly the frame that names the module.
+            var frames = value.stack.split(NL).slice(0, 14);
+            for (var j = 0; j < frames.length; j += 1) {
+              try { console.log('[stack-frame] ' + frames[j].slice(0, 220)); } catch (error) {}
+            }
             return;
           }
         }
