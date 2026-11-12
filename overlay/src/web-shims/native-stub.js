@@ -4,7 +4,7 @@
 // reaches it behind a `Platform.OS !== 'web'` guard or a
 // `requireOptionalNativeModule()` null-check. Without a module to resolve, the
 // whole web bundle fails. These packages are never actually exercised on the
-// web path, so a universal no-op namespace is enough - one file instead of a
+// web path, so a universal no-op namespace is enough — one file instead of a
 // dozen near-identical empty files.
 //
 // Design notes:
@@ -12,7 +12,7 @@
 //     hanging forever on a fake thenable.
 //   * Property reads return further stubs, so `X.foo.bar()` never throws.
 //   * Called with something that looks like React props it returns `null`,
- //     which keeps `X()` usable as a JSX component (React renders nothing).
+//     which keeps `X()` usable as a JSX component (React renders nothing).
 'use strict';
 
 function createStub(label, overrides) {
@@ -37,6 +37,13 @@ function createStub(label, overrides) {
       if (key === 'toJSON') return () => ({});
       if (typeof key === 'string' && Object.prototype.hasOwnProperty.call(base, key)) {
         return base[key];
+      }
+      // Properties assigned onto the stub itself (module.exports.createStub,
+      // .default, ...) must win over synthesized children, otherwise requiring
+      // this module hands out a fake `createStub` and every real shim silently
+      // becomes a null-rendering stub — which removes the whole React tree.
+      if (typeof key === 'string' && Object.prototype.hasOwnProperty.call(target, key)) {
+        return target[key];
       }
       return child(key);
     },
