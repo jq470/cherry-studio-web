@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43241528063 (95d7f506a2af7052af9d37527ca91ad0113c9ab4)
+- run: 43242713576 (df24c8a0dec9b73b8c9376371d6d54b32c08b399)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - size: 46 MB
@@ -8,10 +8,10 @@
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 12 14:55 .
-drwxr-xr-x 5 runner runner   4096 Nov 12 14:55 ..
--rw-r--r-- 1 runner runner 656872 Nov 12 14:55 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 12 14:55 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 12 15:01 .
+drwxr-xr-x 5 runner runner   4096 Nov 12 15:01 ..
+-rw-r--r-- 1 runner runner 656872 Nov 12 15:01 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 12 15:01 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -42,7 +42,8 @@ drwxr-xr-x 5 runner runner   4096 Nov 12 14:55 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 17201 ms
+- boot wait: 47141 ms (first non-empty paint: never)
+- dom nodes: 19
 - title: Cherry Studio
 - verdict: FAIL: body text too short
 - #root children: 1 | body text length: 0
@@ -55,26 +56,35 @@ drwxr-xr-x 5 runner runner   4096 Nov 12 14:55 ..
 (empty)
 ```
 
+## #root html
+```html
+<div class="css-g5y9jx r-13awgt0"></div>
+```
+
+## startup stages
+- none logged
+
+## console tail (2 messages)
+- [log] [web-gate] sqlite ready
+- [log] [web-gate] preloaded 0 database(s), 0 file(s)
+
 ## page errors (0)
 
 ## console errors (0)
 
-## unknown module analysis (0)
-- no mapping recovered
-
-## bad responses (0)
-
-## failed requests (0)
+## warnings (0)
 
 ## workers (0)
 - none
+
+## failed requests (0)
+
+## bad responses (0)
 
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
 - http://127.0.0.1:8099/_expo/static/js/web/__common-0bc6136ab1aeea68ea1a4b26cf9e6d5d.js
 - http://127.0.0.1:8099/_expo/static/js/web/index-e9f8b146111dafe53ed5194a6cfbcaec.js
-- http://127.0.0.1:8099/sqlite3/sqlite3.wasm
-- http://127.0.0.1:8099/_expo/static/js/web/_layout-82541d992a13df26a728d86c319994f4.js
-- http://127.0.0.1:8099/_expo/static/js/web/_layout-53501e52582fd2edbc769c33d0d405e8.js
-- http://127.0.0.1:8099/_expo/static/js/web/_layout-ce65163132c001c93990acf79cd18f44.js
-- http://127.0.0.1:8099/_expo/static/js/web/_layout-7c1581799993158806dec9da7b066143.js
+
+## unknown module analysis (0)
+- no mapping recovered
