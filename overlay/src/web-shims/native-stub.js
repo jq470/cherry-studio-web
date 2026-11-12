@@ -4,7 +4,7 @@
 // reaches it behind a `Platform.OS !== 'web'` guard or a
 // `requireOptionalNativeModule()` null-check. Without a module to resolve, the
 // whole web bundle fails. These packages are never actually exercised on the
-// web path, so a universal no-op namespace is enough — one file instead of a
+// web path, so a universal no-op namespace is enough - one file instead of a
 // dozen near-identical empty files.
 //
 // Design notes:
@@ -12,7 +12,7 @@
 //     hanging forever on a fake thenable.
 //   * Property reads return further stubs, so `X.foo.bar()` never throws.
 //   * Called with something that looks like React props it returns `null`,
-//     which keeps `X()` usable as a JSX component (React renders nothing).
+ //     which keeps `X()` usable as a JSX component (React renders nothing).
 'use strict';
 
 function createStub(label, overrides) {
@@ -58,12 +58,10 @@ function createStub(label, overrides) {
     has() {
       return true;
     },
-    ownKeys() {
-      return [];
-    },
-    getOwnPropertyDescriptor() {
-      return { configurable: true, enumerable: true, value: undefined };
-    },
+    // No ownKeys / getOwnPropertyDescriptor traps on purpose: the Proxy target is
+    // a function, whose `name`/`length`/`prototype` are non-configurable. Reporting
+    // synthetic descriptors violates the Proxy invariants and throws
+    // "Cannot redefine property" as soon as anything assigns a property.
   });
 }
 

@@ -141,10 +141,19 @@ function toPath(value) {
   return path;
 }
 
+// Segments may be strings, URIs, or Directory/File instances
+// (`new Directory(Paths.document, 'SQLite')` passes an object).
+function partToString(part) {
+  if (part == null) return '';
+  if (typeof part === 'string') return part;
+  if (typeof part === 'object' && typeof part.uri === 'string') return part.uri;
+  return String(part);
+}
+
 function join(parts) {
   const pieces = parts
     .filter((part) => part != null && part !== '')
-    .map((part) => toPath(String(part)).replace(/^\/+|\/+$/g, ''))
+    .map((part) => toPath(partToString(part)).replace(/^\/+|\/+$/g, ''))
     .filter(Boolean);
   return `/${pieces.join('/')}`;
 }
