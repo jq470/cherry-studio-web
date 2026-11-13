@@ -19,9 +19,9 @@ ok   provider continue
 ok   model screen — Choose a chat model Edit connection Step 3 of 3 DeepSeek V4 Flash deepseek-v4-flash DeepSeek V4 Pro deepseek-v4-pro DeepSeek V4.1 Flash deepseek-flash fake-model fake-model A connection check runs before starting; a small charge may apply. 
 ok   model picked
 ok   onboarding start
-ok   home composer — http://127.0.0.1:8100/?agentId=9afe3311-a44d-48f6-8712-05ab04a2fccb
+FAIL home composer — http://127.0.0.1:8100/
 FAIL message typed — no composer input
-ok   send clicked
+FAIL send clicked
 FAIL reply received — (no reply)
 ```
 
@@ -32,5 +32,5 @@ FAIL reply received — (no reply)
 
 ## page text (last)
 ```
-Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills fake-model AI-generated content, for reference only 🍒 Cherie
+Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry
 ```
