@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43452104322 (7350bb3f988a17f4efc347626b6772ed68c91e95)
+- run: 43453708523 (c5c7bd965b2dfea9aca983bb2cb6d5b36f05b853)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: e2e
@@ -114,29 +114,29 @@ Exported: dist-web
 ```
 [gate] gated 3 script(s):
   - /_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
-  - /_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js
+  - /_expo/static/js/web/__common-2c53ed26c2164d190671879a689defee.js
   - /_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
 ```
 
 ## smoke log (tail)
 ```
-- [log] [stack-frame] TypeError: o.get is not a function
-- [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js:5410:287)
-- [log] [stack-frame] at e.initialUpdaterRun (http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js:1396:327)
-- [log] [stack-frame] at e.useAnimatedStyle (http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js:1452:453)
-- [log] [stack-frame] at _e.ChatComposerClearance (http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js:3821:459)
-- [log] [stack-frame] at _o (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:57061)
-- [log] [stack-frame] at hu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:80466)
-- [log] [stack-frame] at Iu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:91388)
-- [log] [stack-frame] at Pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:136688)
-- [log] [stack-frame] at Tf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135696)
-- [log] [stack-frame] at Nf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135538)
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [log] [web-gate] sqlite ready
+- [log] [web-gate] preloaded 2 database(s), 9 file(s)
+- [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 
 ## page errors (0)
 
-## console errors (2)
-- TypeError: o.get is not a function
-- TypeError: o.get is not a function
+## console errors (0)
 
 ## unknown module analysis (0)
 - no mapping recovered
@@ -150,7 +150,7 @@ Exported: dist-web
 
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
-- http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js
+- http://127.0.0.1:8099/_expo/static/js/web/__common-2c53ed26c2164d190671879a689defee.js
 - http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
 - http://127.0.0.1:8099/sqlite3/sqlite3.wasm
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
@@ -176,12 +176,12 @@ Exported: dist-web
 ## chat-e2e log (tail)
 ```
 ```
-ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Cherry Studio Privacy and data Cherry Studio collects a small amount of anonymous data to understand
+ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Privacy and data Cherry Studio collects a small amount of anonymous data to understand how its featu
 ok   privacy accept
 ok   connect provider
 ok   provider catalog — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show all providers Custom provider
 FAIL provider chosen
-ok   provider page — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show all providers Custom provider
+ok   provider page — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Custom provider
 FAIL api key typed — no password input
 FAIL key added
 FAIL provider continue
@@ -191,7 +191,7 @@ FAIL onboarding start
 FAIL home composer — http://127.0.0.1:8100/onboarding/provider
 FAIL message typed — no composer input
 FAIL send clicked — api requests before: 0 -> 0
-FAIL after send — api 0 -> 0 ::  :: Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show all providers Custom provider
+FAIL after send — api 0 -> 0 ::  :: Choose a provider Step 1 of 3 Choose the service your API key belongs to. Custom provider
 FAIL reply received — (no reply)
 ```
 
@@ -210,7 +210,7 @@ FAIL reply received — (no reply)
 
 ## page text (last)
 ```
-Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show all providers Custom provider
+Choose a provider Step 1 of 3 Choose the service your API key belongs to. Custom provider
 ```
 
 ## failure screenshot (base64)
@@ -219,10 +219,10 @@ Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show a
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 13 15:26 .
-drwxr-xr-x 5 runner runner   4096 Nov 13 15:26 ..
--rw-r--r-- 1 runner runner 656872 Nov 13 15:26 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 13 15:26 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 13 15:36 .
+drwxr-xr-x 5 runner runner   4096 Nov 13 15:36 ..
+-rw-r--r-- 1 runner runner 656872 Nov 13 15:36 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 13 15:36 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -253,18 +253,18 @@ drwxr-xr-x 5 runner runner   4096 Nov 13 15:26 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 2947 ms (first non-empty paint: 2947)
-- dom nodes: 43
+- boot wait: 3219 ms (first non-empty paint: 3219)
+- dom nodes: 341
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
-- #root children: 1 | body text length: 140
+- #root children: 1 | body text length: 244
 - sqlite backend: ready
 - crossOriginIsolated: true | SAB: true | Worker: true
 - hardwareConcurrency: 4
 
 ## body excerpt
 ```
-Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry
+Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Cherie
 ```
 
 ## react fiber tree
@@ -283,7 +283,7 @@ HostRoot
 
 ## #root html
 ```html
-<div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-105ug2t"><div class="css-g5y9jx r-13awgt0"><div aria-live="polite" class="css-g5y9jx flex-1 items-center justify-center bg-background px-8"><div class="css-g5y9jx items-center justify-center gap-4"><div class="css-g5y9jx max-w-full gap-1.5 items-center"><div dir="auto" class="css-146c3p1 text-center font-semibold text-lg text-error r-1xnzce8">Something went wrong</div><div dir="auto" class="css-146c3p1 text-center text-muted-foreground text-sm r-1xnzce8">This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it.</div></div><div class="css-g5y9jx flex-row flex-wrap items-center gap-3 justify-center"><button role="button" tabindex="0" class="css-g5y9jx r-1loqt21 r-1otgn73 flex-row items-center justify-center overflow-hidden border-0 active:opacity-80 disabled:opacity-40 bg-foreground shadow-xs rounded-full gap-2 px-4 py-2.5" type="button"><div dir="auto" class="css-146c3p1 min-w-0 shrink text-center font-medium text-base text-background">Retry</div></button></div></div></div></div></div></div></div></div></div></div></div>
+<div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-105ug2t"><div class="css-g5y9jx r-13awgt0"><div style="position: absolute; inset: 0px; pointer-events: none; visibility: hidden;"></div><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-1p0dtai r-1d2f490 r-u8s1d r-zchlnj r-ipm5af" style="background-color: rgb(245, 245, 245); display: flex;"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0"><div style="position: absolute; inset: 0px; pointer-events: none; visibility: hidden;"></div><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-18u37iz"><div class="css-g5y9jx r-1p0dtai r-dnmrzs r-ipm5af" style="position: relative; z-index: 1; border-right-color: rgba(0, 0, 0, 0.21); border-right-width: 1px; background-color: rgb(245, 245, 245); width: 280px;"><div class="css-g5y9jx flex-1" data-testid="sidebar" style="margin-right: 0px;"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx r-150rngu r-eqz5dr r-16y2uox r-1wbh5a2 r-11yh6sk r-1rnoaur r-agouwx r-2eszeu"><div class="css-g5y9jx" style="padding-bottom: 92px; padding-left: 0px; padding-top: 56px;"><div class="css-g5y9jx" style="opacity: 1;"><button role="button" class="css-g5y9jx" data-testid="sidebar-agents" type="button" style="cursor: pointer; user-select: none; touch-action: auto;"><div class="css-g5y9jx mx-2 flex-row items-center gap-4 rounded-xl px-3 py-2.5"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#171717" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path fill="none" stroke="#171717" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" height="18" width="18" d="M14 4.1 12 6"></path><path fill="none" stroke="#171717" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" he
 ```
 
 ## interaction
@@ -296,15 +296,17 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1562 ms
+- elapsed: 1641 ms
 - welcome screen returned: false
-- text: Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry Cherry Studio
+- text: Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
 ```
 
 ## startup stages
 - none logged
 
-## console tail (42 messages)
+## console tail (17 messages)
+- [log] [web-gate] sqlite ready
+- [log] [web-gate] preloaded 0 database(s), 0 file(s)
 - [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
@@ -313,44 +315,17 @@ onboarding dismissed: true
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
-- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
-- [error] TypeError: o.get is not a function
-- [log] [stack-frame] TypeError: o.get is not a function
-- [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js:5410:287)
-- [log] [stack-frame] at e.initialUpdaterRun (http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js:1396:327)
-- [log] [stack-frame] at e.useAnimatedStyle (http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js:1452:453)
-- [log] [stack-frame] at _e.ChatComposerClearance (http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js:3821:459)
-- [log] [stack-frame] at _o (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:57061)
-- [log] [stack-frame] at hu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:80466)
-- [log] [stack-frame] at Iu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:91388)
-- [log] [stack-frame] at Pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:136688)
-- [log] [stack-frame] at Tf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135696)
-- [log] [stack-frame] at Nf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135538)
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [log] [web-gate] sqlite ready
 - [log] [web-gate] preloaded 2 database(s), 9 file(s)
 - [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
-- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
-- [error] TypeError: o.get is not a function
-- [log] [stack-frame] TypeError: o.get is not a function
-- [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js:5410:287)
-- [log] [stack-frame] at e.initialUpdaterRun (http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js:1396:327)
-- [log] [stack-frame] at e.useAnimatedStyle (http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js:1452:453)
-- [log] [stack-frame] at _e.ChatComposerClearance (http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js:3821:459)
-- [log] [stack-frame] at _o (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:57061)
-- [log] [stack-frame] at hu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:80466)
-- [log] [stack-frame] at Iu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:91388)
-- [log] [stack-frame] at Pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:136688)
-- [log] [stack-frame] at Tf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135696)
-- [log] [stack-frame] at Nf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135538)
 
 ## page errors (0)
 
-## console errors (2)
-- TypeError: o.get is not a function
-- TypeError: o.get is not a function
+## console errors (0)
 
 ## unknown module analysis (0)
 - no mapping recovered
@@ -364,7 +339,7 @@ onboarding dismissed: true
 
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
-- http://127.0.0.1:8099/_expo/static/js/web/__common-70915f11dea280139c22d7fb6f90cd41.js
+- http://127.0.0.1:8099/_expo/static/js/web/__common-2c53ed26c2164d190671879a689defee.js
 - http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
 - http://127.0.0.1:8099/sqlite3/sqlite3.wasm
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
@@ -385,12 +360,12 @@ onboarding dismissed: true
 
 ## steps
 ```
-ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Cherry Studio Privacy and data Cherry Studio collects a small amount of anonymous data to understand
+ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Privacy and data Cherry Studio collects a small amount of anonymous data to understand how its featu
 ok   privacy accept
 ok   connect provider
 ok   provider catalog — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show all providers Custom provider
 FAIL provider chosen
-ok   provider page — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show all providers Custom provider
+ok   provider page — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Custom provider
 FAIL api key typed — no password input
 FAIL key added
 FAIL provider continue
@@ -400,7 +375,7 @@ FAIL onboarding start
 FAIL home composer — http://127.0.0.1:8100/onboarding/provider
 FAIL message typed — no composer input
 FAIL send clicked — api requests before: 0 -> 0
-FAIL after send — api 0 -> 0 ::  :: Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show all providers Custom provider
+FAIL after send — api 0 -> 0 ::  :: Choose a provider Step 1 of 3 Choose the service your API key belongs to. Custom provider
 FAIL reply received — (no reply)
 ```
 
@@ -419,7 +394,7 @@ FAIL reply received — (no reply)
 
 ## page text (last)
 ```
-Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show all providers Custom provider
+Choose a provider Step 1 of 3 Choose the service your API key belongs to. Custom provider
 ```
 
 ## failure screenshot (base64)

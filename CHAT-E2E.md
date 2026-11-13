@@ -7,12 +7,12 @@
 
 ## steps
 ```
-ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Cherry Studio Privacy and data Cherry Studio collects a small amount of anonymous data to understand
+ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Privacy and data Cherry Studio collects a small amount of anonymous data to understand how its featu
 ok   privacy accept
 ok   connect provider
 ok   provider catalog — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show all providers Custom provider
 FAIL provider chosen
-ok   provider page — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show all providers Custom provider
+ok   provider page — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Custom provider
 FAIL api key typed — no password input
 FAIL key added
 FAIL provider continue
@@ -22,7 +22,7 @@ FAIL onboarding start
 FAIL home composer — http://127.0.0.1:8100/onboarding/provider
 FAIL message typed — no composer input
 FAIL send clicked — api requests before: 0 -> 0
-FAIL after send — api 0 -> 0 ::  :: Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show all providers Custom provider
+FAIL after send — api 0 -> 0 ::  :: Choose a provider Step 1 of 3 Choose the service your API key belongs to. Custom provider
 FAIL reply received — (no reply)
 ```
 
@@ -41,7 +41,7 @@ FAIL reply received — (no reply)
 
 ## page text (last)
 ```
-Choose a provider Step 1 of 3 Choose the service your API key belongs to. Show all providers Custom provider
+Choose a provider Step 1 of 3 Choose the service your API key belongs to. Custom provider
 ```
 
 ## failure screenshot (base64)
