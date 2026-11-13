@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43375421378 (2ea35f5211c529524fa5853a6d438099276d380c)
+- run: 43376648412 (cef5c3988884e113f60341cf4a490630fe111f8e)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: smoke
@@ -54,7 +54,7 @@ devDependencies:
 + tsx 4.22.0
 + typescript 6.0.3
 
-Done in 50.8s using pnpm v12.2.1
+Done in 50.9s using pnpm v12.2.1
 ```
 
 ## overlay log (tail)
@@ -164,10 +164,10 @@ Exported: dist-web
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 13 06:01 .
-drwxr-xr-x 5 runner runner   4096 Nov 13 06:01 ..
--rw-r--r-- 1 runner runner 656872 Nov 13 06:01 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 13 06:01 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 13 06:12 .
+drwxr-xr-x 5 runner runner   4096 Nov 13 06:12 ..
+-rw-r--r-- 1 runner runner 656872 Nov 13 06:12 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 13 06:12 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -198,8 +198,8 @@ drwxr-xr-x 5 runner runner   4096 Nov 13 06:01 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 3434 ms (first non-empty paint: 3434)
-- dom nodes: 338
+- boot wait: 5089 ms (first non-empty paint: 3587)
+- dom nodes: 339
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
 - #root children: 1 | body text length: 244
@@ -241,7 +241,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1563 ms
+- elapsed: 1579 ms
 - welcome screen returned: false
 - text: Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
 ```
