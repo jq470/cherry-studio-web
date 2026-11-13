@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43371487193 (e812ac8226a3d20958b4eafca2ea27e2bcb8fa96)
+- run: 43372629320 (41605ddae1ffa935f2917d7d9e5374661da1798a)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: smoke
@@ -54,7 +54,7 @@ devDependencies:
 + tsx 4.22.0
 + typescript 6.0.3
 
-Done in 44.8s using pnpm v12.2.1
+Done in 54.4s using pnpm v12.2.1
 ```
 
 ## overlay log (tail)
@@ -122,28 +122,28 @@ Exported: dist-web
 ```
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
-- [error] Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
-- [error] Failed to load resource: net::ERR_FAILED
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [log] [web-gate] sqlite ready
+- [log] [web-gate] preloaded 2 database(s), 9 file(s)
+- [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 
 ## page errors (0)
 
-## console errors (6)
-- Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
-- Failed to load resource: net::ERR_FAILED
-- Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
-- Failed to load resource: net::ERR_FAILED
-- Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
-- Failed to load resource: net::ERR_FAILED
+## console errors (0)
 
 ## unknown module analysis (0)
 - no mapping recovered
 
 ## bad responses (0)
 
-## failed requests (3)
-- POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
-- POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
-- POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
+## failed requests (0)
 
 ## workers (0)
 - none
@@ -164,10 +164,10 @@ Exported: dist-web
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 13 05:24 .
-drwxr-xr-x 5 runner runner   4096 Nov 13 05:24 ..
--rw-r--r-- 1 runner runner 656872 Nov 13 05:24 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 13 05:24 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 13 05:35 .
+drwxr-xr-x 5 runner runner   4096 Nov 13 05:35 ..
+-rw-r--r-- 1 runner runner 656872 Nov 13 05:35 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 13 05:35 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -198,7 +198,7 @@ drwxr-xr-x 5 runner runner   4096 Nov 13 05:24 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 3395 ms (first non-empty paint: 3395)
+- boot wait: 3711 ms (first non-empty paint: 3711)
 - dom nodes: 338
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
@@ -241,7 +241,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1430 ms
+- elapsed: 1531 ms
 - welcome screen returned: false
 - text: Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
 ```
@@ -249,7 +249,7 @@ onboarding dismissed: true
 ## startup stages
 - none logged
 
-## console tail (23 messages)
+## console tail (17 messages)
 - [log] [web-gate] sqlite ready
 - [log] [web-gate] preloaded 0 database(s), 0 file(s)
 - [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
@@ -261,38 +261,23 @@ onboarding dismissed: true
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
-- [error] Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
-- [error] Failed to load resource: net::ERR_FAILED
-- [error] Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
-- [error] Failed to load resource: net::ERR_FAILED
 - [log] [web-gate] sqlite ready
 - [log] [web-gate] preloaded 2 database(s), 9 file(s)
 - [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
-- [error] Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
-- [error] Failed to load resource: net::ERR_FAILED
 
 ## page errors (0)
 
-## console errors (6)
-- Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
-- Failed to load resource: net::ERR_FAILED
-- Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
-- Failed to load resource: net::ERR_FAILED
-- Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
-- Failed to load resource: net::ERR_FAILED
+## console errors (0)
 
 ## unknown module analysis (0)
 - no mapping recovered
 
 ## bad responses (0)
 
-## failed requests (3)
-- POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
-- POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
-- POST https://analytics.cherry-ai.com/api/track :: net::ERR_FAILED
+## failed requests (0)
 
 ## workers (0)
 - none
