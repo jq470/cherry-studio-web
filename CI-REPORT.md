@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43441841310 (433b1a696bd46d07e5b52b4d20770e20c8efad79)
+- run: 43443893586 (01943cc97d9fc776b11d59809f4e4fb6804d2610)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: e2e
@@ -54,7 +54,7 @@ devDependencies:
 + tsx 4.22.0
 + typescript 6.0.3
 
-Done in 50.2s using pnpm v12.2.1
+Done in 51.9s using pnpm v12.2.1
 ```
 
 ## overlay log (tail)
@@ -174,11 +174,6 @@ Exported: dist-web
 
 ## chat-e2e log (tail)
 ```
-[e2e] FAIL home composer — http://127.0.0.1:8100/
-[e2e] FAIL message typed — no composer input
-[e2e] FAIL send clicked
-[e2e] FAIL reply received — (no reply)
-# Chat end-to-end report
 
 - url: http://127.0.0.1:8100/?e2e=1
 - verdict: FAIL
@@ -205,6 +200,11 @@ FAIL send clicked
 FAIL reply received — (no reply)
 ```
 
+## console errors
+```
+Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+```
+
 ## model screen text
 ```
 
@@ -218,10 +218,10 @@ Something went wrong This screen ran into a problem. Try again. If this keeps ha
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 13 14:24 .
-drwxr-xr-x 5 runner runner   4096 Nov 13 14:24 ..
--rw-r--r-- 1 runner runner 656872 Nov 13 14:24 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 13 14:24 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 13 14:37 .
+drwxr-xr-x 5 runner runner   4096 Nov 13 14:37 ..
+-rw-r--r-- 1 runner runner 656872 Nov 13 14:37 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 13 14:37 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -252,7 +252,7 @@ drwxr-xr-x 5 runner runner   4096 Nov 13 14:24 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 2989 ms (first non-empty paint: 2989)
+- boot wait: 5504 ms (first non-empty paint: 5504)
 - dom nodes: 43
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
@@ -295,7 +295,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1730 ms
+- elapsed: 1724 ms
 - welcome screen returned: false
 - text: Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry Cherry Studio
 ```
@@ -400,6 +400,11 @@ FAIL home composer — http://127.0.0.1:8100/
 FAIL message typed — no composer input
 FAIL send clicked
 FAIL reply received — (no reply)
+```
+
+## console errors
+```
+Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
 ```
 
 ## model screen text

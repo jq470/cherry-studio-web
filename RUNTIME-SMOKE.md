@@ -1,7 +1,7 @@
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 2989 ms (first non-empty paint: 2989)
+- boot wait: 5504 ms (first non-empty paint: 5504)
 - dom nodes: 43
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
@@ -44,7 +44,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1730 ms
+- elapsed: 1724 ms
 - welcome screen returned: false
 - text: Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry Cherry Studio
 ```

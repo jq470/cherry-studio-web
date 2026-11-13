@@ -25,6 +25,11 @@ FAIL send clicked
 FAIL reply received — (no reply)
 ```
 
+## console errors
+```
+Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+```
+
 ## model screen text
 ```
 
