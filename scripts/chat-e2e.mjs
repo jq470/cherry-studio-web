@@ -29,6 +29,7 @@ const browser = await puppeteer.launch({
 
 let replySeen = false;
 let pageText = '';
+let pickerText = '';
 let failureShot = null;
 
 try {
@@ -115,14 +116,40 @@ try {
   log('provider saved', !/加载服务商配置失败/.test(pageText), summary(pageText, 200));
 
   // Back to chat and pick the fake model.
-  await page.goto(`${ORIGIN}/`, { waitUntil: 'networkidle2', timeout: 60000 });
-  await waitFor(/(Select model|选择模型)/, 30000);
-  const openedPicker = await clickText(['Select model', '选择模型']);
+  await page.goto(`${ORIGIN}/home`, { waitUntil: 'networkidle2', timeout: 60000 });
+  const composerReady = await page
+    .waitForSelector('[data-testid="chat-composer"]', { timeout: 30000 })
+    .then(() => true)
+    .catch(() => false);
+  log('home composer', composerReady, page.url());
+  const openedPicker = await page.evaluate(() => {
+    const btn = document.querySelector('[data-testid="composer-model-button"]');
+    if (!btn) return false;
+    btn.click();
+    return true;
+  });
   log('model picker opened', openedPicker);
-  await new Promise((r) => setTimeout(r, 1200));
-  const picked = await clickText(['fake-model']);
-  log('model picked', picked);
-  await new Promise((r) => setTimeout(r, 800));
+  const pickerReady = await page
+    .waitForSelector('[data-testid="model-picker"]', { timeout: 15000 })
+    .then(() => true)
+    .catch(() => false);
+  log('model picker mounted', pickerReady);
+  pickerText = pickerReady
+    ? await page.evaluate(() => {
+        const node = document.querySelector('[data-testid="model-picker"]');
+        return node ? node.innerText : '';
+      })
+    : '';
+  log('model picker text', Boolean(pickerText), summary(pickerText, 400));
+  const picked = await page.evaluate(() => {
+    const nodes = Array.from(document.querySelectorAll('*'));
+    const target = nodes.find((node) => (node.innerText || '').trim() === 'fake-model');
+    if (!target) return false;
+    target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+    return true;
+  });
+  log('model picked', picked, summary(pickerText, 200));
+  await new Promise((r) => setTimeout(r, 1500));
 
   // Type into the composer and send.
   const inputHandle = await page.evaluateHandle(() => {
@@ -153,9 +180,10 @@ try {
   const reply = await waitFor(/pong/i, 40000);
   replySeen = Boolean(reply);
   log('reply received', replySeen, summary(reply || '(no reply)'));
+  pageText = await text();
 
   if (!replySeen) {
-    failureShot = '/tmp/chat-e2e-failure.png';
+    failureShot = 'CHAT-E2E-FAILURE.png';
     await page.screenshot({ path: failureShot, fullPage: false }).catch(() => {});
   }
 } catch (error) {
@@ -176,6 +204,11 @@ const report = [
   '## steps',
   '```',
   ...steps.map((s) => `${s.ok ? 'ok  ' : 'FAIL'} ${s.name}${s.detail ? ` — ${s.detail}` : ''}`),
+  '```',
+  '',
+  '## model picker text',
+  '```',
+  summary(pickerText, 600),
   '```',
   '',
   '## page text (last)',
