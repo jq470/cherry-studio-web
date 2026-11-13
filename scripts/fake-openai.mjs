@@ -13,6 +13,7 @@ function json(res, status, body) {
 http
   .createServer((req, res) => {
     const url = new URL(req.url, 'http://127.0.0.1');
+    console.log(`[fake-openai] ${req.method} ${url.pathname}`);
     if (req.method === 'OPTIONS') {
       res.writeHead(204, {
         'Access-Control-Allow-Origin': '*',
@@ -39,6 +40,7 @@ http
         } catch {
           /* ignore */
         }
+        console.log(`[fake-openai] stream=${stream} body=${body.slice(0, 300)}`);
         if (!stream) {
           json(res, 200, {
             id: 'chatcmpl-fake',

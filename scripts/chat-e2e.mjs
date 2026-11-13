@@ -31,8 +31,10 @@ let replySeen = false;
 let pageText = '';
 let pickerText = '';
 let failureShot = null;
+let failureShotBase64 = null;
 const consoleErrors = [];
 const apiRequests = [];
+const apiResponses = [];
 
 try {
   const page = await browser.newPage();
@@ -45,6 +47,13 @@ try {
   });
   page.on('request', (request) => {
     if (request.url().includes('api.deepseek.com')) apiRequests.push(request.url());
+  });
+  page.on('response', (response) => {
+    if (response.url().includes('api.deepseek.com')) {
+      apiResponses.push(
+        `${response.status()} ${response.headers()['content-type'] || ''} ${response.url()}`,
+      );
+    }
   });
   page.on('pageerror', (error) => {
     consoleErrors.push(`pageerror: ${summary(error && error.stack ? error.stack : error, 500)}`);
@@ -212,7 +221,10 @@ try {
 
   if (!replySeen) {
     failureShot = 'CHAT-E2E-FAILURE.png';
-    await page.screenshot({ path: failureShot, fullPage: false }).catch(() => {});
+    const shot = await page
+      .screenshot({ path: failureShot, fullPage: false, encoding: 'base64' })
+      .catch(() => null);
+    if (shot) failureShotBase64 = shot;
   }
 } catch (error) {
   log('exception', false, summary(error && error.message ? error.message : error));
@@ -234,6 +246,11 @@ const report = [
   ...steps.map((s) => `${s.ok ? 'ok  ' : 'FAIL'} ${s.name}${s.detail ? ` — ${s.detail}` : ''}`),
   '```',
   '',
+  '## api responses',
+  '```',
+  ...apiResponses.slice(-10),
+  '```',
+  '',
   '## console errors',
   '```',
   ...consoleErrors.slice(-10),
@@ -248,6 +265,9 @@ const report = [
   '```',
   summary(pageText, 1200),
   '```',
+  '',
+  '## failure screenshot (base64)',
+  failureShotBase64 ? `![failure](data:image/png;base64,${failureShotBase64})` : '',
 ].join('\n');
 
 fs.writeFileSync(REPORT, `${report}\n`);
