@@ -1,8 +1,10 @@
 // Cloudflare Worker equivalent of server/cors-proxy.js.
 //
-// Deploy on the same origin as the SPA and route /<host>/<path> through it:
-// the boot gate rewrites raw.githubusercontent.com / api.gitcode.com requests
-// to that shape because those hosts send no CORS headers.
+// Same contract: /<allowlisted-host>/<path> -> https://<allowlisted-host>/<path>.
+// Deliberately not an open proxy; extend ALLOW_HOSTS rather than dropping the
+// check. Deploy on the same origin as the SPA.
+
+const ALLOW_HOSTS = new Set(['raw.githubusercontent.com', 'objects.githubusercontent.com', 'api.gitcode.com']);
 
 export default {
   async fetch(request) {
@@ -12,18 +14,18 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders() });
     }
 
-    const match = url.pathname.match(/^\/([^/]+)(\/.*)?$/);
-    const host = match && match[1];
-    if (!host || !/^\.?[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(host)) {
+    const segment = (url.pathname.split('/')[1] || '').toLowerCase();
+    if (!ALLOW_HOSTS.has(segment)) {
       return new Response('not found', { status: 404 });
     }
 
-    const target = `https://${host}${match[2] || '/'}${url.search}`;
+    const targetPath = url.pathname.slice(segment.length) || '/';
+    const target = `https://${segment}${targetPath}${url.search}`;
     const headers = new Headers(request.headers);
     headers.delete('origin');
     headers.delete('referer');
     headers.delete('cookie');
-    headers.set('host', host);
+    headers.set('host', segment);
 
     const upstream = await fetch(target, {
       method: request.method,
