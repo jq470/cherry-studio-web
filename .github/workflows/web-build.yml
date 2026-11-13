@@ -21,7 +21,6 @@ permissions:
 
 env:
   UPSTREAM_SHA: 714d071096589a4144e2c4dbbbf2b6e3827b998c
-  SQLITE_WASM_VERSION: 3.54.1-build1
   EXPO_NO_TELEMETRY: '1'
   CI: '1'
 
@@ -33,18 +32,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Build steps are diagnostic-tolerant: a failure must still reach the report
-      # step so /tmp/*.log lands in the repo (the only readable channel here).
-      - name: Reset stale reports
-        run: |
-          rm -f RUNTIME-SMOKE.md CI-REPORT.md
-          echo checkout > /tmp/stage
-
       - name: Clone upstream at pinned commit
-        continue-on-error: true
-        run: |
-          bash scripts/prepare-upstream.sh 2>&1 | tee /tmp/clone.log
-          echo clone > /tmp/stage
+        run: bash scripts/prepare-upstream.sh
 
       - uses: pnpm/action-setup@v4
         with:
@@ -64,55 +53,33 @@ jobs:
           restore-keys: metro-${{ runner.os }}-
 
       - name: Install dependencies
-        continue-on-error: true
         working-directory: upstream
-        run: |
-          set -o pipefail
-          pnpm install --frozen-lockfile --prefer-offline 2>&1 | tee /tmp/install.log
-          echo install > /tmp/stage
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Apply web overlay
-        continue-on-error: true
-        run: |
-          set -o pipefail
-          bash scripts/apply-overlay.sh 2>&1 | tee /tmp/overlay.log
-          echo overlay > /tmp/stage
+        run: bash scripts/apply-overlay.sh
 
       - name: Export web bundle
-        continue-on-error: true
         working-directory: upstream
         run: |
-          set -o pipefail
           if [ "${{ inputs.diagnostic }}" = "true" ]; then
-            npx expo export --platform web --output-dir dist-web --dev --no-minify --source-maps external 2>&1 | tee /tmp/export.log
+            npx expo export --platform web --output-dir dist-web --dev --no-minify --source-maps external
           else
-            npx expo export --platform web --output-dir dist-web 2>&1 | tee /tmp/export.log
+            npx expo export --platform web --output-dir dist-web
           fi
-          echo export > /tmp/stage
 
-      - name: Inject boot gate
-        continue-on-error: true
-        run: |
-          node scripts/patch-index-html.js upstream/dist-web 2>&1 | tee /tmp/gate.log
-          echo gate > /tmp/stage
-
-      - name: Vendor SQLite WASM runtime
-        continue-on-error: true
+      - name: Vendor sql.js runtime
         working-directory: upstream
         run: |
           set -e
-          mkdir -p dist-web/sqlite3
-          base="https://cdn.jsdelivr.net/npm/@sqlite.org/sqlite-wasm@${SQLITE_WASM_VERSION}/dist"
-          for f in index.mjs sqlite3.wasm; do
-            curl -fsSL -o "dist-web/sqlite3/$f" "$base/$f" \
-              || curl -fsSL -o "dist-web/sqlite3/$f" "https://unpkg.com/@sqlite.org/sqlite-wasm@${SQLITE_WASM_VERSION}/dist/$f"
-            test -s "dist-web/sqlite3/$f"
+          mkdir -p dist-web/sqljs
+          for f in sql-wasm.js sql-wasm.wasm; do
+            curl -fsSL -o "dist-web/sqljs/$f" "https://cdn.jsdelivr.net/npm/sql.js@1.13.0/dist/$f" \
+              || curl -fsSL -o "dist-web/sqljs/$f" "https://unpkg.com/sql.js@1.13.0/dist/$f"
           done
-          ls -la dist-web/sqlite3
-          echo vendor > /tmp/stage
+          ls -la dist-web/sqljs
 
       - name: Verify bundle output
-        continue-on-error: true
         working-directory: upstream
         run: |
           set -e
@@ -123,12 +90,8 @@ jobs:
           echo "bundle: ${size} MB / ${files} files / ${html} html entry"
           test "$html" -ge 1 || { echo "::error::no html entry in dist-web"; exit 1; }
           test "$size" -ge 1 || { echo "::error::bundle suspiciously small"; exit 1; }
-          grep -q 'cherry-web-gate' dist-web/index.html || { echo "::error::boot gate not injected"; exit 1; }
-          test -s dist-web/sqlite3/index.mjs || { echo "::error::sqlite3 runtime missing"; exit 1; }
-          echo verify > /tmp/stage
 
       - name: Start static server
-        continue-on-error: true
         run: |
           node upstream/web-adaptation/static-server.js upstream/dist-web 8099 > /tmp/static.log 2>&1 &
           for i in $(seq 1 20); do
@@ -136,39 +99,47 @@ jobs:
             sleep 0.5
           done
           curl -sf -o /dev/null http://127.0.0.1:8099/ || { cat /tmp/static.log; exit 1; }
-          echo server > /tmp/stage
 
       - name: Static assertions
-        continue-on-error: true
         run: |
           set -e
           code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8099/)
           echo "index.html -> $code"
           test "$code" = "200" || { echo "::error::index.html not served"; exit 1; }
-          curl -s http://127.0.0.1:8099/ | grep -q 'cherry-web-gate' || { echo "::error::boot gate missing"; exit 1; }
-          for f in sqlite3/index.mjs sqlite3/sqlite3.wasm; do
+          curl -s http://127.0.0.1:8099/ | grep -q "<script" || { echo "::error::no script tag in index.html"; exit 1; }
+          js=$(curl -s http://127.0.0.1:8099/ | grep -oE 'src="[^"]+\.js"' | head -1 | sed 's/src="//;s/"//')
+          echo "main bundle: $js"
+          test -n "$js" || { echo "::error::cannot locate main bundle"; exit 1; }
+          mcode=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:8099${js}")
+          echo "bundle -> $mcode"; test "$mcode" = "200" || exit 1
+          for f in sqljs/sql-wasm.js sqljs/sql-wasm.wasm; do
             scode=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:8099/$f")
             echo "$f -> $scode"; test "$scode" = "200" || { echo "::error::$f missing"; exit 1; }
           done
-          ctype=$(curl -s -o /dev/null -w '%{content_type}' http://127.0.0.1:8099/sqlite3/sqlite3.wasm)
-          echo "wasm content-type -> $ctype"
-          case "$ctype" in application/wasm*) ;; *) echo "::error::bad wasm mime"; exit 1 ;; esac
-          echo assert > /tmp/stage
 
       - name: Install smoke driver
-        continue-on-error: true
-        run: |
-          npm i --no-save --no-audit --no-fund puppeteer-core@24 > /tmp/puppeteer.log 2>&1
-          echo puppeteer > /tmp/stage
+        run: npm i --no-save --no-audit --no-fund puppeteer-core@24
 
       - name: Runtime smoke (headless Chrome)
         continue-on-error: true
         env:
           SMOKE_URL: http://127.0.0.1:8099/
           SMOKE_REPORT: ${{ github.workspace }}/RUNTIME-SMOKE.md
+        run: node scripts/runtime-smoke.mjs
+
+      - name: Chat end-to-end (fake provider)
+        continue-on-error: true
+        env:
+          E2E_URL: http://127.0.0.1:8100/?e2e=1
+          E2E_REPORT: ${{ github.workspace }}/CHAT-E2E.md
         run: |
-          node scripts/runtime-smoke.mjs 2>&1 | tee /tmp/smoke.log || true
-          echo smoke > /tmp/stage
+          nohup node scripts/fake-openai.mjs > /tmp/fake.log 2>&1 &
+          nohup node scripts/e2e-server.mjs --static upstream/dist-web --port 8100 > /tmp/e2e-server.log 2>&1 &
+          sleep 2
+          curl -sf http://127.0.0.1:8100/api.deepseek.com/v1/models
+          node scripts/chat-e2e.mjs || true
+          tail -30 /tmp/e2e-server.log || true
+          cat CHAT-E2E.md || true
 
       - name: Collect report
         if: always()
@@ -179,31 +150,26 @@ jobs:
             echo "- run: ${GITHUB_RUN_ID} (${GITHUB_SHA})"
             echo "- upstream: $(cd upstream && git rev-parse HEAD 2>/dev/null || echo unknown)"
             echo "- diagnostic export: ${{ inputs.diagnostic }}"
-            echo "- stage: $(cat /tmp/stage 2>/dev/null || echo checkout)"
-            echo "- size: $(du -sm upstream/dist-web 2>/dev/null | cut -f1) MB"
+            echo "- size: $(du -sm upstream/dist-web 2>/dev/null | cut -f1 || echo 0) MB"
             echo "- files: $(find upstream/dist-web -type f 2>/dev/null | wc -l)"
             echo
-            for log in clone install overlay export gate smoke; do
-              if [ -f "/tmp/$log.log" ]; then
-                echo "## $log log (tail)"
-                echo '```'
-                tail -n 40 "/tmp/$log.log"
-                echo '```'
-                echo
-              fi
-            done
             echo "## sqlite3 runtime"
             ls -la upstream/dist-web/sqlite3 2>/dev/null || echo "missing"
             echo
             echo "## js chunks"
-            find upstream/dist-web -name '*.js' -type f 2>/dev/null | sed "s|upstream/dist-web|.|" | head -20
+            find upstream/dist-web -name '*.js' -type f 2>/dev/null | sed "s|upstream/dist-web|.|;" | head -20
             echo
             echo "## wasm assets"
-            find upstream/dist-web -name '*.wasm' -type f 2>/dev/null | sed "s|upstream/dist-web|.|" | head -10
+            find upstream/dist-web -name '*.wasm' -type f 2>/dev/null | sed "s|upstream/dist-web|.|;" | head -10
             echo
             if [ -f RUNTIME-SMOKE.md ]; then
               echo "## runtime smoke"
               cat RUNTIME-SMOKE.md
+            fi
+            if [ -f CHAT-E2E.md ]; then
+              echo
+              echo "## chat end-to-end"
+              cat CHAT-E2E.md
             fi
           } > CI-REPORT.md
           cat CI-REPORT.md
@@ -213,16 +179,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add CI-REPORT.md RUNTIME-SMOKE.md 2>/dev/null || true
+          git add CI-REPORT.md RUNTIME-SMOKE.md CHAT-E2E.md 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "report unchanged"
           else
             git commit -m "ci: web build report [skip ci]"
-            git push && echo pushed
+            git push
           fi
 
       - name: Upload bundle
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cherry-studio-web
