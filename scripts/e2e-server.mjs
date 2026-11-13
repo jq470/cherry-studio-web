@@ -4,12 +4,9 @@
 // endpoint, so the browser never needs a real key or network. The gate in
 // index.html is patched at startup to route that host through this server
 // (test bundle only; the shipped gate keeps its production allowlist).
-'use strict';
-
-const fs = require('fs');
-const http = require('http');
-const path = require('path');
-const { URL } = require('url');
+import fs from 'node:fs';
+import http from 'node:http';
+import path from 'node:path';
 
 const args = process.argv.slice(2);
 const argOf = (flag, fallback) => {
@@ -39,31 +36,8 @@ function patchGate() {
   const file = path.join(STATIC_DIR, 'index.html');
   let html = fs.readFileSync(file, 'utf8');
   if (html.includes("'api.deepseek.com': 1")) return;
-  html = html.replace(
-    'var PROXIED_HOSTS = {',
-    "var PROXIED_HOSTS = {\n    'api.deepseek.com': 1,",
-  );
+  html = html.replace("var PROXIED_HOSTS = {", "var PROXIED_HOSTS = {\n    'api.deepseek.com': 1,");
   fs.writeFileSync(file, html);
-}
-
-function serveStatic(res, pathname) {
-  let filePath = path.join(STATIC_DIR, pathname);
-  if (pathname === '/' || !path.extname(pathname)) filePath = path.join(STATIC_DIR, 'index.html');
-  fs.stat(filePath, (error, stat) => {
-    if (error || !stat.isFile()) {
-      filePath = path.join(STATIC_DIR, 'index.html');
-      fs.stat(filePath, (fallbackError, fallbackStat) => {
-        if (fallbackError) {
-          res.writeHead(404);
-          res.end('not found');
-          return;
-        }
-        sendFile(res, filePath, fallbackStat);
-      });
-      return;
-    }
-    sendFile(res, filePath, stat);
-  });
 }
 
 function sendFile(res, filePath, stat) {
@@ -74,6 +48,25 @@ function sendFile(res, filePath, stat) {
   fs.createReadStream(filePath).pipe(res);
 }
 
+function serveStatic(res, pathname) {
+  const direct = path.join(STATIC_DIR, pathname);
+  fs.stat(direct, (error, stat) => {
+    if (!error && stat.isFile()) {
+      sendFile(res, direct, stat);
+      return;
+    }
+    const fallback = path.join(STATIC_DIR, 'index.html');
+    fs.stat(fallback, (fallbackError, fallbackStat) => {
+      if (fallbackError) {
+        res.writeHead(404);
+        res.end('not found');
+        return;
+      }
+      sendFile(res, fallback, fallbackStat);
+    });
+  });
+}
+
 patchGate();
 
 http
@@ -82,7 +75,13 @@ http
     if (url.pathname.startsWith('/api.deepseek.com/')) {
       const targetPath = url.pathname.slice('/api.deepseek.com'.length) + url.search;
       const upstream = http.request(
-        { hostname: FAKE.hostname, port: FAKE.port, path: targetPath, method: req.method, headers: req.headers },
+        {
+          hostname: FAKE.hostname,
+          port: FAKE.port,
+          path: targetPath,
+          method: req.method,
+          headers: req.headers,
+        },
         (upstreamRes) => {
           res.writeHead(upstreamRes.statusCode || 502, upstreamRes.headers);
           upstreamRes.pipe(res);

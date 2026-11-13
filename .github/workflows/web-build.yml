@@ -135,11 +135,12 @@ jobs:
         run: |
           nohup node scripts/fake-openai.mjs > /tmp/fake.log 2>&1 &
           nohup node scripts/e2e-server.mjs --static upstream/dist-web --port 8100 > /tmp/e2e-server.log 2>&1 &
-          sleep 2
-          curl -sf http://127.0.0.1:8100/api.deepseek.com/v1/models
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:8100/api.deepseek.com/v1/models > /dev/null && break
+            sleep 0.5
+          done
+          tail -20 /tmp/fake.log /tmp/e2e-server.log || true
           node scripts/chat-e2e.mjs || true
-          tail -30 /tmp/e2e-server.log || true
-          cat CHAT-E2E.md || true
 
       - name: Collect report
         if: always()
@@ -150,8 +151,29 @@ jobs:
             echo "- run: ${GITHUB_RUN_ID} (${GITHUB_SHA})"
             echo "- upstream: $(cd upstream && git rev-parse HEAD 2>/dev/null || echo unknown)"
             echo "- diagnostic export: ${{ inputs.diagnostic }}"
+            echo "- stage: smoke"
             echo "- size: $(du -sm upstream/dist-web 2>/dev/null | cut -f1 || echo 0) MB"
             echo "- files: $(find upstream/dist-web -type f 2>/dev/null | wc -l)"
+            echo
+            echo "## clone log (tail)"
+            echo '```'
+            tail -5 /tmp/clone.log 2>/dev/null || true
+            echo '```'
+            echo
+            echo "## install log (tail)"
+            echo '```'
+            tail -10 /tmp/install.log 2>/dev/null || true
+            echo '```'
+            echo
+            echo "## overlay log (tail)"
+            echo '```'
+            tail -10 /tmp/overlay.log 2>/dev/null || true
+            echo '```'
+            echo
+            echo "## gate log (tail)"
+            echo '```'
+            tail -10 /tmp/gate.log 2>/dev/null || true
+            echo '```'
             echo
             echo "## sqlite3 runtime"
             ls -la upstream/dist-web/sqlite3 2>/dev/null || echo "missing"

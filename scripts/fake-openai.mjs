@@ -1,8 +1,6 @@
 // OpenAI-compatible fake used only by the chat E2E workflow.
 // Exposes /v1/models and /v1/chat/completions (SSE when stream=true).
-'use strict';
-
-const http = require('http');
+import http from 'node:http';
 
 const PORT = Number(process.env.FAKE_PORT || 9100);
 const MODEL = 'fake-model';
