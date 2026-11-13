@@ -1,8 +1,8 @@
 // react-native-keyboard-controller on web.
 //
 // 25 call sites: the provider must render, the hooks must return values that
-// callers can read (`height.value`, `isVisible`, `input.value`), and the
-// controller is a no-op (there is no soft keyboard in a browser).
+// callers can read (`height.value`, `height.get()`, `isVisible`, `input.value`),
+// and the controller is a no-op (there is no soft keyboard in a browser).
 //
 // KeyboardProvider wraps the whole app. Rendering it as a bare <div> gave the
 // root layout a 0-height box: absolutely positioned children then resolved
@@ -12,8 +12,11 @@
 //
 // A plain DOM node with CSS flex is used on purpose: importing `View` from
 // `react-native` at module scope hits RNW's own initialisation (React error #130
-// because View is still undefined at that point), and a lazy require inside
-// render is too fragile for a module this central.
+// because View is still undefined at that point).
+//
+// The hooks return real SharedValue-shaped objects. Returning a bare `{ value: 0 }`
+// crashed ChatComposerClearance with `o.get is not a function`, because app code
+// calls `.get()` on the animated height.
 'use strict';
 
 const React = require('react');
@@ -41,11 +44,27 @@ function KeyboardProvider(props) {
   return React.createElement('div', { style }, props && props.children);
 }
 
-const zero = { value: 0 };
+function createSharedValue(initial) {
+  const value = { value: initial };
+  value.get = () => value.value;
+  value.set = (next) => {
+    value.value = next;
+  };
+  value.addListener = () => {};
+  value.removeListener = () => {};
+  value.modify = (modifier) => {
+    if (typeof modifier === 'function') value.value = modifier(value.value);
+    return value.value;
+  };
+  return value;
+}
+
+const keyboardHeight = createSharedValue(0);
+const keyboardProgress = createSharedValue(0);
 
 const useKeyboardState = () => ({ height: 0, isVisible: false, duration: 0, easing: 'easeOut' });
-const useReanimatedKeyboardAnimation = () => ({ height: zero, progress: zero });
-const useReanimatedFocusedInput = () => ({ input: { value: null } });
+const useReanimatedKeyboardAnimation = () => ({ height: keyboardHeight, progress: keyboardProgress });
+const useReanimatedFocusedInput = () => ({ input: createSharedValue(null) });
 const useKeyboardHandler = () => undefined;
 const useGenericKeyboardHandler = () => undefined;
 const useFocusedInputHandler = () => undefined;
