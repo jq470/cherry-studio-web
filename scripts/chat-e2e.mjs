@@ -32,6 +32,7 @@ let pageText = '';
 let pickerText = '';
 let failureShot = null;
 const consoleErrors = [];
+const apiRequests = [];
 
 try {
   const page = await browser.newPage();
@@ -41,6 +42,9 @@ try {
       console.log(`[console.error] ${summary(message.text(), 200)}`);
       consoleErrors.push(summary(message.text(), 500));
     }
+  });
+  page.on('request', (request) => {
+    if (request.url().includes('api.deepseek.com')) apiRequests.push(request.url());
   });
   page.on('pageerror', (error) => {
     consoleErrors.push(`pageerror: ${summary(error && error.stack ? error.stack : error, 500)}`);
@@ -164,18 +168,36 @@ try {
   if (input) {
     await input.click();
     await input.type('ping');
-    log('message typed', true);
+    const state = await page.evaluate(() => {
+      const field = document.querySelector('[data-testid="chat-composer"] textarea');
+      const btn = document.querySelector('[data-testid="chat-composer-send"]');
+      return {
+        value: field ? field.value : null,
+        disabled: btn ? btn.getAttribute('aria-disabled') : 'missing',
+      };
+    });
+    log('message typed', true, JSON.stringify(state));
   } else {
     log('message typed', false, 'no composer input');
   }
 
+  if (input) {
+    await input.press('Enter');
+    await new Promise((r) => setTimeout(r, 1000));
+  }
   const sent = await page.evaluate(() => {
     const btn = document.querySelector('[data-testid="chat-composer-send"]');
     if (!btn) return false;
     btn.click();
     return true;
   });
-  log('send clicked', sent);
+  log('send clicked', sent, `api requests: ${apiRequests.length}`);
+  await new Promise((r) => setTimeout(r, 2000));
+  log(
+    'after send',
+    apiRequests.length > 0,
+    `${apiRequests.slice(-2).join(' | ')} :: ${summary(await text(), 300)}`,
+  );
 
   const reply = await waitFor(/pong/i, 40000);
   replySeen = Boolean(reply);
