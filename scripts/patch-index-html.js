@@ -63,8 +63,11 @@ for (const entry of entries) console.log(`  - ${entry}`);
 function buildGate(scripts) {
   return `(function () {
   var scripts = ${JSON.stringify(scripts)};
-  // Absolute URL: dynamic import() treats a bare specifier as a package name.
-  var SQLITE_DIR = new URL('sqlite3/', document.baseURI).href;
+  // Root-relative on purpose: on a deep route (/settings/provider/new) a
+  // relative 'sqlite3/' resolves under that route, the static server answers
+  // index.html and the module import fails its MIME check - the app then shows
+  // its startup-failure screen. Always resolve against the origin.
+  var SQLITE_DIR = location.origin + '/sqlite3/';
 
   // The exported app is phone-first: a bottom-sheet dialog taller than the
   // remaining viewport extends past body height, and expo-reset hides body
