@@ -1,7 +1,7 @@
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 2054 ms (first non-empty paint: 2054)
+- boot wait: 3395 ms (first non-empty paint: 3395)
 - dom nodes: 338
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
@@ -44,7 +44,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1433 ms
+- elapsed: 1430 ms
 - welcome screen returned: false
 - text: Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
 ```
