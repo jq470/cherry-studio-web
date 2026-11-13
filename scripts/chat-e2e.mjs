@@ -181,22 +181,28 @@ try {
     log('message typed', false, 'no composer input');
   }
 
-  if (input) {
-    await input.press('Enter');
-    await new Promise((r) => setTimeout(r, 1000));
+  const before = apiRequests.length;
+  let sent = false;
+  const sendButton = await page.$('[data-testid="chat-composer-send"]');
+  if (sendButton) {
+    const box = await sendButton.boundingBox();
+    if (box) {
+      await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+      sent = true;
+    } else {
+      sent = await sendButton.click().then(() => true).catch(() => false);
+    }
   }
-  const sent = await page.evaluate(() => {
-    const btn = document.querySelector('[data-testid="chat-composer-send"]');
-    if (!btn) return false;
-    btn.click();
-    return true;
-  });
-  log('send clicked', sent, `api requests: ${apiRequests.length}`);
+  log('send clicked', sent, `api requests before: ${before} -> ${apiRequests.length}`);
   await new Promise((r) => setTimeout(r, 2000));
+  if (input && apiRequests.length === before) {
+    await input.press('Enter');
+    await new Promise((r) => setTimeout(r, 2000));
+  }
   log(
     'after send',
-    apiRequests.length > 0,
-    `${apiRequests.slice(-2).join(' | ')} :: ${summary(await text(), 300)}`,
+    apiRequests.length > before,
+    `api ${before} -> ${apiRequests.length} :: ${apiRequests.slice(-2).join(' | ')} :: ${summary(await text(), 300)}`,
   );
 
   const reply = await waitFor(/pong/i, 40000);
