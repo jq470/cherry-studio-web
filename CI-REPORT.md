@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43455123145 (5600d62406e9bbbd6f98cafb4762d56d7f65ab6c)
+- run: 43467771032 (9fc309317ebe7ccde9d558fe2f613defa0e21abe)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: e2e
@@ -54,7 +54,7 @@ devDependencies:
 + tsx 4.22.0
 + typescript 6.0.3
 
-Done in 45.7s using pnpm v12.2.1
+Done in 50.1s using pnpm v12.2.1
 ```
 
 ## overlay log (tail)
@@ -115,7 +115,7 @@ Exported: dist-web
 [gate] gated 3 script(s):
   - /_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
   - /_expo/static/js/web/__common-2c53ed26c2164d190671879a689defee.js
-  - /_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
+  - /_expo/static/js/web/index-b3aa8762ff19a22bc42cf024f2a4b6eb.js
 ```
 
 ## smoke log (tail)
@@ -151,7 +151,7 @@ Exported: dist-web
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
 - http://127.0.0.1:8099/_expo/static/js/web/__common-2c53ed26c2164d190671879a689defee.js
-- http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-b3aa8762ff19a22bc42cf024f2a4b6eb.js
 - http://127.0.0.1:8099/sqlite3/sqlite3.wasm
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-53501e52582fd2edbc769c33d0d405e8.js
@@ -192,7 +192,7 @@ ok   provider continue
 ok   model screen — Choose a chat model Edit connection Step 3 of 3 DeepSeek V4 Flash deepseek-v4-flash DeepSeek V4 Pro deepseek-v4-pro DeepSeek V4.1 Flash deepseek-flash fake-model fake-model A connection check runs before starting; a small charge may apply. 
 ok   model picked
 ok   onboarding start
-ok   home composer — http://127.0.0.1:8100/?agentId=2f7b1664-cbd8-4d33-a373-16d979b06942
+ok   home composer — http://127.0.0.1:8100/?agentId=ba3d9651-8162-40a9-89cb-20c46abf6d6a
 FAIL exception — Node is either not clickable or not an Element
 ```
 
@@ -222,10 +222,10 @@ FAIL exception — Node is either not clickable or not an Element
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 13 15:44 .
-drwxr-xr-x 5 runner runner   4096 Nov 13 15:44 ..
--rw-r--r-- 1 runner runner 656872 Nov 13 15:44 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 13 15:44 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 13 17:00 .
+drwxr-xr-x 5 runner runner   4096 Nov 13 17:00 ..
+-rw-r--r-- 1 runner runner 656872 Nov 13 17:00 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 13 17:00 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -256,7 +256,7 @@ drwxr-xr-x 5 runner runner   4096 Nov 13 15:44 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 2994 ms (first non-empty paint: 2994)
+- boot wait: 3908 ms (first non-empty paint: 3908)
 - dom nodes: 341
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
@@ -299,7 +299,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1412 ms
+- elapsed: 1590 ms
 - welcome screen returned: false
 - text: Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
 ```
@@ -343,7 +343,7 @@ onboarding dismissed: true
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
 - http://127.0.0.1:8099/_expo/static/js/web/__common-2c53ed26c2164d190671879a689defee.js
-- http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-b3aa8762ff19a22bc42cf024f2a4b6eb.js
 - http://127.0.0.1:8099/sqlite3/sqlite3.wasm
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-53501e52582fd2edbc769c33d0d405e8.js
@@ -375,7 +375,7 @@ ok   provider continue
 ok   model screen — Choose a chat model Edit connection Step 3 of 3 DeepSeek V4 Flash deepseek-v4-flash DeepSeek V4 Pro deepseek-v4-pro DeepSeek V4.1 Flash deepseek-flash fake-model fake-model A connection check runs before starting; a small charge may apply. 
 ok   model picked
 ok   onboarding start
-ok   home composer — http://127.0.0.1:8100/?agentId=2f7b1664-cbd8-4d33-a373-16d979b06942
+ok   home composer — http://127.0.0.1:8100/?agentId=ba3d9651-8162-40a9-89cb-20c46abf6d6a
 FAIL exception — Node is either not clickable or not an Element
 ```
 

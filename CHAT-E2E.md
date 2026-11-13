@@ -19,7 +19,7 @@ ok   provider continue
 ok   model screen — Choose a chat model Edit connection Step 3 of 3 DeepSeek V4 Flash deepseek-v4-flash DeepSeek V4 Pro deepseek-v4-pro DeepSeek V4.1 Flash deepseek-flash fake-model fake-model A connection check runs before starting; a small charge may apply. 
 ok   model picked
 ok   onboarding start
-ok   home composer — http://127.0.0.1:8100/?agentId=2f7b1664-cbd8-4d33-a373-16d979b06942
+ok   home composer — http://127.0.0.1:8100/?agentId=ba3d9651-8162-40a9-89cb-20c46abf6d6a
 FAIL exception — Node is either not clickable or not an Element
 ```
 
