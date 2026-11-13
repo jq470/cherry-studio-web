@@ -101,21 +101,31 @@ try {
   // First-use provider catalog -> deepseek config (setupIntent=chat).
   const catalog = await waitFor(/(Choose a provider|选择服务商)/, 30000);
   log('provider catalog', Boolean(catalog), summary(catalog || '(none)'));
-  const choseProvider =
-    (await clickTestId('provider-catalog-entry-deepseek')) ||
-    (await page.evaluate(() => {
+  // The provider registry is fetched after the screen mounts; wait for the row.
+  await page
+    .waitForSelector('[data-testid="provider-catalog-entry-deepseek"]', { timeout: 20000 })
+    .catch(() => {});
+  let choseProvider = await clickTestId('provider-catalog-entry-deepseek');
+  if (!choseProvider) {
+    await clickText(['Show all providers', '查看全部服务商']);
+    await new Promise((r) => setTimeout(r, 2000));
+    choseProvider = await clickTestId('provider-catalog-entry-deepseek');
+  }
+  if (!choseProvider) {
+    choseProvider = await page.evaluate(() => {
       const node = Array.from(document.querySelectorAll('*')).find(
         (item) => (item.innerText || '').trim() === 'DeepSeek',
       );
       if (!node) return false;
       node.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
       return true;
-    }));
+    });
+  }
   log('provider chosen', choseProvider);
   await new Promise((r) => setTimeout(r, 3000));
 
   const provider = await waitFor(/(配置 deepseek|Configure deepseek|API)/i, 20000);
-  log('provider page', Boolean(provider), summary(provider || '(blank)'));
+  log('provider page', Boolean(provider), summary(provider || '(no deepseek)'));
 
   const keyInput = await page.$('input[type="password"]');
   if (keyInput) {

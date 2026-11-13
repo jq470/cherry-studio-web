@@ -9,13 +9,12 @@ const React = require('react');
 
 const { createStub } = require('./native-stub');
 const ReactNativeWeb = require('react-native-web');
+const Reanimated = require('react-native-reanimated');
 
 const wrap = (tag) =>
   function KeyboardWrapper(props) {
     return React.createElement(tag, { style: props && props.style }, props && props.children);
   };
-
-const zero = { value: 0 };
 
 // @legendapp/list/keyboard renders its rows through this scroll host; without it
 // the whole transcript subtree was dropped and the chat looked empty.
@@ -36,9 +35,14 @@ const KeyboardChatScrollView = React.forwardRef(function KeyboardChatScrollView(
   );
 });
 
+// Reanimated worklets call `.get()` on these shared values, so plain objects
+// crash ChatComposerClearance with "o.get is not a function".
+const useReanimatedKeyboardAnimation = () => ({
+  height: Reanimated.useSharedValue(0),
+  progress: Reanimated.useSharedValue(0),
+});
+const useReanimatedFocusedInput = () => ({ input: Reanimated.useSharedValue(null) });
 const useKeyboardState = () => ({ height: 0, isVisible: false, duration: 0, easing: 'easeOut' });
-const useReanimatedKeyboardAnimation = () => ({ height: zero, progress: zero });
-const useReanimatedFocusedInput = () => ({ input: { value: null } });
 const useKeyboardHandler = () => undefined;
 const useGenericKeyboardHandler = () => undefined;
 const useFocusedInputHandler = () => undefined;
