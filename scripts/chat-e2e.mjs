@@ -121,6 +121,15 @@ try {
       return true;
     });
   }
+  if (!choseProvider) {
+    // Catalog rows come from the signed registry; if that feed is unavailable
+    // (CI has no network to it), go straight to the onboarding connection step.
+    await page.goto(`${ORIGIN}/onboarding/connection?providerId=deepseek`, {
+      waitUntil: 'networkidle2',
+      timeout: 30000,
+    });
+    choseProvider = true;
+  }
   log('provider chosen', choseProvider);
   await new Promise((r) => setTimeout(r, 3000));
 
