@@ -6,9 +6,8 @@
 //   /<allowlisted-host>/<path> -> https://<allowlisted-host>/<path>
 //   everything else            -> the static bundle (SPA fallback to index.html)
 //
-// This is deliberately NOT an open proxy: only hosts in ALLOW_HOSTS are
-// forwarded, so a public deployment cannot be used as an SSRF relay.
-// Override with PROXY_HOSTS="a.com,b.com" when a new registry host appears.
+// Deliberately NOT an open proxy: only ALLOW_HOSTS are forwarded, so a public
+// deployment cannot be used as an SSRF relay. Override with PROXY_HOSTS.
 'use strict';
 
 const fs = require('fs');
@@ -132,7 +131,10 @@ const server = http.createServer((req, res) => {
 
   const segment = url.pathname.split('/')[1] || '';
   if (ALLOW_HOSTS.has(segment.toLowerCase())) {
-    proxy(req, res, segment, url.pathname.slice(segment.length + 1) + url.search || '/');
+    // Keep the leading slash: new URL('https://host' + '/path') is valid only
+    // when the path starts with '/'. slice(segment.length) preserves it.
+    const forwarded = url.pathname.slice(segment.length) || '/';
+    proxy(req, res, segment, forwarded + url.search);
     return;
   }
 
