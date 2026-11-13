@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43413468297 (bf386fd1515054ed81cbc407a85f625cb4008bca)
+- run: 43416337779 (72ccf9c672a77eb282db3d13c6d429bbf80e6cc3)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: smoke
@@ -55,7 +55,7 @@ missing
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 3837 ms (first non-empty paint: 3837)
+- boot wait: 3570 ms (first non-empty paint: 3570)
 - dom nodes: 38
 - title: Cherry Studio
 - verdict: FAIL: startup failure markers → couldn't start | FAIL: sqlite backend state = failed:sqlite runtime is provided by the index.html boot gate (scripts/patch-index-html.js)
@@ -99,7 +99,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: failed:sqlite runtime is provided by the index.html boot gate (scripts/patch-index-html.js)
-- elapsed: 2322 ms
+- elapsed: 2432 ms
 - welcome screen returned: false
 - text: Cherry Studio couldn't start Something stopped the app from starting. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry Cherry Studio
 ```
@@ -125,7 +125,7 @@ onboarding dismissed: true
 
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
-- http://127.0.0.1:8099/_expo/static/js/web/__common-b9473b5c37e394632d7d77502404d54d.js
+- http://127.0.0.1:8099/_expo/static/js/web/__common-074ad4f4a6a28c73e9f858a1ad4f6235.js
 - http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-53501e52582fd2edbc769c33d0d405e8.js
@@ -142,18 +142,19 @@ onboarding dismissed: true
 
 ## steps
 ```
-FAIL boot - (no onboarding)
-FAIL home reached - (no home)
-FAIL provider page - (blank)
-FAIL api key typed - no password input
+FAIL boot — (no onboarding)
+FAIL home reached — (no home)
+FAIL provider page — (blank)
+FAIL api key typed — no password input
 FAIL key added
 FAIL provider continue
-ok   provider saved - Cherry Studio couldn't start Something stopped the app from starting. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry
+FAIL model sync page — (none)
+ok   provider saved — Cherry Studio couldn't start Something stopped the app from starting. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry
 FAIL model picker opened
 FAIL model picked
-FAIL message typed - no composer input
+FAIL message typed — no composer input
 FAIL send clicked
-FAIL reply received - (no reply)
+FAIL reply received — (no reply)
 ```
 
 ## page text (last)
