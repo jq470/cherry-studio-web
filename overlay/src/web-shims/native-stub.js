@@ -41,7 +41,7 @@ function createStub(label, overrides) {
       // Properties assigned onto the stub itself (module.exports.createStub,
       // .default, ...) must win over synthesized children, otherwise requiring
       // this module hands out a fake `createStub` and every real shim silently
-      // becomes a null-rendering stub — which removes the whole React tree.
+      // becomes a null-rendering stub.
       if (typeof key === 'string' && Object.prototype.hasOwnProperty.call(target, key)) {
         return target[key];
       }
@@ -74,4 +74,13 @@ function createStub(label, overrides) {
 
 module.exports = createStub('native');
 module.exports.createStub = createStub;
+// Some Fabric specs import this subpath directly; returning a null component is enough.
+module.exports.codegenNativeComponent = function codegenNativeComponent(name) {
+  function NativeComponent() {
+    return null;
+  }
+  NativeComponent.displayName = String(name || 'NativeComponent');
+  return NativeComponent;
+};
+module.exports.requireNativeComponent = module.exports.codegenNativeComponent;
 module.exports.default = module.exports;
