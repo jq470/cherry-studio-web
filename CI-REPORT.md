@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43445361804 (1b956ded810129db7025b4f80d0cfa6e71f833ec)
+- run: 43446786451 (7ddf580dcf36142f6d2ac35074684319ccbdc9fd)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: e2e
@@ -54,7 +54,7 @@ devDependencies:
 + tsx 4.22.0
 + typescript 6.0.3
 
-Done in 45.8s using pnpm v12.2.1
+Done in 55.9s using pnpm v12.2.1
 ```
 
 ## overlay log (tail)
@@ -174,7 +174,6 @@ Exported: dist-web
 
 ## chat-e2e log (tail)
 ```
-# Chat end-to-end report
 
 - url: http://127.0.0.1:8100/?e2e=1
 - verdict: FAIL
@@ -183,7 +182,7 @@ Exported: dist-web
 
 ## steps
 ```
-ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Cherry Studio Privacy and data Cherry Studio collects a small amount of anonymous data to understand
+ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Privacy and data Cherry Studio collects a small amount of anonymous data to understand how its featu
 ok   privacy accept
 ok   connect provider
 ok   provider catalog — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Recommended CherryIN OAuth CherryIN - AI model provider Silicon Silicon - AI model provider AiHubMix AiHubMix - AI model provider ZhiPu ZhiPu - AI model provider deep
@@ -195,9 +194,10 @@ ok   provider continue
 ok   model screen — Choose a chat model Edit connection Step 3 of 3 DeepSeek V4 Flash deepseek-v4-flash DeepSeek V4 Pro deepseek-v4-pro DeepSeek V4.1 Flash deepseek-flash fake-model fake-model A connection check runs before starting; a small charge may apply. 
 ok   model picked
 ok   onboarding start
-ok   home composer — http://127.0.0.1:8100/?agentId=51daec26-1220-4c01-bd27-3f990e4c79ff
-ok   message typed
-ok   send clicked
+ok   home composer — http://127.0.0.1:8100/?agentId=be186011-8cc2-464a-94a4-4b309c7bb989
+ok   message typed — {"value":"ping","disabled":null}
+ok   send clicked — api requests: 3
+ok   after send — http://127.0.0.1:8100/api.deepseek.com/v1/chat/completions | http://127.0.0.1:8100/api.deepseek.com/v1/chat/completions :: Agents Drawings Plugins Skills Files Sessions Cherry Studio Cherry Studio New chat Cancel Camera Photos File Plugins Skills fake-model AI-generated content, for reference only 🍒 Cherie
 FAIL reply received — (no reply)
 ```
 
@@ -218,10 +218,10 @@ Agents Drawings Plugins Skills Files Sessions Cherry Studio Cherry Studio New ch
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 13 14:45 .
-drwxr-xr-x 5 runner runner   4096 Nov 13 14:45 ..
--rw-r--r-- 1 runner runner 656872 Nov 13 14:45 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 13 14:45 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 13 14:55 .
+drwxr-xr-x 5 runner runner   4096 Nov 13 14:55 ..
+-rw-r--r-- 1 runner runner 656872 Nov 13 14:55 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 13 14:55 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -252,7 +252,7 @@ drwxr-xr-x 5 runner runner   4096 Nov 13 14:45 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 2074 ms (first non-empty paint: 2074)
+- boot wait: 4512 ms (first non-empty paint: 4512)
 - dom nodes: 341
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
@@ -295,7 +295,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1424 ms
+- elapsed: 1649 ms
 - welcome screen returned: false
 - text: Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
 ```
@@ -359,7 +359,7 @@ onboarding dismissed: true
 
 ## steps
 ```
-ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Cherry Studio Privacy and data Cherry Studio collects a small amount of anonymous data to understand
+ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Privacy and data Cherry Studio collects a small amount of anonymous data to understand how its featu
 ok   privacy accept
 ok   connect provider
 ok   provider catalog — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Recommended CherryIN OAuth CherryIN - AI model provider Silicon Silicon - AI model provider AiHubMix AiHubMix - AI model provider ZhiPu ZhiPu - AI model provider deep
@@ -371,9 +371,10 @@ ok   provider continue
 ok   model screen — Choose a chat model Edit connection Step 3 of 3 DeepSeek V4 Flash deepseek-v4-flash DeepSeek V4 Pro deepseek-v4-pro DeepSeek V4.1 Flash deepseek-flash fake-model fake-model A connection check runs before starting; a small charge may apply. 
 ok   model picked
 ok   onboarding start
-ok   home composer — http://127.0.0.1:8100/?agentId=51daec26-1220-4c01-bd27-3f990e4c79ff
-ok   message typed
-ok   send clicked
+ok   home composer — http://127.0.0.1:8100/?agentId=be186011-8cc2-464a-94a4-4b309c7bb989
+ok   message typed — {"value":"ping","disabled":null}
+ok   send clicked — api requests: 3
+ok   after send — http://127.0.0.1:8100/api.deepseek.com/v1/chat/completions | http://127.0.0.1:8100/api.deepseek.com/v1/chat/completions :: Agents Drawings Plugins Skills Files Sessions Cherry Studio Cherry Studio New chat Cancel Camera Photos File Plugins Skills fake-model AI-generated content, for reference only 🍒 Cherie
 FAIL reply received — (no reply)
 ```
 
