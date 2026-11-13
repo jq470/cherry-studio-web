@@ -2,12 +2,10 @@
 //
 //   node server/cors-proxy.js --static dist-web --port 8080
 //
-// Routes:
-//   /<allowlisted-host>/<path> -> https://<allowlisted-host>/<path>
-//   everything else            -> the static bundle (SPA fallback to index.html)
-//
-// Deliberately NOT an open proxy: only ALLOW_HOSTS are forwarded, so a public
-// deployment cannot be used as an SSRF relay. Override with PROXY_HOSTS.
+// /<allowlisted-host>/<path> is forwarded to https://<allowlisted-host>/<path>
+// (redirects inside the allowlist are followed server-side, so the browser never
+// sees a cross-origin Location). Everything else is served from the bundle.
+// Not an open proxy: only ALLOW_HOSTS are forwarded. Override via PROXY_HOSTS.
 'use strict';
 
 const fs = require('fs');
@@ -31,6 +29,7 @@ const ALLOW_HOSTS = new Set(
     .map((host) => host.trim().toLowerCase())
     .filter(Boolean),
 );
+const REDIRECTS = new Set([301, 302, 303, 307, 308]);
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -92,20 +91,37 @@ function serveStatic(res, pathname) {
   });
 }
 
-function proxy(req, res, targetHost, targetPath) {
-  const target = new URL(`https://${targetHost}${targetPath}`);
-  const headers = { ...req.headers };
+function upstreamHeaders(sourceHeaders, host) {
+  const headers = { ...sourceHeaders };
   delete headers.host;
   delete headers.origin;
   delete headers.referer;
   delete headers.cookie;
-  headers.host = target.host;
+  headers.host = host;
+  return headers;
+}
 
+function forward(target, method, headers, res, hops) {
   const upstream = https.request(
-    { method: req.method, hostname: target.hostname, path: target.pathname + target.search, headers },
+    { method: method, hostname: target.hostname, path: target.pathname + target.search, headers: headers },
     (upstreamRes) => {
+      const location = upstreamRes.headers.location;
+      if (REDIRECTS.has(upstreamRes.statusCode) && location && hops < 3 && method === 'GET') {
+        let next;
+        try { next = new URL(location, target); } catch (error) { next = null; }
+        if (next && ALLOW_HOSTS.has(next.hostname.toLowerCase())) {
+          upstreamRes.resume();
+          forward(next, 'GET', headers, res, hops + 1);
+          return;
+        }
+      }
       cors(res);
-      res.writeHead(upstreamRes.statusCode || 502, { ...upstreamRes.headers });
+      const responseHeaders = { ...upstreamRes.headers };
+      if (location && !ALLOW_HOSTS.has(new URL(location, target).hostname.toLowerCase())) {
+        // a Location outside the allowlist would leak a cross-origin URL
+        responseHeaders.location = target.pathname;
+      }
+      res.writeHead(upstreamRes.statusCode || 502, responseHeaders);
       upstreamRes.pipe(res);
     },
   );
@@ -116,6 +132,31 @@ function proxy(req, res, targetHost, targetPath) {
     res.end(JSON.stringify({ error: 'upstream failed', detail: error.message }));
   });
 
+  upstream.end();
+}
+
+function proxy(req, res, targetHost, targetPath) {
+  const target = new URL(`https://${targetHost}${targetPath}`);
+  const headers = upstreamHeaders(req.headers, target.host);
+
+  if (req.method === 'GET' || req.method === 'HEAD') {
+    forward(target, req.method, headers, res, 0);
+    return;
+  }
+
+  const upstream = https.request(
+    { method: req.method, hostname: target.hostname, path: target.pathname + target.search, headers },
+    (upstreamRes) => {
+      cors(res);
+      res.writeHead(upstreamRes.statusCode || 502, upstreamRes.headers);
+      upstreamRes.pipe(res);
+    },
+  );
+  upstream.on('error', (error) => {
+    cors(res);
+    res.writeHead(502, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({ error: 'upstream failed', detail: error.message }));
+  });
   req.pipe(upstream);
 }
 
@@ -131,8 +172,6 @@ const server = http.createServer((req, res) => {
 
   const segment = url.pathname.split('/')[1] || '';
   if (ALLOW_HOSTS.has(segment.toLowerCase())) {
-    // pathname is '/' + segment + rest; drop the leading '/' and the segment,
-    // then re-add '/' so the build URL is https://host/path (never hostpath).
     const rest = url.pathname.slice(segment.length + 1);
     proxy(req, res, segment, '/' + rest + url.search);
     return;
