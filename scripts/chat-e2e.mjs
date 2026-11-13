@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Chat end-to-end test: onboarding -> provider key -> model -> send message.
+ * Chat end-to-end test: first-use onboarding -> provider key -> model -> send.
  *
  * Runs against scripts/e2e-server.mjs with scripts/fake-openai.mjs behind it.
  * Writes CHAT-E2E.md and exits 0 unless the reply never arrives (the report is
@@ -57,6 +57,13 @@ try {
       target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
       return true;
     }, labels);
+  const clickTestId = (id) =>
+    page.evaluate((testId) => {
+      const node = document.querySelector(`[data-testid="${testId}"]`);
+      if (!node) return false;
+      node.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      return true;
+    }, id);
 
   await page.goto(URL_TO_OPEN, { waitUntil: 'networkidle2', timeout: 60000 });
   const boot = await waitFor(/(Welcome to Cherry|欢迎使用 Cherry)/i, 45000);
@@ -66,20 +73,27 @@ try {
     const accepted = await clickText(['Accept and continue', '同意并继续']);
     log('privacy accept', accepted);
     await new Promise((r) => setTimeout(r, 2000));
-    const skipped = await clickText(['Set up later', '稍后设置']);
-    log('skip setup', skipped);
-    await new Promise((r) => setTimeout(r, 2000));
+    const connect = await clickText(['Connect a provider', '连接服务商']);
+    log('connect provider', connect);
+    await new Promise((r) => setTimeout(r, 3000));
   }
 
-  const home = await waitFor(/(Select model|选择模型)/, 30000);
-  log('home reached', Boolean(home), summary(home || '(no home)'));
+  // First-use provider catalog -> deepseek config (setupIntent=chat).
+  const catalog = await waitFor(/(Choose a provider|选择服务商)/, 30000);
+  log('provider catalog', Boolean(catalog), summary(catalog || '(none)'));
+  const choseProvider =
+    (await clickTestId('provider-catalog-entry-deepseek')) ||
+    (await page.evaluate(() => {
+      const node = Array.from(document.querySelectorAll('*')).find(
+        (item) => (item.innerText || '').trim() === 'DeepSeek',
+      );
+      if (!node) return false;
+      node.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      return true;
+    }));
+  log('provider chosen', choseProvider);
+  await new Promise((r) => setTimeout(r, 3000));
 
-  // Provider: preset deepseek, fake key; endpoint stays api.deepseek.com and is
-  // redirected to the fake server by the test proxy.
-  await page.goto(`${ORIGIN}/settings/provider/new?providerId=deepseek&providerName=deepseek`, {
-    waitUntil: 'networkidle2',
-    timeout: 60000,
-  });
   const provider = await waitFor(/(配置 deepseek|Configure deepseek|API)/i, 20000);
   log('provider page', Boolean(provider), summary(provider || '(blank)'));
 
@@ -98,58 +112,37 @@ try {
 
   const continued = await clickText(['Continue', '继续']);
   log('provider continue', continued);
+  await new Promise((r) => setTimeout(r, 5000));
+
+  // Onboarding model selection; the fake provider's /v1/models result lands first.
+  const modelScreen = await waitFor(/(选择聊天模型|Choose a chat model)/, 30000);
+  log('model screen', Boolean(modelScreen), summary(modelScreen || '(none)'));
+  pickerText = await page.evaluate(() => {
+    const node = document.querySelector('[data-testid="onboarding-model"]');
+    return node ? node.innerText : '';
+  });
+  const picked = await page.evaluate(() => {
+    const node = Array.from(document.querySelectorAll('*')).find(
+      (item) => (item.innerText || '').trim() === 'fake-model',
+    );
+    if (!node) return false;
+    node.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+    return true;
+  });
+  log('model picked', picked, summary(pickerText, 300));
+  await new Promise((r) => setTimeout(r, 1000));
+  const started =
+    (await clickTestId('onboarding-model-start')) ||
+    (await clickText(['Start chatting', '开始聊天']));
+  log('onboarding start', started);
   await new Promise((r) => setTimeout(r, 4000));
 
-  // The provider wizard opens a model-sync sheet; enable everything it found.
-  const syncPage = await waitFor(/(同步模型|Sync models)/, 20000);
-  log('model sync page', Boolean(syncPage), summary(syncPage || '(none)'));
-  if (syncPage) {
-    const allSelected = await clickText(['全选', 'Select all']);
-    log('models selected', allSelected);
-    await new Promise((r) => setTimeout(r, 1000));
-    const finished = await clickText(['完成配置', 'Finish setup', 'Done']);
-    log('setup finished', finished);
-    await new Promise((r) => setTimeout(r, 3000));
-  }
-
-  pageText = await text();
-  log('provider saved', !/加载服务商配置失败/.test(pageText), summary(pageText, 200));
-
-  // Back to chat and pick the fake model.
-  await page.goto(`${ORIGIN}/home`, { waitUntil: 'networkidle2', timeout: 60000 });
+  // Chat composer should now be admitted by FirstUseGate.
   const composerReady = await page
     .waitForSelector('[data-testid="chat-composer"]', { timeout: 30000 })
     .then(() => true)
     .catch(() => false);
   log('home composer', composerReady, page.url());
-  const openedPicker = await page.evaluate(() => {
-    const btn = document.querySelector('[data-testid="composer-model-button"]');
-    if (!btn) return false;
-    btn.click();
-    return true;
-  });
-  log('model picker opened', openedPicker);
-  const pickerReady = await page
-    .waitForSelector('[data-testid="model-picker"]', { timeout: 15000 })
-    .then(() => true)
-    .catch(() => false);
-  log('model picker mounted', pickerReady);
-  pickerText = pickerReady
-    ? await page.evaluate(() => {
-        const node = document.querySelector('[data-testid="model-picker"]');
-        return node ? node.innerText : '';
-      })
-    : '';
-  log('model picker text', Boolean(pickerText), summary(pickerText, 400));
-  const picked = await page.evaluate(() => {
-    const nodes = Array.from(document.querySelectorAll('*'));
-    const target = nodes.find((node) => (node.innerText || '').trim() === 'fake-model');
-    if (!target) return false;
-    target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-    return true;
-  });
-  log('model picked', picked, summary(pickerText, 200));
-  await new Promise((r) => setTimeout(r, 1500));
 
   // Type into the composer and send.
   const inputHandle = await page.evaluateHandle(() => {
@@ -206,7 +199,7 @@ const report = [
   ...steps.map((s) => `${s.ok ? 'ok  ' : 'FAIL'} ${s.name}${s.detail ? ` — ${s.detail}` : ''}`),
   '```',
   '',
-  '## model picker text',
+  '## model screen text',
   '```',
   summary(pickerText, 600),
   '```',
