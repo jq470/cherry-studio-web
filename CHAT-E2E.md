@@ -19,10 +19,10 @@ ok   provider continue
 ok   model screen — Choose a chat model Edit connection Step 3 of 3 DeepSeek V4 Flash deepseek-v4-flash DeepSeek V4 Pro deepseek-v4-pro DeepSeek V4.1 Flash deepseek-flash fake-model fake-model A connection check runs before starting; a small charge may apply. 
 ok   model picked
 ok   onboarding start
-ok   home composer — http://127.0.0.1:8100/?agentId=be186011-8cc2-464a-94a4-4b309c7bb989
+ok   home composer — http://127.0.0.1:8100/?agentId=e69ecb28-6945-4c42-aa6f-5f6b0367c510
 ok   message typed — {"value":"ping","disabled":null}
-ok   send clicked — api requests: 3
-ok   after send — http://127.0.0.1:8100/api.deepseek.com/v1/chat/completions | http://127.0.0.1:8100/api.deepseek.com/v1/chat/completions :: Agents Drawings Plugins Skills Files Sessions Cherry Studio Cherry Studio New chat Cancel Camera Photos File Plugins Skills fake-model AI-generated content, for reference only 🍒 Cherie
+ok   send clicked — api requests before: 2 -> 2
+ok   after send — api 2 -> 4 :: http://127.0.0.1:8100/api.deepseek.com/v1/chat/completions | http://127.0.0.1:8100/api.deepseek.com/v1/chat/completions :: Agents Drawings Plugins Skills Files Sessions Cherry Studio Cherry Studio New chat Cancel Camera Photos File Plugins Skills fake-model AI-generated content, for reference only 🍒 Cherie
 FAIL reply received — (no reply)
 ```
 
