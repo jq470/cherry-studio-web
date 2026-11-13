@@ -8,13 +8,28 @@
 // root layout a 0-height box: absolutely positioned children then resolved
 // `bottom: 0` to y = -height, so the entire UI (sidebar footer, composer) sat
 // above the viewport while innerText still looked fine to the smoke test.
-// It must be a flex:1 View, exactly like the native provider.
+// It must be a flex-growing container, exactly like the native provider.
+//
+// A plain DOM node with CSS flex is used on purpose: importing `View` from
+// `react-native` at module scope hits RNW's own initialisation (React error #130
+// because View is still undefined at that point), and a lazy require inside
+// render is too fragile for a module this central.
 'use strict';
 
 const React = require('react');
-const { View } = require('react-native');
 
 const { createStub } = require('./native-stub');
+
+const PROVIDER_STYLE = {
+  display: 'flex',
+  flexDirection: 'column',
+  flexGrow: 1,
+  flexShrink: 1,
+  flexBasis: '0%',
+  minHeight: 0,
+  width: '100%',
+  height: '100%',
+};
 
 const wrap = (tag) =>
   function KeyboardWrapper(props) {
@@ -22,11 +37,8 @@ const wrap = (tag) =>
   };
 
 function KeyboardProvider(props) {
-  return React.createElement(
-    View,
-    { style: [{ flex: 1, minHeight: 0 }, props && props.style] },
-    props && props.children,
-  );
+  const style = props && props.style ? [PROVIDER_STYLE, props.style] : PROVIDER_STYLE;
+  return React.createElement('div', { style }, props && props.children);
 }
 
 const zero = { value: 0 };
