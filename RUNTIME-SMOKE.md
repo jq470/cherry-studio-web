@@ -1,18 +1,18 @@
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 2226 ms (first non-empty paint: 2226)
-- dom nodes: 42
+- boot wait: 3434 ms (first non-empty paint: 3434)
+- dom nodes: 338
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
-- #root children: 1 | body text length: 140
+- #root children: 1 | body text length: 244
 - sqlite backend: ready
 - crossOriginIsolated: true | SAB: true | Worker: true
 - hardwareConcurrency: 4
 
 ## body excerpt
 ```
-Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry
+Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Cherie
 ```
 
 ## react fiber tree
@@ -31,7 +31,7 @@ HostRoot
 
 ## #root html
 ```html
-<div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div style="display: flex; flex-direction: column; flex: 1 1 0%; min-height: 0px; width: 100%; height: 100%;"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-105ug2t"><div class="css-g5y9jx r-13awgt0"><div aria-live="polite" class="css-g5y9jx flex-1 items-center justify-center bg-background px-8"><div class="css-g5y9jx items-center justify-center gap-4"><div class="css-g5y9jx max-w-full gap-1.5 items-center"><div dir="auto" class="css-146c3p1 text-center font-semibold text-lg text-error r-1xnzce8">Something went wrong</div><div dir="auto" class="css-146c3p1 text-center text-muted-foreground text-sm r-1xnzce8">This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it.</div></div><div class="css-g5y9jx flex-row flex-wrap items-center gap-3 justify-center"><button role="button" tabindex="0" class="css-g5y9jx r-1loqt21 r-1otgn73 flex-row items-center justify-center overflow-hidden border-0 active:opacity-80 disabled:opacity-40 bg-foreground shadow-xs rounded-full gap-2 px-4 py-2.5" type="button"><div dir="auto" class="css-146c3p1 min-w-0 shrink text-center font-medium text-base text-background">Retry</div></button></div></div></div></div></div></div></div></div></div></div></div>
+<div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div style="display: flex; flex-direction: column; flex: 1 1 0%; min-height: 0px; width: 100%; height: 100%;"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-105ug2t"><div class="css-g5y9jx r-13awgt0"><div style="position: absolute; inset: 0px; pointer-events: none; visibility: hidden;"></div><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-1p0dtai r-1d2f490 r-u8s1d r-zchlnj r-ipm5af" style="background-color: rgb(245, 245, 245); display: flex;"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0"><div style="position: absolute; inset: 0px; pointer-events: none; visibility: hidden;"></div><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-18u37iz"><div class="css-g5y9jx r-1p0dtai r-dnmrzs r-ipm5af" style="position: relative; z-index: 1; border-right-color: rgba(0, 0, 0, 0.21); border-right-width: 1px; background-color: rgb(245, 245, 245); width: 280px;"><div class="css-g5y9jx flex-1" data-testid="sidebar" style="margin-right: 0px;"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx r-150rngu r-eqz5dr r-16y2uox r-1wbh5a2 r-11yh6sk r-1rnoaur r-agouwx r-2eszeu"><div class="css-g5y9jx" style="padding-bottom: 92px; padding-left: 0px; padding-top: 56px;"><div class="css-g5y9jx" style="opacity: 1;"><button role="button" class="css-g5y9jx" data-testid="sidebar-agents" type="button" style="cursor: pointer; user-select: none; touch-action: auto;"><div class="css-g5y9jx mx-2 flex-row items-center gap-4 rounded-xl px-3 py-2.5"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#171717" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path fill="none" stroke="#171717" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" height="18" width="18" d="M14 4.1 12 6"></pat
 ```
 
 ## interaction
@@ -44,15 +44,17 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1582 ms
+- elapsed: 1563 ms
 - welcome screen returned: false
-- text: Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry Cherry Studio
+- text: Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
 ```
 
 ## startup stages
 - none logged
 
-## console tail (42 messages)
+## console tail (17 messages)
+- [log] [web-gate] sqlite ready
+- [log] [web-gate] preloaded 0 database(s), 0 file(s)
 - [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
@@ -61,44 +63,17 @@ onboarding dismissed: true
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
-- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
-- [error] TypeError: o.get is not a function
-- [log] [stack-frame] TypeError: o.get is not a function
-- [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:5412:287)
-- [log] [stack-frame] at e.initialUpdaterRun (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:1396:327)
-- [log] [stack-frame] at e.useAnimatedStyle (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:1452:453)
-- [log] [stack-frame] at _e.ChatComposerClearance (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:3823:459)
-- [log] [stack-frame] at _o (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:57061)
-- [log] [stack-frame] at hu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:80466)
-- [log] [stack-frame] at Iu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:91388)
-- [log] [stack-frame] at Pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:136688)
-- [log] [stack-frame] at Tf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135696)
-- [log] [stack-frame] at Nf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135538)
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [log] [web-gate] sqlite ready
 - [log] [web-gate] preloaded 2 database(s), 9 file(s)
 - [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
-- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
-- [error] TypeError: o.get is not a function
-- [log] [stack-frame] TypeError: o.get is not a function
-- [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:5412:287)
-- [log] [stack-frame] at e.initialUpdaterRun (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:1396:327)
-- [log] [stack-frame] at e.useAnimatedStyle (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:1452:453)
-- [log] [stack-frame] at _e.ChatComposerClearance (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:3823:459)
-- [log] [stack-frame] at _o (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:57061)
-- [log] [stack-frame] at hu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:80466)
-- [log] [stack-frame] at Iu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:91388)
-- [log] [stack-frame] at Pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:136688)
-- [log] [stack-frame] at Tf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135696)
-- [log] [stack-frame] at Nf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135538)
 
 ## page errors (0)
 
-## console errors (2)
-- TypeError: o.get is not a function
-- TypeError: o.get is not a function
+## console errors (0)
 
 ## unknown module analysis (0)
 - no mapping recovered
@@ -112,7 +87,7 @@ onboarding dismissed: true
 
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
-- http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js
+- http://127.0.0.1:8099/_expo/static/js/web/__common-b9473b5c37e394632d7d77502404d54d.js
 - http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
 - http://127.0.0.1:8099/sqlite3/sqlite3.wasm
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
