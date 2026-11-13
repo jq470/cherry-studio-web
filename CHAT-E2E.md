@@ -3,7 +3,7 @@
 - url: http://127.0.0.1:8100/?e2e=1
 - verdict: FAIL
 - reply seen: false
-- failure screenshot: /tmp/chat-e2e-failure.png
+- failure screenshot: CHAT-E2E-FAILURE.png
 
 ## steps
 ```
@@ -19,14 +19,22 @@ ok   model sync page — Agents Drawings Plugins Skills Files Sessions No sessio
 ok   models selected
 ok   setup finished
 ok   provider saved — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel Model service Enabled (1) deepseek Disabled (8) CherryIN OAuth Silicon AiHubMix ZhiPu OpenRout
-ok   model picker opened
+FAIL home composer — http://127.0.0.1:8100/home
+FAIL model picker opened
+FAIL model picker mounted
+FAIL model picker text
 FAIL model picked
 FAIL message typed — no composer input
-ok   send clicked
+FAIL send clicked
 FAIL reply received — (no reply)
+```
+
+## model picker text
+```
+
 ```
 
 ## page text (last)
 ```
-Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel Model service Enabled (1) deepseek Disabled (8) CherryIN OAuth Silicon AiHubMix ZhiPu OpenRouter OAuth Anthropic OpenAI Gemini deepseek enabled deepseek enabled
+Home Usage Statistics View details May Jun Jul Aug Sep Oct Nov 0 active days Less More 0 Tokens -- Cost
 ```
