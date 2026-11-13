@@ -42,6 +42,7 @@ const SHIMS = {
   '@sentry/react-native': 'sentry-react-native.web.js',
   'expo-image-picker': 'expo-image-picker.web.js',
   'react-native-webview': 'react-native-webview.web.js',
+  'expo-paste-input': 'expo-paste-input.web.js',
   'react-native-enriched-markdown': 'react-native-enriched-markdown.web.js',
 
   // --- generic stub (L1): native-only, never exercised on the web path,
@@ -58,7 +59,6 @@ const SHIMS = {
   'expo-speech': 'native-stub.js',
   'expo-speech-recognition': 'native-stub.js',
   'expo-audio': 'native-stub.js',
-  'expo-paste-input': 'native-stub.js',
   'expo-intent-launcher': 'native-stub.js',
   'react-native-nitro-theme-transition': 'native-stub.js',
   'react-native-reserved-regions': 'native-stub.js',
