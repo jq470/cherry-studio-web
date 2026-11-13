@@ -9,6 +9,7 @@
 // takes the whole screen down. Everything else is passed through untouched.
 'use strict';
 
+const React = require('react');
 const ReactNativeWeb = require('react-native-web');
 
 const shim = {};
@@ -16,6 +17,17 @@ for (const key of Object.keys(ReactNativeWeb)) shim[key] = ReactNativeWeb[key];
 
 if (typeof shim.codegenNativeComponent !== 'function') {
   shim.codegenNativeComponent = function codegenNativeComponent(name) {
+    // Bottom sheets carry real React children. Their native host would size and
+    // position them, so on web the host must still render that subtree — a
+    // null component leaves only the full-screen scrim behind (an invisible
+    // layer that swallows every tap and shows no dialog).
+    if (/BottomSheet/i.test(String(name || ''))) {
+      function BottomSheetHost(props) {
+        return React.createElement(ReactNativeWeb.View, props, props.children);
+      }
+      BottomSheetHost.displayName = String(name);
+      return BottomSheetHost;
+    }
     function NativeComponent() {
       return null;
     }

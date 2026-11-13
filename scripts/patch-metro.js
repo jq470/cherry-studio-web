@@ -42,6 +42,7 @@ const SHIMS = {
   '@sentry/react-native': 'sentry-react-native.web.js',
   'expo-image-picker': 'expo-image-picker.web.js',
   'react-native-webview': 'react-native-webview.web.js',
+  'react-native-enriched-markdown': 'react-native-enriched-markdown.web.js',
 
   // --- generic stub (L1): native-only, never exercised on the web path,
   //     but Metro still bundles the static require edge ---
@@ -65,7 +66,6 @@ const SHIMS = {
   'react-native-view-shot': 'native-stub.js',
   'react-native-background-actions': 'native-stub.js',
   'react-native-anydoc': 'native-stub.js',
-  'react-native-enriched-markdown': 'native-stub.js',
   '@magrinj/expo-quick-look': 'native-stub.js',
   '@preeternal/react-native-file-hash': 'native-stub.js',
   '@siteed/sherpa-onnx.rn': 'native-stub.js',
