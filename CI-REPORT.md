@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43368686481 (e1ad1938750e8b3febc9cb78ffdfd0d6e3cae4d1)
+- run: 43370351261 (b9e19b86ffd2f86a83a3be7b8ace8c66a7e10fa7)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: smoke
@@ -54,7 +54,7 @@ devDependencies:
 + tsx 4.22.0
 + typescript 6.0.3
 
-Done in 49.3s using pnpm v12.2.1
+Done in 50s using pnpm v12.2.1
 ```
 
 ## overlay log (tail)
@@ -164,10 +164,10 @@ Exported: dist-web
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 13 04:59 .
-drwxr-xr-x 5 runner runner   4096 Nov 13 04:59 ..
--rw-r--r-- 1 runner runner 656872 Nov 13 04:59 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 13 04:59 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 13 05:14 .
+drwxr-xr-x 5 runner runner   4096 Nov 13 05:14 ..
+-rw-r--r-- 1 runner runner 656872 Nov 13 05:14 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 13 05:14 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -198,7 +198,7 @@ drwxr-xr-x 5 runner runner   4096 Nov 13 04:59 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 2887 ms (first non-empty paint: 2887)
+- boot wait: 2054 ms (first non-empty paint: 2054)
 - dom nodes: 338
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
@@ -241,7 +241,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1531 ms
+- elapsed: 1433 ms
 - welcome screen returned: false
 - text: Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
 ```
@@ -258,11 +258,11 @@ onboarding dismissed: true
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
-- [error] Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
-- [error] Failed to load resource: net::ERR_FAILED
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [error] Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
+- [error] Failed to load resource: net::ERR_FAILED
 - [error] Access to fetch at 'https://analytics.cherry-ai.com/api/track' from origin 'http://127.0.0.1:8099' has been blocked by CORS policy: Request header field app-name is not allowed by Access-Control-Allow-Headers in preflight response.
 - [error] Failed to load resource: net::ERR_FAILED
 - [log] [web-gate] sqlite ready
