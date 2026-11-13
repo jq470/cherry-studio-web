@@ -4,12 +4,15 @@
 // callers can read (`height.value`, `isVisible`, `input.value`), and the
 // controller is a no-op (there is no soft keyboard in a browser).
 //
-// Reanimated 4 removed `.value` in favour of `.get()`; returning a plain
-// `{ value: 0 }` makes `height.get()` throw inside useAnimatedStyle, so the
-// hooks hand out real shared values when reanimated is available.
+// KeyboardProvider wraps the whole app. Rendering it as a bare <div> gave the
+// root layout a 0-height box: absolutely positioned children then resolved
+// `bottom: 0` to y = -height, so the entire UI (sidebar footer, composer) sat
+// above the viewport while innerText still looked fine to the smoke test.
+// It must be a flex:1 View, exactly like the native provider.
 'use strict';
 
 const React = require('react');
+const { View } = require('react-native');
 
 const { createStub } = require('./native-stub');
 
@@ -18,31 +21,19 @@ const wrap = (tag) =>
     return React.createElement(tag, { style: props && props.style }, props && props.children);
   };
 
-function createSharedValue(initial) {
-  try {
-    const reanimated = require('react-native-reanimated');
-    const makeMutable = reanimated.makeMutable || (reanimated.default && reanimated.default.makeMutable);
-    if (typeof makeMutable === 'function') return makeMutable(initial);
-  } catch (error) {
-    /* fall back to a value object below */
-  }
-  return {
-    value: initial,
-    get: () => initial,
-    set: () => {},
-    addListener: () => {},
-    removeListener: () => {},
-    modify: () => {},
-  };
+function KeyboardProvider(props) {
+  return React.createElement(
+    View,
+    { style: [{ flex: 1, minHeight: 0 }, props && props.style] },
+    props && props.children,
+  );
 }
 
-const height = createSharedValue(0);
-const progress = createSharedValue(0);
-const input = createSharedValue(null);
+const zero = { value: 0 };
 
 const useKeyboardState = () => ({ height: 0, isVisible: false, duration: 0, easing: 'easeOut' });
-const useReanimatedKeyboardAnimation = () => ({ height, progress });
-const useReanimatedFocusedInput = () => ({ input });
+const useReanimatedKeyboardAnimation = () => ({ height: zero, progress: zero });
+const useReanimatedFocusedInput = () => ({ input: { value: null } });
 const useKeyboardHandler = () => undefined;
 const useGenericKeyboardHandler = () => undefined;
 const useFocusedInputHandler = () => undefined;
@@ -62,7 +53,7 @@ const KeyboardEvents = {
 };
 
 const exports_ = {
-  KeyboardProvider: wrap('div'),
+  KeyboardProvider,
   KeyboardAwareScrollView: wrap('div'),
   KeyboardStickyView: wrap('div'),
   KeyboardAvoidingView: wrap('div'),
