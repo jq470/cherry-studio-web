@@ -31,12 +31,19 @@ let replySeen = false;
 let pageText = '';
 let pickerText = '';
 let failureShot = null;
+const consoleErrors = [];
 
 try {
   const page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 900 });
   page.on('console', (message) => {
-    if (message.type() === 'error') console.log(`[console.error] ${summary(message.text(), 200)}`);
+    if (message.type() === 'error') {
+      console.log(`[console.error] ${summary(message.text(), 200)}`);
+      consoleErrors.push(summary(message.text(), 500));
+    }
+  });
+  page.on('pageerror', (error) => {
+    consoleErrors.push(`pageerror: ${summary(error && error.stack ? error.stack : error, 500)}`);
   });
 
   const text = () => page.evaluate(() => (document.body && document.body.innerText) || '');
@@ -197,6 +204,11 @@ const report = [
   '## steps',
   '```',
   ...steps.map((s) => `${s.ok ? 'ok  ' : 'FAIL'} ${s.name}${s.detail ? ` — ${s.detail}` : ''}`),
+  '```',
+  '',
+  '## console errors',
+  '```',
+  ...consoleErrors.slice(-10),
   '```',
   '',
   '## model screen text',
