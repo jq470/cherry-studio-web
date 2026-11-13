@@ -10,13 +10,14 @@ import fs from 'node:fs';
 import puppeteer from 'puppeteer-core';
 
 const URL_TO_OPEN = process.env.E2E_URL || 'http://127.0.0.1:8099/?e2e=1';
+const ORIGIN = new URL(URL_TO_OPEN).origin;
 const REPORT = process.env.E2E_REPORT || 'CHAT-E2E.md';
 const CHROME = process.env.CHROME_PATH || '/usr/bin/google-chrome';
 
 const steps = [];
 const log = (name, ok, detail) => {
   steps.push({ name, ok, detail });
-  console.log(`[e2e] ${ok ? 'ok' : 'FAIL'} ${name}${detail ? ` - ${detail}` : ''}`);
+  console.log(`[e2e] ${ok ? 'ok' : 'FAIL'} ${name}${detail ? ` — ${detail}` : ''}`);
 };
 const summary = (text, limit = 240) => String(text).replace(/\s+/g, ' ').trim().slice(0, limit);
 
@@ -74,7 +75,7 @@ try {
 
   // Provider: preset deepseek, fake key; endpoint stays api.deepseek.com and is
   // redirected to the fake server by the test proxy.
-  await page.goto('http://127.0.0.1:8099/settings/provider/new?providerId=deepseek&providerName=deepseek', {
+  await page.goto(`${ORIGIN}/settings/provider/new?providerId=deepseek&providerName=deepseek`, {
     waitUntil: 'networkidle2',
     timeout: 60000,
   });
@@ -98,11 +99,23 @@ try {
   log('provider continue', continued);
   await new Promise((r) => setTimeout(r, 4000));
 
+  // The provider wizard opens a model-sync sheet; enable everything it found.
+  const syncPage = await waitFor(/(同步模型|Sync models)/, 20000);
+  log('model sync page', Boolean(syncPage), summary(syncPage || '(none)'));
+  if (syncPage) {
+    const allSelected = await clickText(['全选', 'Select all']);
+    log('models selected', allSelected);
+    await new Promise((r) => setTimeout(r, 1000));
+    const finished = await clickText(['完成配置', 'Finish setup', 'Done']);
+    log('setup finished', finished);
+    await new Promise((r) => setTimeout(r, 3000));
+  }
+
   pageText = await text();
   log('provider saved', !/加载服务商配置失败/.test(pageText), summary(pageText, 200));
 
   // Back to chat and pick the fake model.
-  await page.goto('http://127.0.0.1:8099/', { waitUntil: 'networkidle2', timeout: 60000 });
+  await page.goto(`${ORIGIN}/`, { waitUntil: 'networkidle2', timeout: 60000 });
   await waitFor(/(Select model|选择模型)/, 30000);
   const openedPicker = await clickText(['Select model', '选择模型']);
   log('model picker opened', openedPicker);
@@ -162,7 +175,7 @@ const report = [
   '',
   '## steps',
   '```',
-  ...steps.map((s) => `${s.ok ? 'ok  ' : 'FAIL'} ${s.name}${s.detail ? ` - ${s.detail}` : ''}`),
+  ...steps.map((s) => `${s.ok ? 'ok  ' : 'FAIL'} ${s.name}${s.detail ? ` — ${s.detail}` : ''}`),
   '```',
   '',
   '## page text (last)',
