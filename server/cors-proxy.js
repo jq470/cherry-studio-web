@@ -131,10 +131,10 @@ const server = http.createServer((req, res) => {
 
   const segment = url.pathname.split('/')[1] || '';
   if (ALLOW_HOSTS.has(segment.toLowerCase())) {
-    // Keep the leading slash: new URL('https://host' + '/path') is valid only
-    // when the path starts with '/'. slice(segment.length) preserves it.
-    const forwarded = url.pathname.slice(segment.length) || '/';
-    proxy(req, res, segment, forwarded + url.search);
+    // pathname is '/' + segment + rest; drop the leading '/' and the segment,
+    // then re-add '/' so the build URL is https://host/path (never hostpath).
+    const rest = url.pathname.slice(segment.length + 1);
+    proxy(req, res, segment, '/' + rest + url.search);
     return;
   }
 

@@ -19,8 +19,8 @@ export default {
       return new Response('not found', { status: 404 });
     }
 
-    const targetPath = url.pathname.slice(segment.length) || '/';
-    const target = `https://${segment}${targetPath}${url.search}`;
+    const rest = url.pathname.slice(segment.length + 1);
+    const target = `https://${segment}/${rest}${url.search}`;
     const headers = new Headers(request.headers);
     headers.delete('origin');
     headers.delete('referer');
