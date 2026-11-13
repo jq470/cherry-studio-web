@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43439050073 (68eef545bb750c2ca0cc84069c206f9d44ad04bf)
+- run: 43440429884 (709c9ea6cb45d631b16fbe9f21422b9b905967bf)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: e2e
@@ -54,7 +54,7 @@ devDependencies:
 + tsx 4.22.0
 + typescript 6.0.3
 
-Done in 40.7s using pnpm v12.2.1
+Done in 53s using pnpm v12.2.1
 ```
 
 ## overlay log (tail)
@@ -174,6 +174,10 @@ Exported: dist-web
 
 ## chat-e2e log (tail)
 ```
+[e2e] ok home composer — http://127.0.0.1:8100/?agentId=9afe3311-a44d-48f6-8712-05ab04a2fccb
+[e2e] FAIL message typed — no composer input
+[e2e] ok send clicked
+[e2e] FAIL reply received — (no reply)
 # Chat end-to-end report
 
 - url: http://127.0.0.1:8100/?e2e=1
@@ -183,67 +187,63 @@ Exported: dist-web
 
 ## steps
 ```
-ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Cherry Studio Privacy and data Cherry Studio collects a small amount of anonymous data to understand
+ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Privacy and data Cherry Studio collects a small amount of anonymous data to understand how its featu
 ok   privacy accept
-ok   skip setup
-ok   home reached — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
-ok   provider page — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel Configure deepseek deepseek API keys Add How to get an API key Advanced API address api.deepseek.com API format OpenAI Chat Continue E
+ok   connect provider
+ok   provider catalog — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Recommended CherryIN OAuth CherryIN - AI model provider Silicon Silicon - AI model provider AiHubMix AiHubMix - AI model provider ZhiPu ZhiPu - AI model provider deep
+ok   provider chosen
+ok   provider page — Configure deepseek Step 2 of 3 Connect using your own API key. deepseek API keys Add How to get an API key Advanced API address api.deepseek.com API format OpenAI Chat Continue Enter an API key to continue enabling this provider.
 ok   api key typed
 ok   key added
 ok   provider continue
-ok   model sync page — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel Sync models Finish setup Models to add 4 Select all fake-model DeepSeek V4.1 Flash DeepSeek V4 Flash DeepSeek V4 Pro
-ok   models selected
-ok   setup finished
-ok   provider saved — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel Model service Enabled (1) deepseek Disabled (8) CherryIN OAuth Silicon AiHubMix ZhiPu OpenRout
-FAIL home composer — http://127.0.0.1:8100/home
-FAIL model picker opened
-FAIL model picker mounted
-FAIL model picker text
-FAIL model picked
+ok   model screen — Choose a chat model Edit connection Step 3 of 3 DeepSeek V4 Flash deepseek-v4-flash DeepSeek V4 Pro deepseek-v4-pro DeepSeek V4.1 Flash deepseek-flash fake-model fake-model A connection check runs before starting; a small charge may apply. 
+ok   model picked
+ok   onboarding start
+ok   home composer — http://127.0.0.1:8100/?agentId=9afe3311-a44d-48f6-8712-05ab04a2fccb
 FAIL message typed — no composer input
-FAIL send clicked
+ok   send clicked
 FAIL reply received — (no reply)
 ```
 
-## model picker text
+## model screen text
 ```
 
 ```
 
 ## page text (last)
 ```
-Home Usage Statistics View details May Jun Jul Aug Sep Oct Nov 0 active days Less More 0 Tokens -- Cost
+Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills fake-model AI-generated content, for reference only 🍒 Cherie
 ```
 ```
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 13 14:05 .
-drwxr-xr-x 5 runner runner   4096 Nov 13 14:05 ..
--rw-r--r-- 1 runner runner 656872 Nov 13 14:05 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 13 14:05 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 13 14:15 .
+drwxr-xr-x 5 runner runner   4096 Nov 13 14:15 ..
+-rw-r--r-- 1 runner runner 656872 Nov 13 14:15 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 13 14:15 sqlite3.wasm
 
 ## js chunks
-./_expo/static/js/web/share-destination-28c75f65f923f7bb56d4304e2e5b3a89.js
-./_expo/static/js/web/font-size-00189b10f50af368b1046ac6d6494748.js
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
-./_expo/static/js/web/index-43a609c9e85702b33c3c35ac0a3a9a53.js
-./_expo/static/js/web/scan-6f8b0cccdd9655bb38360f4940db5def.js
-./_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
-./_expo/static/js/web/connect-5526245f92be7b02794989fd16ac54b8.js
-./_expo/static/js/web/[paintingId]-1b6e0ffb5bf4234eb8382de324241a63.js
-./_expo/static/js/web/notifications-a735af5eec661f818f20e4a32d143f06.js
-./_expo/static/js/web/index-a9573d8ec3db6b7b10d16527ddf940f4.js
-./_expo/static/js/web/index-111d425fada28c54842dffc7bcece297.js
-./_expo/static/js/web/model-2dbac4681f26394e83c1176a3e0f4028.js
+./_expo/static/js/web/pair-572cbb462346ec431aa51c0feedf9155.js
+./_expo/static/js/web/web-search-4f2211264c029c9f086f8c3d1ed06749.js
+./_expo/static/js/web/edit-46fb22ca5ce19efeb4d4a873ff6a7d1d.js
 ./_expo/static/js/web/files-b5c23b002187edf3bb1c0e5006870358.js
-./_expo/static/js/web/[serverId]-9fc3a6e2c78277ac9c2db0586184a120.js
-./_expo/static/js/web/oauth-callback-4cbb6e2275ac8f61be44dcaf0c5d1eda.js
-./_expo/static/js/web/data-0d21e5f32f9cb7eb3bb9821807df465d.js
-./_expo/static/js/web/_layout-3f0386dbf11505f354d6bc94b8100e85.js
-./_expo/static/js/web/openai-responses-61ee35597605ab1ac9451c95c1507efe.js
-./_expo/static/js/web/[permission]-59eb6b499c48d85f7a2c64ff5ae19748.js
-./_expo/static/js/web/__common-074ad4f4a6a28c73e9f858a1ad4f6235.js
+./_expo/static/js/web/desktop-sync-a492c756b4f6b96a0cbd05b0fec649e2.js
+./_expo/static/js/web/_layout-7c1581799993158806dec9da7b066143.js
+./_expo/static/js/web/index-214c563e120a3d87bd42c1477284c679.js
+./_expo/static/js/web/index-7138a22aa47bae477da6d48bfc17bc6b.js
+./_expo/static/js/web/provider-sync-85c961b359e018527b4228fc31dbb733.js
+./_expo/static/js/web/about-3e7b1c4aa927d4fef7467f6fe592ac16.js
+./_expo/static/js/web/azure-openai-responses-6e60b218fc2dc965d2ff308c59ff46bb.js
+./_expo/static/js/web/notifications-a735af5eec661f818f20e4a32d143f06.js
+./_expo/static/js/web/trash-7a2d54b1df167f084938b0b608e53964.js
+./_expo/static/js/web/_layout-21ae8887fe29682e0dc834c60b3dee2a.js
+./_expo/static/js/web/index-111d425fada28c54842dffc7bcece297.js
+./_expo/static/js/web/new-96e6ba2bffcd3bf28901f0c9003f0285.js
+./_expo/static/js/web/templates-c329eddff042fbbb2fe773d23051c9fe.js
+./_expo/static/js/web/privacy-f174e89ff118fc51905afe72f1fcb4c3.js
+./_expo/static/js/web/[marketplaceId]-b49bb394baa9942d3608c70fdb22cb1f.js
 
 ## wasm assets
 ./sqlite3/sqlite3.wasm
@@ -252,7 +252,7 @@ drwxr-xr-x 5 runner runner   4096 Nov 13 14:05 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 2688 ms (first non-empty paint: 2688)
+- boot wait: 3715 ms (first non-empty paint: 3715)
 - dom nodes: 339
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
@@ -295,7 +295,7 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1442 ms
+- elapsed: 1569 ms
 - welcome screen returned: false
 - text: Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
 ```
@@ -359,34 +359,30 @@ onboarding dismissed: true
 
 ## steps
 ```
-ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Cherry Studio Privacy and data Cherry Studio collects a small amount of anonymous data to understand
+ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Privacy and data Cherry Studio collects a small amount of anonymous data to understand how its featu
 ok   privacy accept
-ok   skip setup
-ok   home reached — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
-ok   provider page — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel Configure deepseek deepseek API keys Add How to get an API key Advanced API address api.deepseek.com API format OpenAI Chat Continue E
+ok   connect provider
+ok   provider catalog — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Recommended CherryIN OAuth CherryIN - AI model provider Silicon Silicon - AI model provider AiHubMix AiHubMix - AI model provider ZhiPu ZhiPu - AI model provider deep
+ok   provider chosen
+ok   provider page — Configure deepseek Step 2 of 3 Connect using your own API key. deepseek API keys Add How to get an API key Advanced API address api.deepseek.com API format OpenAI Chat Continue Enter an API key to continue enabling this provider.
 ok   api key typed
 ok   key added
 ok   provider continue
-ok   model sync page — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel Sync models Finish setup Models to add 4 Select all fake-model DeepSeek V4.1 Flash DeepSeek V4 Flash DeepSeek V4 Pro
-ok   models selected
-ok   setup finished
-ok   provider saved — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel Model service Enabled (1) deepseek Disabled (8) CherryIN OAuth Silicon AiHubMix ZhiPu OpenRout
-FAIL home composer — http://127.0.0.1:8100/home
-FAIL model picker opened
-FAIL model picker mounted
-FAIL model picker text
-FAIL model picked
+ok   model screen — Choose a chat model Edit connection Step 3 of 3 DeepSeek V4 Flash deepseek-v4-flash DeepSeek V4 Pro deepseek-v4-pro DeepSeek V4.1 Flash deepseek-flash fake-model fake-model A connection check runs before starting; a small charge may apply. 
+ok   model picked
+ok   onboarding start
+ok   home composer — http://127.0.0.1:8100/?agentId=9afe3311-a44d-48f6-8712-05ab04a2fccb
 FAIL message typed — no composer input
-FAIL send clicked
+ok   send clicked
 FAIL reply received — (no reply)
 ```
 
-## model picker text
+## model screen text
 ```
 
 ```
 
 ## page text (last)
 ```
-Home Usage Statistics View details May Jun Jul Aug Sep Oct Nov 0 active days Less More 0 Tokens -- Cost
+Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills fake-model AI-generated content, for reference only 🍒 Cherie
 ```

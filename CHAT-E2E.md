@@ -7,34 +7,30 @@
 
 ## steps
 ```
-ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Cherry Studio Privacy and data Cherry Studio collects a small amount of anonymous data to understand
+ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Privacy and data Cherry Studio collects a small amount of anonymous data to understand how its featu
 ok   privacy accept
-ok   skip setup
-ok   home reached — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
-ok   provider page — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel Configure deepseek deepseek API keys Add How to get an API key Advanced API address api.deepseek.com API format OpenAI Chat Continue E
+ok   connect provider
+ok   provider catalog — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Recommended CherryIN OAuth CherryIN - AI model provider Silicon Silicon - AI model provider AiHubMix AiHubMix - AI model provider ZhiPu ZhiPu - AI model provider deep
+ok   provider chosen
+ok   provider page — Configure deepseek Step 2 of 3 Connect using your own API key. deepseek API keys Add How to get an API key Advanced API address api.deepseek.com API format OpenAI Chat Continue Enter an API key to continue enabling this provider.
 ok   api key typed
 ok   key added
 ok   provider continue
-ok   model sync page — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel Sync models Finish setup Models to add 4 Select all fake-model DeepSeek V4.1 Flash DeepSeek V4 Flash DeepSeek V4 Pro
-ok   models selected
-ok   setup finished
-ok   provider saved — Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel Model service Enabled (1) deepseek Disabled (8) CherryIN OAuth Silicon AiHubMix ZhiPu OpenRout
-FAIL home composer — http://127.0.0.1:8100/home
-FAIL model picker opened
-FAIL model picker mounted
-FAIL model picker text
-FAIL model picked
+ok   model screen — Choose a chat model Edit connection Step 3 of 3 DeepSeek V4 Flash deepseek-v4-flash DeepSeek V4 Pro deepseek-v4-pro DeepSeek V4.1 Flash deepseek-flash fake-model fake-model A connection check runs before starting; a small charge may apply. 
+ok   model picked
+ok   onboarding start
+ok   home composer — http://127.0.0.1:8100/?agentId=9afe3311-a44d-48f6-8712-05ab04a2fccb
 FAIL message typed — no composer input
-FAIL send clicked
+ok   send clicked
 FAIL reply received — (no reply)
 ```
 
-## model picker text
+## model screen text
 ```
 
 ```
 
 ## page text (last)
 ```
-Home Usage Statistics View details May Jun Jul Aug Sep Oct Nov 0 active days Less More 0 Tokens -- Cost
+Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills fake-model AI-generated content, for reference only 🍒 Cherie
 ```
