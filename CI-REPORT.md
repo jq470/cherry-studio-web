@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43443893586 (01943cc97d9fc776b11d59809f4e4fb6804d2610)
+- run: 43445361804 (1b956ded810129db7025b4f80d0cfa6e71f833ec)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: e2e
@@ -54,7 +54,7 @@ devDependencies:
 + tsx 4.22.0
 + typescript 6.0.3
 
-Done in 51.9s using pnpm v12.2.1
+Done in 45.8s using pnpm v12.2.1
 ```
 
 ## overlay log (tail)
@@ -114,29 +114,29 @@ Exported: dist-web
 ```
 [gate] gated 3 script(s):
   - /_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
-  - /_expo/static/js/web/__common-e598b6f7ef1586f1aabf7ab49c4c7447.js
+  - /_expo/static/js/web/__common-543099ac887493bdf31d6ede6e200304.js
   - /_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
 ```
 
 ## smoke log (tail)
 ```
-- [log] [stack-frame] Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
-- [log] [stack-frame] at ol (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:38823)
-- [log] [stack-frame] at v (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:51820)
-- [log] [stack-frame] at http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:52660
-- [log] [stack-frame] at lu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:76965)
-- [log] [stack-frame] at hu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:80532)
-- [log] [stack-frame] at Iu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:91388)
-- [log] [stack-frame] at Pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:136688)
-- [log] [stack-frame] at Tf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135696)
-- [log] [stack-frame] at Nf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135538)
-- [log] [stack-frame] at pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:132171)
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [log] [web-gate] sqlite ready
+- [log] [web-gate] preloaded 2 database(s), 9 file(s)
+- [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 
 ## page errors (0)
 
-## console errors (2)
-- Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
-- Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+## console errors (0)
 
 ## unknown module analysis (0)
 - no mapping recovered
@@ -150,7 +150,7 @@ Exported: dist-web
 
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
-- http://127.0.0.1:8099/_expo/static/js/web/__common-e598b6f7ef1586f1aabf7ab49c4c7447.js
+- http://127.0.0.1:8099/_expo/static/js/web/__common-543099ac887493bdf31d6ede6e200304.js
 - http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
 - http://127.0.0.1:8099/sqlite3/sqlite3.wasm
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
@@ -174,6 +174,7 @@ Exported: dist-web
 
 ## chat-e2e log (tail)
 ```
+# Chat end-to-end report
 
 - url: http://127.0.0.1:8100/?e2e=1
 - verdict: FAIL
@@ -182,7 +183,7 @@ Exported: dist-web
 
 ## steps
 ```
-ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Privacy and data Cherry Studio collects a small amount of anonymous data to understand how its featu
+ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Cherry Studio Privacy and data Cherry Studio collects a small amount of anonymous data to understand
 ok   privacy accept
 ok   connect provider
 ok   provider catalog — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Recommended CherryIN OAuth CherryIN - AI model provider Silicon Silicon - AI model provider AiHubMix AiHubMix - AI model provider ZhiPu ZhiPu - AI model provider deep
@@ -194,15 +195,14 @@ ok   provider continue
 ok   model screen — Choose a chat model Edit connection Step 3 of 3 DeepSeek V4 Flash deepseek-v4-flash DeepSeek V4 Pro deepseek-v4-pro DeepSeek V4.1 Flash deepseek-flash fake-model fake-model A connection check runs before starting; a small charge may apply. 
 ok   model picked
 ok   onboarding start
-FAIL home composer — http://127.0.0.1:8100/
-FAIL message typed — no composer input
-FAIL send clicked
+ok   home composer — http://127.0.0.1:8100/?agentId=51daec26-1220-4c01-bd27-3f990e4c79ff
+ok   message typed
+ok   send clicked
 FAIL reply received — (no reply)
 ```
 
 ## console errors
 ```
-Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
 ```
 
 ## model screen text
@@ -212,16 +212,16 @@ Error: Minified React error #130; visit https://react.dev/errors/130?args[]=unde
 
 ## page text (last)
 ```
-Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry
+Agents Drawings Plugins Skills Files Sessions Cherry Studio Cherry Studio New chat Cancel Camera Photos File Plugins Skills fake-model AI-generated content, for reference only 🍒 Cherie
 ```
 ```
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 13 14:37 .
-drwxr-xr-x 5 runner runner   4096 Nov 13 14:37 ..
--rw-r--r-- 1 runner runner 656872 Nov 13 14:37 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 13 14:37 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 13 14:45 .
+drwxr-xr-x 5 runner runner   4096 Nov 13 14:45 ..
+-rw-r--r-- 1 runner runner 656872 Nov 13 14:45 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 13 14:45 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -233,7 +233,6 @@ drwxr-xr-x 5 runner runner   4096 Nov 13 14:37 ..
 ./_expo/static/js/web/_layout-7c1581799993158806dec9da7b066143.js
 ./_expo/static/js/web/index-214c563e120a3d87bd42c1477284c679.js
 ./_expo/static/js/web/index-7138a22aa47bae477da6d48bfc17bc6b.js
-./_expo/static/js/web/__common-e598b6f7ef1586f1aabf7ab49c4c7447.js
 ./_expo/static/js/web/provider-sync-85c961b359e018527b4228fc31dbb733.js
 ./_expo/static/js/web/about-3e7b1c4aa927d4fef7467f6fe592ac16.js
 ./_expo/static/js/web/azure-openai-responses-6e60b218fc2dc965d2ff308c59ff46bb.js
@@ -244,6 +243,7 @@ drwxr-xr-x 5 runner runner   4096 Nov 13 14:37 ..
 ./_expo/static/js/web/new-96e6ba2bffcd3bf28901f0c9003f0285.js
 ./_expo/static/js/web/templates-c329eddff042fbbb2fe773d23051c9fe.js
 ./_expo/static/js/web/privacy-f174e89ff118fc51905afe72f1fcb4c3.js
+./_expo/static/js/web/[marketplaceId]-b49bb394baa9942d3608c70fdb22cb1f.js
 
 ## wasm assets
 ./sqlite3/sqlite3.wasm
@@ -252,18 +252,18 @@ drwxr-xr-x 5 runner runner   4096 Nov 13 14:37 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 5504 ms (first non-empty paint: 5504)
-- dom nodes: 43
+- boot wait: 2074 ms (first non-empty paint: 2074)
+- dom nodes: 341
 - title: Cherry Studio
 - verdict: PASS (no startup failure markers)
-- #root children: 1 | body text length: 140
+- #root children: 1 | body text length: 244
 - sqlite backend: ready
 - crossOriginIsolated: true | SAB: true | Worker: true
 - hardwareConcurrency: 4
 
 ## body excerpt
 ```
-Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry
+Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Cherie
 ```
 
 ## react fiber tree
@@ -282,7 +282,7 @@ HostRoot
 
 ## #root html
 ```html
-<div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div style="display: flex; flex-direction: column; flex: 1 1 0%; min-height: 0px; width: 100%; height: 100%;"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-105ug2t"><div class="css-g5y9jx r-13awgt0"><div aria-live="polite" class="css-g5y9jx flex-1 items-center justify-center bg-background px-8"><div class="css-g5y9jx items-center justify-center gap-4"><div class="css-g5y9jx max-w-full gap-1.5 items-center"><div dir="auto" class="css-146c3p1 text-center font-semibold text-lg text-error r-1xnzce8">Something went wrong</div><div dir="auto" class="css-146c3p1 text-center text-muted-foreground text-sm r-1xnzce8">This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it.</div></div><div class="css-g5y9jx flex-row flex-wrap items-center gap-3 justify-center"><button role="button" tabindex="0" class="css-g5y9jx r-1loqt21 r-1otgn73 flex-row items-center justify-center overflow-hidden border-0 active:opacity-80 disabled:opacity-40 bg-foreground shadow-xs rounded-full gap-2 px-4 py-2.5" type="button"><div dir="auto" class="css-146c3p1 min-w-0 shrink text-center font-medium text-base text-background">Retry</div></button></div></div></div></div></div></div></div></div></div></div></div>
+<div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div style="display: flex; flex-direction: column; flex: 1 1 0%; min-height: 0px; width: 100%; height: 100%;"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-105ug2t"><div class="css-g5y9jx r-13awgt0"><div style="position: absolute; inset: 0px; pointer-events: none; visibility: hidden;"></div><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-1p0dtai r-1d2f490 r-u8s1d r-zchlnj r-ipm5af" style="background-color: rgb(245, 245, 245); display: flex;"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0"><div style="position: absolute; inset: 0px; pointer-events: none; visibility: hidden;"></div><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-18u37iz"><div class="css-g5y9jx r-1p0dtai r-dnmrzs r-ipm5af" style="position: relative; z-index: 1; border-right-color: rgba(0, 0, 0, 0.21); border-right-width: 1px; background-color: rgb(245, 245, 245); width: 280px;"><div class="css-g5y9jx flex-1" data-testid="sidebar" style="margin-right: 0px;"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx r-150rngu r-eqz5dr r-16y2uox r-1wbh5a2 r-11yh6sk r-1rnoaur r-agouwx r-2eszeu"><div class="css-g5y9jx" style="padding-bottom: 92px; padding-left: 0px; padding-top: 56px;"><div class="css-g5y9jx" style="opacity: 1;"><button role="button" class="css-g5y9jx" data-testid="sidebar-agents" type="button" style="cursor: pointer; user-select: none; touch-action: auto;"><div class="css-g5y9jx mx-2 flex-row items-center gap-4 rounded-xl px-3 py-2.5"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#171717" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path fill="none" stroke="#171717" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" height="18" width="18" d="M14 4.1 12 6"></pat
 ```
 
 ## interaction
@@ -295,15 +295,17 @@ onboarding dismissed: true
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 1724 ms
+- elapsed: 1424 ms
 - welcome screen returned: false
-- text: Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry Cherry Studio
+- text: Agents Drawings Plugins Skills Files Sessions No sessions yet Cherry Studio Cherry Studio New chat Cancel 🍒 What should we create together today? Camera Photos File Plugins Skills Select model AI-generated content, for reference only 🍒 Ch
 ```
 
 ## startup stages
 - none logged
 
-## console tail (42 messages)
+## console tail (17 messages)
+- [log] [web-gate] sqlite ready
+- [log] [web-gate] preloaded 0 database(s), 0 file(s)
 - [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
@@ -313,43 +315,16 @@ onboarding dismissed: true
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
-- [error] Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
-- [log] [stack-frame] Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
-- [log] [stack-frame] at ol (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:38823)
-- [log] [stack-frame] at v (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:51820)
-- [log] [stack-frame] at http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:52660
-- [log] [stack-frame] at lu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:76965)
-- [log] [stack-frame] at hu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:80532)
-- [log] [stack-frame] at Iu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:91388)
-- [log] [stack-frame] at Pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:136688)
-- [log] [stack-frame] at Tf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135696)
-- [log] [stack-frame] at Nf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135538)
-- [log] [stack-frame] at pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:132171)
 - [log] [web-gate] sqlite ready
 - [log] [web-gate] preloaded 2 database(s), 9 file(s)
 - [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
 - [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
-- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
-- [error] Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
-- [log] [stack-frame] Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
-- [log] [stack-frame] at ol (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:38823)
-- [log] [stack-frame] at v (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:51820)
-- [log] [stack-frame] at http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:52660
-- [log] [stack-frame] at lu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:76965)
-- [log] [stack-frame] at hu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:80532)
-- [log] [stack-frame] at Iu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:91388)
-- [log] [stack-frame] at Pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:136688)
-- [log] [stack-frame] at Tf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135696)
-- [log] [stack-frame] at Nf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135538)
-- [log] [stack-frame] at pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:132171)
 
 ## page errors (0)
 
-## console errors (2)
-- Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
-- Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+## console errors (0)
 
 ## unknown module analysis (0)
 - no mapping recovered
@@ -363,7 +338,7 @@ onboarding dismissed: true
 
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
-- http://127.0.0.1:8099/_expo/static/js/web/__common-e598b6f7ef1586f1aabf7ab49c4c7447.js
+- http://127.0.0.1:8099/_expo/static/js/web/__common-543099ac887493bdf31d6ede6e200304.js
 - http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
 - http://127.0.0.1:8099/sqlite3/sqlite3.wasm
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
@@ -384,7 +359,7 @@ onboarding dismissed: true
 
 ## steps
 ```
-ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Privacy and data Cherry Studio collects a small amount of anonymous data to understand how its featu
+ok   boot — Welcome to Cherry Connect your AI service or sync your existing setup from your computer. Connect a provider Sync from desktop Set up later Cherry Studio Privacy and data Cherry Studio collects a small amount of anonymous data to understand
 ok   privacy accept
 ok   connect provider
 ok   provider catalog — Choose a provider Step 1 of 3 Choose the service your API key belongs to. Recommended CherryIN OAuth CherryIN - AI model provider Silicon Silicon - AI model provider AiHubMix AiHubMix - AI model provider ZhiPu ZhiPu - AI model provider deep
@@ -396,15 +371,14 @@ ok   provider continue
 ok   model screen — Choose a chat model Edit connection Step 3 of 3 DeepSeek V4 Flash deepseek-v4-flash DeepSeek V4 Pro deepseek-v4-pro DeepSeek V4.1 Flash deepseek-flash fake-model fake-model A connection check runs before starting; a small charge may apply. 
 ok   model picked
 ok   onboarding start
-FAIL home composer — http://127.0.0.1:8100/
-FAIL message typed — no composer input
-FAIL send clicked
+ok   home composer — http://127.0.0.1:8100/?agentId=51daec26-1220-4c01-bd27-3f990e4c79ff
+ok   message typed
+ok   send clicked
 FAIL reply received — (no reply)
 ```
 
 ## console errors
 ```
-Error: Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
 ```
 
 ## model screen text
@@ -414,5 +388,5 @@ Error: Minified React error #130; visit https://react.dev/errors/130?args[]=unde
 
 ## page text (last)
 ```
-Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry
+Agents Drawings Plugins Skills Files Sessions Cherry Studio Cherry Studio New chat Cancel Camera Photos File Plugins Skills fake-model AI-generated content, for reference only 🍒 Cherie
 ```
