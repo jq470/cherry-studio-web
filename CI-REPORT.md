@@ -1,6 +1,6 @@
 # Web build report
 
-- run: 43374148635 (172f2887e1e396fc6b393e6bf95b4ab510725802)
+- run: 43374789000 (2080eaa6af0087ad856cdf70c18ca2f30d7ef246)
 - upstream: 714d071096589a4144e2c4dbbbf2b6e3827b998c
 - diagnostic export: 
 - stage: smoke
@@ -54,7 +54,7 @@ devDependencies:
 + tsx 4.22.0
 + typescript 6.0.3
 
-Done in 40.9s using pnpm v12.2.1
+Done in 51.5s using pnpm v12.2.1
 ```
 
 ## overlay log (tail)
@@ -114,32 +114,29 @@ Exported: dist-web
 ```
 [gate] gated 3 script(s):
   - /_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
-  - /_expo/static/js/web/__common-4785bb1796e41dffd36aca90067db179.js
+  - /_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js
   - /_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
 ```
 
 ## smoke log (tail)
 ```
-- sqlite: ready
-- elapsed: 22036 ms
-- welcome screen returned: false
-- text: (empty)
-```
+- [log] [stack-frame] TypeError: o.get is not a function
+- [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:5412:287)
+- [log] [stack-frame] at e.initialUpdaterRun (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:1396:327)
+- [log] [stack-frame] at e.useAnimatedStyle (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:1452:453)
+- [log] [stack-frame] at _e.ChatComposerClearance (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:3823:459)
+- [log] [stack-frame] at _o (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:57061)
+- [log] [stack-frame] at hu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:80466)
+- [log] [stack-frame] at Iu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:91388)
+- [log] [stack-frame] at Pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:136688)
+- [log] [stack-frame] at Tf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135696)
+- [log] [stack-frame] at Nf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135538)
 
-## startup stages
-- none logged
+## page errors (0)
 
-## console tail (4 messages)
-- [log] [web-gate] sqlite ready
-- [log] [web-gate] preloaded 0 database(s), 0 file(s)
-- [log] [web-gate] sqlite ready
-- [log] [web-gate] preloaded 0 database(s), 5 file(s)
-
-## page errors (2)
-- Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
-- Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
-
-## console errors (0)
+## console errors (2)
+- TypeError: o.get is not a function
+- TypeError: o.get is not a function
 
 ## unknown module analysis (0)
 - no mapping recovered
@@ -153,21 +150,24 @@ Exported: dist-web
 
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
-- http://127.0.0.1:8099/_expo/static/js/web/__common-4785bb1796e41dffd36aca90067db179.js
+- http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js
 - http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
 - http://127.0.0.1:8099/sqlite3/sqlite3.wasm
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-53501e52582fd2edbc769c33d0d405e8.js
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-ce65163132c001c93990acf79cd18f44.js
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-7c1581799993158806dec9da7b066143.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-43a609c9e85702b33c3c35ac0a3a9a53.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-96f4b2821f567ae5339167974df76759.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-f9384db76673e101b7654ff4595eb18b.js
 ```
 
 ## sqlite3 runtime
 total 1512
-drwxr-xr-x 2 runner runner   4096 Nov 13 05:48 .
-drwxr-xr-x 5 runner runner   4096 Nov 13 05:48 ..
--rw-r--r-- 1 runner runner 656872 Nov 13 05:48 index.mjs
--rw-r--r-- 1 runner runner 879084 Nov 13 05:48 sqlite3.wasm
+drwxr-xr-x 2 runner runner   4096 Nov 13 05:55 .
+drwxr-xr-x 5 runner runner   4096 Nov 13 05:55 ..
+-rw-r--r-- 1 runner runner 656872 Nov 13 05:55 index.mjs
+-rw-r--r-- 1 runner runner 879084 Nov 13 05:55 sqlite3.wasm
 
 ## js chunks
 ./_expo/static/js/web/remote-f532e04fbc8e152225cfd7627be86216.js
@@ -198,60 +198,104 @@ drwxr-xr-x 5 runner runner   4096 Nov 13 05:48 ..
 # Runtime smoke report
 
 - url: http://127.0.0.1:8099/
-- boot wait: 47314 ms (first non-empty paint: never)
-- dom nodes: 18
+- boot wait: 2226 ms (first non-empty paint: 2226)
+- dom nodes: 42
 - title: Cherry Studio
-- verdict: FAIL: #root has no children | FAIL: body text too short | FAIL: 2 uncaught page error(s)
-- #root children: 0 | body text length: 0
+- verdict: PASS (no startup failure markers)
+- #root children: 1 | body text length: 140
 - sqlite backend: ready
 - crossOriginIsolated: true | SAB: true | Worker: true
 - hardwareConcurrency: 4
 
 ## body excerpt
 ```
-(empty)
+Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry
 ```
 
 ## react fiber tree
 ```
 HostRoot
+  o
+    t
+      Anonymous
+        f
+          f
+            Anonymous
+              Anonymous
+                Anonymous
+                  h
 ```
 
 ## #root html
 ```html
-(empty)
+<div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div style="display: flex; flex-direction: column; flex: 1 1 0%; min-height: 0px; width: 100%; height: 100%;"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx flex-1"><div class="css-g5y9jx r-13awgt0"><div class="css-g5y9jx r-13awgt0 r-105ug2t"><div class="css-g5y9jx r-13awgt0"><div aria-live="polite" class="css-g5y9jx flex-1 items-center justify-center bg-background px-8"><div class="css-g5y9jx items-center justify-center gap-4"><div class="css-g5y9jx max-w-full gap-1.5 items-center"><div dir="auto" class="css-146c3p1 text-center font-semibold text-lg text-error r-1xnzce8">Something went wrong</div><div dir="auto" class="css-146c3p1 text-center text-muted-foreground text-sm r-1xnzce8">This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it.</div></div><div class="css-g5y9jx flex-row flex-wrap items-center gap-3 justify-center"><button role="button" tabindex="0" class="css-g5y9jx r-1loqt21 r-1otgn73 flex-row items-center justify-center overflow-hidden border-0 active:opacity-80 disabled:opacity-40 bg-foreground shadow-xs rounded-full gap-2 px-4 py-2.5" type="button"><div dir="auto" class="css-146c3p1 min-w-0 shrink text-center font-medium text-base text-background">Retry</div></button></div></div></div></div></div></div></div></div></div></div></div>
 ```
 
 ## interaction
 ```
-privacy accept clicked: false
-privacy button not found; continuing anyway
-skip setup clicked: false
-onboarding dismissed: false
+privacy accept clicked: true
+skip setup clicked: true
+onboarding dismissed: true
 ```
 
 ## reload (persistence)
 ```
 - sqlite: ready
-- elapsed: 22036 ms
+- elapsed: 1582 ms
 - welcome screen returned: false
-- text: (empty)
+- text: Something went wrong This screen ran into a problem. Try again. If this keeps happening, close Cherry Studio completely and reopen it. Retry Cherry Studio
 ```
 
 ## startup stages
 - none logged
 
-## console tail (4 messages)
+## console tail (42 messages)
+- [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [error] TypeError: o.get is not a function
+- [log] [stack-frame] TypeError: o.get is not a function
+- [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:5412:287)
+- [log] [stack-frame] at e.initialUpdaterRun (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:1396:327)
+- [log] [stack-frame] at e.useAnimatedStyle (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:1452:453)
+- [log] [stack-frame] at _e.ChatComposerClearance (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:3823:459)
+- [log] [stack-frame] at _o (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:57061)
+- [log] [stack-frame] at hu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:80466)
+- [log] [stack-frame] at Iu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:91388)
+- [log] [stack-frame] at Pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:136688)
+- [log] [stack-frame] at Tf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135696)
+- [log] [stack-frame] at Nf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135538)
 - [log] [web-gate] sqlite ready
-- [log] [web-gate] preloaded 0 database(s), 0 file(s)
-- [log] [web-gate] sqlite ready
-- [log] [web-gate] preloaded 0 database(s), 5 file(s)
+- [log] [web-gate] preloaded 2 database(s), 9 file(s)
+- [warn] Deprecated: prop 'getId' on screen files/[fileEntryId] is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] Deprecated: prop 'getId' on screen paintings/index is deprecated. Please rename the prop to 'dangerouslySingular'
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [warn] [Reanimated] Selected easing is not currently supported on web. Using linear easing instead.
+- [error] TypeError: o.get is not a function
+- [log] [stack-frame] TypeError: o.get is not a function
+- [log] [stack-frame] at f (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:5412:287)
+- [log] [stack-frame] at e.initialUpdaterRun (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:1396:327)
+- [log] [stack-frame] at e.useAnimatedStyle (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:1452:453)
+- [log] [stack-frame] at _e.ChatComposerClearance (http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js:3823:459)
+- [log] [stack-frame] at _o (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:57061)
+- [log] [stack-frame] at hu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:80466)
+- [log] [stack-frame] at Iu (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:91388)
+- [log] [stack-frame] at Pf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:136688)
+- [log] [stack-frame] at Tf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135696)
+- [log] [stack-frame] at Nf (http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js:315:135538)
 
-## page errors (2)
-- Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
-- Minified React error #130; visit https://react.dev/errors/130?args[]=undefined&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+## page errors (0)
 
-## console errors (0)
+## console errors (2)
+- TypeError: o.get is not a function
+- TypeError: o.get is not a function
 
 ## unknown module analysis (0)
 - no mapping recovered
@@ -265,10 +309,13 @@ onboarding dismissed: false
 
 ## scripts
 - http://127.0.0.1:8099/_expo/static/js/web/__expo-metro-runtime-d69eda5965c49045122640c27878a05e.js
-- http://127.0.0.1:8099/_expo/static/js/web/__common-4785bb1796e41dffd36aca90067db179.js
+- http://127.0.0.1:8099/_expo/static/js/web/__common-f56f0d98938d3bf78c2003c647be31a9.js
 - http://127.0.0.1:8099/_expo/static/js/web/index-8012037c038c1d96498445972bcc42f0.js
 - http://127.0.0.1:8099/sqlite3/sqlite3.wasm
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-aab386dd34d12ff606522fc811eff1e8.js
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-53501e52582fd2edbc769c33d0d405e8.js
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-ce65163132c001c93990acf79cd18f44.js
 - http://127.0.0.1:8099/_expo/static/js/web/_layout-7c1581799993158806dec9da7b066143.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-43a609c9e85702b33c3c35ac0a3a9a53.js
+- http://127.0.0.1:8099/_expo/static/js/web/_layout-96f4b2821f567ae5339167974df76759.js
+- http://127.0.0.1:8099/_expo/static/js/web/index-f9384db76673e101b7654ff4595eb18b.js
