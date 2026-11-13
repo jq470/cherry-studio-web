@@ -155,6 +155,13 @@ function buildGate(scripts) {
     'api.gitcode.com': 1,
   };
 
+  // Anonymous telemetry is fire-and-forget and its endpoint refuses CORS
+  // preflights from browser origins. Answer locally so the console stays clean
+  // and no request leaves the page; it carries no product functionality.
+  var SUPPRESSED_HOSTS = {
+    'analytics.cherry-ai.com': 1,
+  };
+
   function installProxyRewrite() {
     if (typeof window === 'undefined' || typeof window.fetch !== 'function') return;
     var nativeFetch = window.fetch.bind(window);
@@ -163,6 +170,9 @@ function buildGate(scripts) {
         var url = typeof input === 'string' ? input : input && input.url;
         if (url) {
           var parsed = new URL(url, location.href);
+          if (SUPPRESSED_HOSTS[parsed.hostname] && parsed.origin !== location.origin) {
+            return Promise.resolve(new Response(null, { status: 204, statusText: 'No Content' }));
+          }
           if (PROXIED_HOSTS[parsed.hostname] && parsed.origin !== location.origin) {
             return nativeFetch(location.origin + '/' + parsed.hostname + parsed.pathname + parsed.search, init);
           }
