@@ -1,11 +1,14 @@
-// Zero-dependency static host + CORS proxy for the Cherry Studio web build.
+// Zero-dependency static host + allowlisted CORS proxy for the web build.
 //
 //   node server/cors-proxy.js --static dist-web --port 8080
 //
 // Routes:
-//   /<host>/<path>  -> https://<host>/<path>   (the boot gate rewrites the two
-//                     registry hosts to this shape; they send no CORS headers)
-//   everything else -> the static bundle (SPA fallback to index.html)
+//   /<allowlisted-host>/<path> -> https://<allowlisted-host>/<path>
+//   everything else            -> the static bundle (SPA fallback to index.html)
+//
+// This is deliberately NOT an open proxy: only hosts in ALLOW_HOSTS are
+// forwarded, so a public deployment cannot be used as an SSRF relay.
+// Override with PROXY_HOSTS="a.com,b.com" when a new registry host appears.
 'use strict';
 
 const fs = require('fs');
@@ -23,6 +26,12 @@ const argOf = (flag, fallback) => {
 const PORT = Number(argOf('--port', process.env.PORT || 8080));
 const STATIC_DIR = argOf('--static', process.env.STATIC_DIR || '');
 const ALLOW_ORIGIN = process.env.ALLOW_ORIGIN || '*';
+const DEFAULT_HOSTS = ['raw.githubusercontent.com', 'objects.githubusercontent.com', 'api.gitcode.com'];
+const ALLOW_HOSTS = new Set(
+  (process.env.PROXY_HOSTS ? process.env.PROXY_HOSTS.split(',') : DEFAULT_HOSTS)
+    .map((host) => host.trim().toLowerCase())
+    .filter(Boolean),
+);
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -97,8 +106,7 @@ function proxy(req, res, targetHost, targetPath) {
     { method: req.method, hostname: target.hostname, path: target.pathname + target.search, headers },
     (upstreamRes) => {
       cors(res);
-      const responseHeaders = { ...upstreamRes.headers };
-      res.writeHead(upstreamRes.statusCode || 502, responseHeaders);
+      res.writeHead(upstreamRes.statusCode || 502, { ...upstreamRes.headers });
       upstreamRes.pipe(res);
     },
   );
@@ -122,11 +130,9 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  const match = url.pathname.match(/^\/([^/]+)(\/.*)?$/);
-  const targetHost = match && match[1];
-  const isAsset = /^\.(js|mjs|css|wasm|json|png|jpg|jpeg|svg|ico|woff2?|ttf|html)$/i.test(url.pathname);
-  if (!isAsset && targetHost && /^[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(targetHost)) {
-    proxy(req, res, targetHost, (match[2] || '/') + url.search);
+  const segment = url.pathname.split('/')[1] || '';
+  if (ALLOW_HOSTS.has(segment.toLowerCase())) {
+    proxy(req, res, segment, url.pathname.slice(segment.length + 1) + url.search || '/');
     return;
   }
 
@@ -134,5 +140,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`[cors-proxy] listening on :${PORT} static=${STATIC_DIR || '(none)'}`);
+  console.log(`[cors-proxy] :${PORT} static=${STATIC_DIR || '(none)'} hosts=${[...ALLOW_HOSTS].join(',')}`);
 });
