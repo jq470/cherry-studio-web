@@ -44,6 +44,7 @@ const SHIMS = {
   'react-native-webview': 'react-native-webview.web.js',
   'expo-paste-input': 'expo-paste-input.web.js',
   'react-native-enriched-markdown': 'react-native-enriched-markdown.web.js',
+  'react-native-streamdown': 'react-native-streamdown.web.js',
 
   // --- generic stub (L1): native-only, never exercised on the web path,
   //     but Metro still bundles the static require edge ---
@@ -107,6 +108,17 @@ ${ANCHOR}
       return {
         type: 'sourceFile',
         filePath: path.join(__dirname, 'src/web-shims', 'rnw-input-accessory-view.web.js'),
+      };
+    }
+    // @legendapp/list/keyboard pulls this host from react-native-keyboard-controller;
+    // the default resolution picks the native list build, which mounts no rows.
+    if (
+      moduleName === '@legendapp/list/react-native' &&
+      context.originModulePath.includes('/@legendapp/list/keyboard')
+    ) {
+      return {
+        type: 'sourceFile',
+        filePath: path.join(__dirname, 'src/web-shims', 'legend-list-react-native.web.js'),
       };
     }
     const shimFile = webShimMap[moduleName];

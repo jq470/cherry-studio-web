@@ -1,70 +1,44 @@
 // react-native-keyboard-controller on web.
 //
 // 25 call sites: the provider must render, the hooks must return values that
-// callers can read (`height.value`, `height.get()`, `isVisible`, `input.value`),
-// and the controller is a no-op (there is no soft keyboard in a browser).
-//
-// KeyboardProvider wraps the whole app. Rendering it as a bare <div> gave the
-// root layout a 0-height box: absolutely positioned children then resolved
-// `bottom: 0` to y = -height, so the entire UI (sidebar footer, composer) sat
-// above the viewport while innerText still looked fine to the smoke test.
-// It must be a flex-growing container, exactly like the native provider.
-//
-// A plain DOM node with CSS flex is used on purpose: importing `View` from
-// `react-native` at module scope hits RNW's own initialisation (React error #130
-// because View is still undefined at that point).
-//
-// The hooks return real SharedValue-shaped objects. Returning a bare `{ value: 0 }`
-// crashed ChatComposerClearance with `o.get is not a function`, because app code
-// calls `.get()` on the animated height.
+// callers can read (`height.value`, `isVisible`, `input.value`), and the
+// controller is a no-op (there is no soft keyboard in a browser).
 'use strict';
 
 const React = require('react');
 
 const { createStub } = require('./native-stub');
-
-const PROVIDER_STYLE = {
-  display: 'flex',
-  flexDirection: 'column',
-  flexGrow: 1,
-  flexShrink: 1,
-  flexBasis: '0%',
-  minHeight: 0,
-  width: '100%',
-  height: '100%',
-};
+const ReactNativeWeb = require('react-native-web');
 
 const wrap = (tag) =>
   function KeyboardWrapper(props) {
     return React.createElement(tag, { style: props && props.style }, props && props.children);
   };
 
-function KeyboardProvider(props) {
-  const style = props && props.style ? [PROVIDER_STYLE, props.style] : PROVIDER_STYLE;
-  return React.createElement('div', { style }, props && props.children);
-}
+const zero = { value: 0 };
 
-function createSharedValue(initial) {
-  const value = { value: initial };
-  value.get = () => value.value;
-  value.set = (next) => {
-    value.value = next;
-  };
-  value.addListener = () => {};
-  value.removeListener = () => {};
-  value.modify = (modifier) => {
-    if (typeof modifier === 'function') value.value = modifier(value.value);
-    return value.value;
-  };
-  return value;
-}
-
-const keyboardHeight = createSharedValue(0);
-const keyboardProgress = createSharedValue(0);
+// @legendapp/list/keyboard renders its rows through this scroll host; without it
+// the whole transcript subtree was dropped and the chat looked empty.
+const KeyboardChatScrollView = React.forwardRef(function KeyboardChatScrollView(props, ref) {
+  const ScrollView =
+    ReactNativeWeb.ScrollView || (ReactNativeWeb.default && ReactNativeWeb.default.ScrollView);
+  return React.createElement(
+    ScrollView,
+    {
+      ref,
+      style: props && props.style,
+      contentContainerStyle: props && props.contentContainerStyle,
+      onScroll: props && props.onScroll,
+      scrollEventThrottle: props && props.scrollEventThrottle,
+      showsVerticalScrollIndicator: false,
+    },
+    props && props.children,
+  );
+});
 
 const useKeyboardState = () => ({ height: 0, isVisible: false, duration: 0, easing: 'easeOut' });
-const useReanimatedKeyboardAnimation = () => ({ height: keyboardHeight, progress: keyboardProgress });
-const useReanimatedFocusedInput = () => ({ input: createSharedValue(null) });
+const useReanimatedKeyboardAnimation = () => ({ height: zero, progress: zero });
+const useReanimatedFocusedInput = () => ({ input: { value: null } });
 const useKeyboardHandler = () => undefined;
 const useGenericKeyboardHandler = () => undefined;
 const useFocusedInputHandler = () => undefined;
@@ -84,8 +58,9 @@ const KeyboardEvents = {
 };
 
 const exports_ = {
-  KeyboardProvider,
+  KeyboardProvider: wrap('div'),
   KeyboardAwareScrollView: wrap('div'),
+  KeyboardChatScrollView,
   KeyboardStickyView: wrap('div'),
   KeyboardAvoidingView: wrap('div'),
   OverKeyboardView: wrap('div'),
