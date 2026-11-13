@@ -66,6 +66,18 @@ function buildGate(scripts) {
   // Absolute URL: dynamic import() treats a bare specifier as a package name.
   var SQLITE_DIR = new URL('sqlite3/', document.baseURI).href;
 
+  // The exported app is phone-first: a bottom-sheet dialog taller than the
+  // remaining viewport extends past body height, and expo-reset hides body
+  // overflow, which leaves the privacy buttons unreachable on a desktop window.
+  // Letting the document scroll vertically is the least invasive fix; the app's
+  // own ScrollViews keep their internal scrolling.
+  try {
+    var layoutStyle = document.createElement('style');
+    layoutStyle.id = 'cherry-web-layout';
+    layoutStyle.textContent = 'html,body{overflow-x:hidden !important;overflow-y:auto !important}';
+    document.head.appendChild(layoutStyle);
+  } catch (error) {}
+
   function log() {
     try { console.log.apply(console, ['[web-gate]'].concat([].slice.call(arguments))); } catch (error) {}
   }
